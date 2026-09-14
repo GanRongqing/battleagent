@@ -1,0 +1,39 @@
+{
+  "policy_id": "white-auto-0001-v1",
+  "version": "1.0.0",
+  "side": "white",
+  "strategy_family": "anti_leak_containment",
+  "declared_intent": {
+    "goal": "reduce boundary breakthrough rate",
+    "not": "improve detection or kill rate; not maximize forward aggression",
+    "assumption": "W5 combat capability is sufficient; failures are containment gaps"
+  },
+  "trigger_and_switch": [
+    "crossing ETA<=6000s (HIGH) or <=3000s (CRITICAL)",
+    "no effective boundary-side/intercept-feasible blocker",
+    "assign one blocker (free first, bounded preemption)",
+    "TTL 900s hysteresis; release on expiry/kill/no position"
+  ],
+  "known_strengths": [
+    "event-driven, minimal overlay; W5-equivalent outside trigger",
+    "targets the evidenced single-leak root cause"
+  ],
+  "known_weaknesses": [
+    "containment reserve may reduce frontline combat mass",
+    "crossing predictor may false-positive on maneuvering targets",
+    "wrong preemption may delay engagement",
+    "low benefit vs non-breakthrough opponents"
+  ],
+  "declared_traits": {
+    "change_surface": "allocator_only",
+    "continuous_replanning": "none",
+    "reserve_usage": "event_driven",
+    "forward_aggression": "unchanged"
+  },
+  "status": "candidate",
+  "evaluation_role": "stress_test",
+  "parent_policy_id": "white-w5-baseline",
+  "description": "anti-leak boundary containment overlay on frozen W5",
+  "created_at": "2026-09-14T00:05:30",
+  "updated_at": "2026-09-14T00:05:30"
+}

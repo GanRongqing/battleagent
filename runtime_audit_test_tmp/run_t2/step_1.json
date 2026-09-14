@@ -1,0 +1,300 @@
+{
+ "run_id": "t2",
+ "audit_step_id": 1,
+ "prev_audit_step_id": 0,
+ "sim_time": 300.0,
+ "wall_time": 1788754289.105316,
+ "A_raw_observation": {
+  "status": {
+   "局内时间": "00:05:00",
+   "已结束": false,
+   "对局结果": null,
+   "资源快照": {
+    "统计": {
+     "usv_total": 2,
+     "usv_alive": 2,
+     "uav_total": 0,
+     "uav_alive": 0,
+     "uav_flying": 0,
+     "enemy_visible": 2
+    },
+    "单位状态": {
+     "white_usv_states": [
+      {
+       "name": "white_usv1",
+       "position": [
+        100000,
+        300000
+       ],
+       "is_alive": true,
+       "is_frozen": false,
+       "is_locking": false,
+       "locking_unit": null,
+       "battery_pct": 100
+      },
+      {
+       "name": "white_usv2",
+       "position": [
+        105000,
+        300000
+       ],
+       "is_alive": true,
+       "is_frozen": false,
+       "is_locking": false,
+       "locking_unit": null,
+       "battery_pct": 100
+      }
+     ],
+     "white_uav_states": []
+    },
+    "观察信息": {
+     "white_observation": {
+      "雷达捕获": [
+       {
+        "name": "black_usv1",
+        "position": [
+         150000,
+         300000
+        ],
+        "velocity": [
+         -10,
+         0
+        ]
+       },
+       {
+        "name": "black_usv2",
+        "position": [
+         165000,
+         300000
+        ],
+        "velocity": [
+         -10,
+         0
+        ]
+       }
+      ],
+      "被动告警": []
+     }
+    }
+   },
+   "奖励信号": {
+    "black_killed": 0,
+    "black_hit": 0,
+    "white_ship_killed": 0,
+    "white_uav_killed": 0,
+    "black_breakthrough": 0
+   }
+  },
+  "obs": null,
+  "legal_actions": {
+   "动作": {
+    "[move]": [
+     "white_usv1 移动",
+     "white_usv2 移动"
+    ],
+    "[lock]": [
+     "white_usv1 锁定 black_usv1",
+     "white_usv2 锁定 black_usv1",
+     "white_usv1 锁定 black_usv2",
+     "white_usv2 锁定 black_usv2"
+    ],
+    "[launch_uav]": [],
+    "[fly]": [],
+    "[land_uav]": []
+   }
+  },
+  "truncated": []
+ },
+ "B_fused_state": {
+  "tracks": {
+   "black_usv1": {
+    "name": "black_usv1",
+    "is_ship": true,
+    "confidence": 1.0,
+    "point_confidence": 1.0,
+    "maneuver_score": 0.0,
+    "age": 0,
+    "uncertainty": 4000.0,
+    "predicted_position": [
+     150000,
+     300000
+    ],
+    "last_velocity": [
+     -10,
+     0
+    ],
+    "last_seen_time": 300,
+    "visible": true,
+    "engaged": false,
+    "assigned_usvs": [],
+    "has_position": true
+   },
+   "black_usv2": {
+    "name": "black_usv2",
+    "is_ship": true,
+    "confidence": 1.0,
+    "point_confidence": 1.0,
+    "maneuver_score": 0.0,
+    "age": 0,
+    "uncertainty": 4000.0,
+    "predicted_position": [
+     165000,
+     300000
+    ],
+    "last_velocity": [
+     -10,
+     0
+    ],
+    "last_seen_time": 300,
+    "visible": true,
+    "engaged": false,
+    "assigned_usvs": [],
+    "has_position": true
+   }
+  },
+  "resource": {
+   "usv_total": 2,
+   "usv_alive": 2,
+   "usv_available": 2,
+   "usv_engaged": 0,
+   "usv_frozen": 0,
+   "available_ratio": 1.0,
+   "engaged_ratio": 0.0,
+   "frozen_ratio": 0.0,
+   "uav_alive": 0,
+   "uav_airborne": 0,
+   "uav_searching": 0,
+   "uav_screening": 0,
+   "uav_reacquiring": 0,
+   "uav_returning": 0,
+   "uav_charging": 0,
+   "available_sensing_ratio": 0.0,
+   "active_combat_tracks": 2,
+   "lost_high_threat_tracks": 0,
+   "threat_cluster_count": 0,
+   "coverage_quality": 0.05,
+   "describe": "usv_alive=2 avail=1.00 engaged=0.00 frozen=0.00 | uav_alive=0 airborne=0 search=0 screen=0 reacq=0 | tracks=2 lost_ht=0 cov=0.05"
+  },
+  "mission": "NORMAL_COMBAT",
+  "clusters": [
+   {
+    "id": "cluster_1",
+    "ships": 2,
+    "visible": 2,
+    "lost": 0,
+    "avg_conf": 1.0,
+    "min_x": 150000,
+    "friendly_committed": 0,
+    "local_force_ratio": 0.0,
+    "near_break": false,
+    "recon_coverage": "high",
+    "describe": "CLUSTER cluster_1: tracks=2 visible=2 lost=0 avg_conf=1.00 min_breakthrough_x=150000 friendly_committed=0 local_force_ratio=0.00 near_break=false recon_coverage=high"
+   }
+  ],
+  "coverage": {
+   "quality": 0.05,
+   "cells_covered": 9,
+   "cells_total": 9
+  },
+  "state_signature": [
+   2,
+   2,
+   0,
+   0,
+   2,
+   1,
+   1.0,
+   0,
+   true,
+   0,
+   0
+  ],
+  "commander_ctx": {
+   "n_usv_alive": 2,
+   "n_ships": 2,
+   "n_uncovered": 2,
+   "n_lost_ht": 0,
+   "breakthrough_imminent": false,
+   "blind": false,
+   "mission": "NORMAL_COMBAT",
+   "coverage_quality": 0.05
+  },
+  "trigger": "first_detect",
+  "summary_hash": -586828598947781637
+ },
+ "E_intermediate": {
+  "intent": {
+   "source": "default_intent",
+   "describe": "posture=balanced focus=2 emergency=3 reserve_ratio=0.20 reserve_usvs=auto bias=breakthrough_eta priority=[] uav_mode=search_and_reacquire uav_priority=[] recon=0.6 engage=0.7 overmatch=balanced recon_mode=balanced standoff=medium unc_tol=0.35",
+   "reason": ""
+  },
+  "allocator": {
+   "result": {},
+   "margin": null,
+   "candidates": []
+  },
+  "controller": {
+   "usv_actions": [
+    [
+     "white_usv1 移动 target_speed=20.0 target_course=90.0",
+     "move"
+    ],
+    [
+     "white_usv2 移动 target_speed=20.0 target_course=90.0",
+     "move"
+    ]
+   ],
+   "uav_actions": [],
+   "usv_fsm": {
+    "white_usv1": "AVAILABLE",
+    "white_usv2": "AVAILABLE"
+   },
+   "uav_fsm": {}
+  }
+ },
+ "F_execution_feedback": {
+  "requested_actions": [
+   [
+    "white_usv1 移动 target_speed=20.0 target_course=90.0",
+    "move"
+   ],
+   [
+    "white_usv2 移动 target_speed=20.0 target_course=90.0",
+    "move"
+   ]
+  ],
+  "filtered_actions": [
+   {
+    "action_text": "white_usv1 移动 target_speed=20.0 target_course=90.0",
+    "action_type": "move"
+   },
+   {
+    "action_text": "white_usv2 移动 target_speed=20.0 target_course=90.0",
+    "action_type": "move"
+   }
+  ],
+  "apply_payload": {
+   "actions": [
+    {
+     "action_text": "white_usv1 移动 target_speed=20.0 target_course=90.0",
+     "action_type": "move"
+    },
+    {
+     "action_text": "white_usv2 移动 target_speed=20.0 target_course=90.0",
+     "action_type": "move"
+    }
+   ]
+  },
+  "apply_response": {
+   "成功": true,
+   "accepted": 2
+  },
+  "feedback_link": {
+   "link_type": "audit_step_id",
+   "requested_step_id": 1,
+   "next_audit_step_id": 2,
+   "response_sim_time": 300,
+   "response_wall_time": 1788754289.1075082
+  }
+ }
+}

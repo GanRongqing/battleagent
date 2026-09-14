@@ -1,0 +1,1353 @@
+import collections
+import math
+
+import numpy as np
+import pdb
+import copy
+from simulation.algorithm.drive import velocity
+
+from simulation.algorithm.shape import draw_cone
+
+from .driver import MIN_DIS
+from .. import algorithm as alg
+from .. import core
+from .. import message
+from .. import arsenal as asn
+
+distance = alg.geo.distance # 为加速，较少索引
+
+
+class RandomMotor(core.arch.Motor):
+    def _move(self):
+        i = np.random.randint(0, 4)
+        heading = 90*i
+        self.change_course(heading)
+        super()._move()
+
+
+class DurationMotor(core.arch.Motor):
+    """ 基于持续时间的机动组件
+
+    在Motor的基础上增加持续时间的控制
+    作为基类使用，一般不实例化
+    """
+    def __init__(self, unit, model):
+        super().__init__(unit, model)
+        self._duration = -1 # 持续时间, 单位s
+        self._upper_tick = -1
+        self._end_tick = -1
+
+    def _set_duration(self, duration):
+        """ 设置持续时间 """
+        self._duration = duration
+        self._upper_tick = self.engine.tick
+        self._end_tick = self._upper_tick + duration*1000
+
+    def _clear_duration(self):
+        """ 清除当前的持续时间(如果有) """
+        self._duration = -1 # 持续时间, 单位s
+        self._upper_tick = -1
+        self._end_tick = -1
+
+
+class WaypointsMotor(DurationMotor):
+    """ 基于航路点的机动组件 
+
+    在Motor的基础上增加了按航路点运动功能
+    作为ManeuverMotor的基类，一般不实例化
+    """
+    def __init__(self, unit, model):
+        super().__init__(unit, model)
+        self._waypoints = [] # 航路点,第0个点是下一个要机动到的点
+        self._speeds = []
+        self._events = [] # 抛出抵达第i个航路点的航路事件
+        # 航路点对应的速度,速度的长度和航路点长度一样
+        # i-1(i=0时i-1表示当前的位置点)和i航路点之间的速度为第i个速度
+        self._num_waypoint = 0 #航路点数量
+        self._current_waypoint_id = -1 #正在飞向的id
+        self._next_waypoint_id = 0 #下一个要飞向的id
+
+    @property
+    def is_free(self):
+        """ 判断是否是自由状态
+        
+        只有自由状态下才可以直接改变速度，否则应该在按航路点运动时自动计算速度的改变量
+        """
+        flag = super().is_free
+        if not flag:
+            return False
+        else:
+            if self._waypoints != []:
+                return False
+            else:
+                return True
+
+    def _set_waypoints(self, waypoints, speeds=None, speed=None, events=None):
+        """ 设置航路点以及速度 """
+        self._waypoints = np.array(waypoints) 
+        self._next_waypoint_id = 0 
+        self._num_waypoint = len(waypoints)  #　waypoints的类型为list或np.array均可以
+        if speeds is not None:
+            self._speeds = speeds
+        elif speed is not None:
+            self._speeds = [speed]*self._num_waypoint
+        else:
+            self._speeds = [self.speed]*self._num_waypoint
+        if events is not None:
+            assert len(events) == self._num_waypoint
+            self._events = events
+
+        # 解决初始点与当前位置一致或非常接近的问题
+        period = self._state_period
+        period = 1 if period <= 0 else period
+        while self._next_waypoint_id < self._num_waypoint:
+            if distance(self.coords, np.array(self._waypoints[self._next_waypoint_id,:])) < 1.2*self.speed*period: # 1.2为经验扩大系数
+                if self._events:
+                    content = message.event.EventManeuver(self._events[self._next_waypoint_id], self._waypoints[self._next_waypoint_id,:])
+                    self._send_event(self.unit.commander, content) # 设置机动事件时必须有指挥员
+                self._next_waypoint_id += 1
+            else:
+                break
+        if self._next_waypoint_id == self._num_waypoint:
+            # 由于给定的位置与当前位置非常接近，直接走完。但基于waypoints的机动指令的结束行为仍然执行
+            self.engine.log_warning(f"{self.ucname}由于给定的位置与当前位置非常接近，直接走完")
+            return
+        velocity = alg.drive.velocity3(self._speeds[self._next_waypoint_id], self.coords, 
+                    self._waypoints[self._next_waypoint_id,:]) 
+        self._current_waypoint_id = self._next_waypoint_id
+        self._velocity = velocity
+        self.engine.log_info("TURN %d/%d %s %s %s %s", 
+                        self._next_waypoint_id, self._num_waypoint, self.unit,
+                        "(%0.3f,%0.3f,%0.3f)" % tuple(self._waypoints[self._next_waypoint_id,:]),
+                        "Velocity", "(%0.3f,%0.3f,%0.3f)" % tuple(self.velocity))
+
+    def _clear_waypoints(self):
+        """ 清除当前的航路点(如果有) """
+        if self._num_waypoint > 0:
+            self._waypoints = []
+            self._speeds = []
+            self._events = []
+            self._num_waypoint = 0
+            self._current_waypoint_id = -1
+            self._next_waypoint_id = 0
+
+    def _move(self):
+        """ 按航路点更新运动状态 """
+        super()._move()
+        if self._ref_unit: return
+        if self._num_waypoint == 0:
+            # 没有航路点
+            return
+
+        # if self.unit.name == "忠诚僚机_2" and self.mode == "Hover":
+        #     import pdb; pdb.set_trace()
+
+        period = self._state_period
+        assert period > 0
+        while self._next_waypoint_id < self._num_waypoint:
+            if distance(self.coords, np.array(self._waypoints[self._next_waypoint_id,:])) < 1.2*self.speed*period: # 1.2为经验扩大系数
+                if self._events:
+                    content = message.event.EventManeuver(self._events[self._next_waypoint_id], self._waypoints[self._next_waypoint_id,:])
+                    self._send_event(self.unit.commander, content) # 设置机动事件时必须有指挥员
+                self._next_waypoint_id += 1
+            else:
+                break
+
+        if self._next_waypoint_id == self._num_waypoint: 
+            # 走完航路点
+            # 此处代码不能提到前面
+            return
+
+        if self._next_waypoint_id > self._current_waypoint_id:
+            next_point = self._waypoints[self._next_waypoint_id,:]
+            velocity = alg.drive.velocity(self._speeds[self._next_waypoint_id], self.coords, next_point)
+            self._current_waypoint_id = self._next_waypoint_id
+            self._velocity = velocity
+            self.engine.log_info("TURN %d/%d %s %s %s %s", 
+                            self._next_waypoint_id, self._num_waypoint, self,
+                            "(%0.3f,%0.3f,%0.3f)" % tuple(self._waypoints[self._next_waypoint_id,:]),
+                            "Velocity", "(%0.3f,%0.3f,%0.3f)" % tuple(self.velocity))
+
+    def _draw(self, ax=None, mode="draw"):
+        items = []
+        if self._waypoints != []:
+            if self.engine.render_config["waypoints_units"] == "all" or self.unit.name in self.engine.render_config["waypoints_units"]:
+                if mode == "draw":
+                    ax.plot(self._waypoints[:,0], self._waypoints[:,1], color=self.group.lower())
+                else: # symbol
+                    symbol = alg.shape.Symbol(
+                        mode="Line", type_="Waypoints", group=self.group, name=self.name,
+                        x=self._waypoints[:,0].tolist(), y=self._waypoints[:, 1].tolist(), color=self.group)
+                    items.append(symbol)
+        return items
+
+class ManeuverMotor(WaypointsMotor):
+    """ 基于机动指令的通用机动组件
+    
+    机动组件也是比较特殊的组件，其实每一类组件都有其固有的特点
+    在有限状态机的基础上，进一步封装不同的机动模式(mode)，不同的mode对应不同的机动动作(函数)
+    与有限状态机类型，但不是按条件转移，而是按序列依次执行
+    """
+    def __init__(self, unit, model):
+        super().__init__(unit, model)
+        self._maneuver_cmds = collections.deque()  # 机动指令序列
+        self._current_maneuver_cmd = None # 当前正在执行的机动指令
+        self._completed_end_cmd = False # 标记是否完成对当前指令的善后处理
+        self._is_frozen = False # 是否冻结
+
+    @property
+    def mode(self):
+        """ 模式 
+            
+            当前指令中的mode，当当前指令为None时，返回None
+            特殊的mode：
+                None: 无任何指令在执行， 且指令序列‘必须是’空
+                Frozen: 冻结状态
+        """
+        if self._is_frozen:
+            return "Frozen"
+        else:
+            if self._current_maneuver_cmd is not None:
+                return self._current_maneuver_cmd["mode"]
+            else:
+                return None
+
+    @property
+    def compound_mode(self):
+        """ 复合模式，最上层的 """
+        return "Compound"
+
+    @property
+    def is_repeat_mode(self):
+        """ 判断当前motor是否处于周期性执行的状态 """
+        if self._current_maneuver_cmd is not None:
+            if self._current_maneuver_cmd.get("repeat", False) or self._current_maneuver_cmd.get("retrace", False):
+                return True
+        return False
+
+
+    @property
+    def is_free(self):
+        """ 判断是否是自由状态
+        
+        只有自由状态下才可以直接改变速度，否则应该在按航路点运动时自动计算速度的改变量
+        """
+        flag = super().is_free
+        if not flag:
+            return False
+        else:
+            if self.mode in [None, "Frozen"]:
+                return True
+            else:
+                return False
+
+    # 定义mode的开始和结束动作
+    def _velocity_begin(self, cmd):
+        self.change_velocity(cmd["velocity"])
+        duration = cmd.get("duration", 0)
+        if duration > 0:
+            self._set_duration(duration)
+    
+    def _speed_begin(self, cmd):
+        self.change_speed(cmd["speed"], ignore=True)
+        if "event1" in cmd:
+            content = message.event.EventManeuver(cmd["event1"])
+            self._send_event(self.unit.commander, content) # 设置机动事件时必须有指挥员
+        duration = cmd.get("duration", 0)
+        if duration > 0:
+            self._set_duration(duration)
+
+    def _speed_end(self, cmd):
+        if "event2" in cmd:
+            content = message.event.EventManeuver(cmd["event2"])
+            self._send_event(self.unit.commander, content) # 设置机动事件时必须有指挥员
+
+    def _course_begin(self, cmd):
+        self.change_course(cmd["course"], ignore=True)
+        duration = cmd.get("duration", 0)
+        if duration > 0:
+            self._set_duration(duration)
+
+    def _acce_begin(self, cmd):
+        self.change_acce(cmd["acce"], ignore=True)
+        duration = cmd.get("duration", 0)
+        if duration > 0:
+            self._set_duration(duration)
+
+    def _acce_end(self, cmd):
+        self.change_acce([0, 0, 0], ignore=True)
+
+    def _turn_begin(self, cmd):
+        coords = self.coords
+        course = self.course
+        theta = cmd["theta"] # 转弯角度
+        radius = cmd["radius"] # 转弯半径
+        clockwise = cmd.get("clockwise", True) # 顺时针或逆时针
+        points = alg.drive.turnPointsCal(coords, course, theta, radius=radius, clockwise=clockwise)
+        self._set_waypoints(points[1:]) # 去掉当前点
+
+    def _waypoints_begin(self, cmd):
+        waypoints = cmd["waypoints"]
+        speeds = cmd.get("speeds", None)
+        speed = cmd.get("speed", None)
+        events = cmd.get("events", None)
+        self._set_waypoints(waypoints, speeds=speeds, speed=speed, events=events)
+
+    def _waypoints_end(self, cmd):
+        # 重复指令
+        repeat = cmd.get("repeat", False)
+        if repeat is True and ( not self._maneuver_cmds):
+            self._maneuver_cmds.appendleft(cmd)  # 继续
+            return 
+        if isinstance(repeat, int) and repeat > 0:
+            cmd["repeat"] = repeat-1
+            self._maneuver_cmds.appendleft(cmd)  # 继续
+            return 
+        # 折返指令
+        retrace = cmd.get("retrace", False)
+        if retrace is True and ( not self._maneuver_cmds):
+            waypoints = cmd["waypoints"]
+            cmd["waypoints"] = waypoints[::-1]
+            self._maneuver_cmds.appendleft(cmd)  # 继续
+            return 
+        if isinstance(retrace, int) and retrace > 0:
+            waypoints = cmd["waypoints"]
+            cmd["waypoints"] = waypoints[::-1]
+            cmd["retrace"] = retrace-1
+            self._maneuver_cmds.appendleft(cmd)  # 继续
+            return 
+
+    def _begin_maneuver_cmd(self):
+        """ 处理机动指令，开始机动
+        """
+        self._completed_end_cmd = False
+        cmd = self._current_maneuver_cmd
+        self.engine.log_info(f"{self} Begin Handle {self.mode}")
+        # 指令的开始动作必须得有
+        getattr(self, "_"+cmd["mode"]+"_begin")(cmd)
+
+    def _end_maneuver_cmd(self, normal=True):
+        """ 当前机动指令执行完成或强行中断后的善后处理
+
+        normal: 是否时正常结束的
+        """
+        self._completed_end_cmd = True
+        cmd = self._current_maneuver_cmd
+        self.engine.log_info(f"{self} End Handle {self.mode}")
+        if hasattr(self, "_"+cmd["mode"]+"_end"):
+            # 指令的结束动作可以没有
+            getattr(self, "_"+cmd["mode"]+"_end")(cmd)
+
+        # 指令如果附加了指令名称，则对指令的完成情况进行处理
+        if (("repeat" in cmd) and (cmd["repeat"] == True or cmd["repeat"] > 0) or 
+            ("retrace" in cmd) and (cmd["retrace"] == True or cmd["retrace"] > 0)):
+            if normal:
+                pass # 正常中间结束（下次仍有）的重复性或折返式指令，不对指令的结束状态进行处理
+            else:
+                # 被打断的重复性指令，标记为结束
+                cmd_name = cmd.get("cmd_name", None)
+                if cmd_name:
+                    _cmd = self.engine.cmd_collections[cmd_name]
+                    _cmd.end_time = self.engine.time
+                    _cmd.res = "结束"
+        else:
+            cmd_name = cmd.get("cmd_name", None)
+            if cmd_name:
+                _cmd = self.engine.cmd_collections[cmd_name]
+                _cmd.end_time = self.engine.time
+                if normal:
+                    _cmd.res = "成功"
+                else:
+                    _cmd.res = "失败"
+
+    def clear_current_cmd(self):
+        if (self._current_maneuver_cmd is not None) and (not self._completed_end_cmd):
+             # 只有还未进行善后处理的指令才对当前正在执行的机动指令的善后处理
+             # 避免重复处理
+             temp = copy.deepcopy(self._maneuver_cmds)
+             self._end_maneuver_cmd(normal=False)
+             self._maneuver_cmds = temp # 避免在善后处理时增加新的机动指令
+        # 考虑到善后处理可能会增加新的机动指令(比如周期性指令)，因此下述指令放在善后处理之后
+        self._clear_waypoints()
+        self._clear_duration()
+        self._current_maneuver_cmd = None 
+
+    def clear_cmds(self, is_clear_current=True):
+        if is_clear_current:
+            self.clear_current_cmd()#增加一个只清除命令队列的选项
+        self._maneuver_cmds = collections.deque() 
+
+    def add_maneuver_cmd(self, cmd):
+        """ 当mode为None时立即执行，否则加入待执行序列末尾 
+        """
+        if (self.mode == None) and (self._ref_unit is None) and (not self._is_frozen):
+                self._current_maneuver_cmd = cmd
+                self._begin_maneuver_cmd()
+        else:
+             self._maneuver_cmds.append(cmd)
+
+    def insert_maneuver_cmd(self, cmd, rightnow=False):
+        """
+        当mode为None时或rightnow为True时清空当前状态，立即执行
+        否则， 插入到待执行序列之前
+        """
+        if (self.mode == None or rightnow) and (self._ref_unit is None) and (not self._is_frozen):
+            self.clear_current_cmd()
+            self._current_maneuver_cmd = cmd
+            self._begin_maneuver_cmd()
+        else:
+            self._maneuver_cmds.appendleft(cmd)
+
+    def freeze(self):
+        """ 冻结所有指令
+        
+        一旦冻结，在解冻之前，该类的任何函数都不执行，只能通过更底层的命令进行操控
+        在解冻之后才能继续执行
+        """
+        self._is_frozen = True
+        # 冻结时清空持续时间和航路点,但不清空当前指令,因为存在重复执行的指令
+        self._clear_waypoints()
+        self._clear_duration()
+
+    def unfreeze(self):
+        """ 解冻所有指令
+
+        解冻后需清除当前指令，并立即执行下一个指令
+        之所以现在清除，而不是在冻结时清除是因为存在重复执行的指令
+        而且之所以清除，是因为指令都是按航迹点运动的，不清除无意义
+        """
+        self._is_frozen = False
+        self.clear_current_cmd()
+        if self._maneuver_cmds:
+            cmd = self._maneuver_cmds.popleft()
+            self._current_maneuver_cmd = cmd
+            self._begin_maneuver_cmd()
+
+    def _move(self):
+        super()._move()
+        if self._ref_unit: return
+        if self._is_frozen: return # 冻结指令则什么也不做
+        flag = False # 是否完成当前指令
+        if self._num_waypoint > 0  and self._next_waypoint_id == self._num_waypoint:
+            # 走完航路点
+            flag = True
+            self._clear_waypoints()
+        elif self._end_tick > 0 and self.engine.tick >= self._end_tick:
+            # 走完持续时间
+            flag = True
+            self._clear_duration()
+        if flag:
+            # 完成当前指令且当前指令不为空则
+            if self._current_maneuver_cmd is not None:
+                former_cmd = self._current_maneuver_cmd
+                self._end_maneuver_cmd() # 对当前正在执行的机动指令的善后处理,该处理不能改变当前指令
+                assert former_cmd == self._current_maneuver_cmd, "former:%s, current:%s" % (former_cmd, self._current_maneuver_cmd)
+                #防止结束执行过程中指令已经切换，导致新的指令消失，一般来说不会，除非强制打断了当前指令或者调用了
+                self._current_maneuver_cmd = None
+
+        if self._num_waypoint == 0 and self._end_tick == -1:
+            # 新的开始
+            if self._maneuver_cmds:
+                cmd = self._maneuver_cmds.popleft()
+                self._current_maneuver_cmd = cmd
+                self._begin_maneuver_cmd()
+
+    def _oval_begin(self,cmd):
+        '''
+            生成椭圆上的点列表
+
+            Args:
+                cmd(str):指令字符串
+        '''
+        clockwise = cmd.get("clockwise", True)  # 顺时针或逆时针
+        center = cmd.get("center", None)  #
+        az = cmd.get("az", None)  #
+        points = alg.drive.oval_cal(center=center,az=az, clockwise=clockwise)
+        self._set_waypoints(points)  # 去掉当前点
+
+    def _oval_end(self,cmd):
+        # 重复指令
+        repeat = cmd.get("repeat", False)
+        if repeat is True and ( not self._maneuver_cmds):
+            self._maneuver_cmds.appendleft(cmd)  # 继续
+            return 
+        if isinstance(repeat, int) and repeat > 0:
+            cmd["repeat"] = repeat-1
+            self._maneuver_cmds.appendleft(cmd)  # 继续
+            return 
+
+    def _lineCircle_begin(self,cmd):
+        '''
+            生成直线上的点列表
+
+            Args:
+                cmd(str):指令字符串
+        '''
+        coords = cmd.get("coords", True)  # 起始点
+        dis = cmd.get("dis", None)  # 运动距离（m）
+        speed = cmd.get("speed", None)  # 运动速度（m）
+        period = cmd.get("period", None)  # 运动周期
+        flag = -1 if dis < 0 else 1
+        num = math.ceil(abs(dis) / (speed*period))
+        points = []
+        for i in range(num):
+            y = coords[1] + speed * period * i * flag
+            points.append([coords[0],y,coords[2]])
+        points_ = points.copy()
+        points.reverse()
+
+        points_.extend(points)
+        self._set_waypoints(points)
+
+    def _lineCircle_end(self,cmd):
+        repeat = cmd.get("repeat", False)
+        if repeat is True and ( not self._maneuver_cmds):
+            self._maneuver_cmds.appendleft(cmd)  # 继续
+            return 
+        if isinstance(repeat, int) and repeat > 0:
+            cmd["repeat"] = repeat-1
+            self._maneuver_cmds.appendleft(cmd)  # 继续
+            return 
+
+    def _rectangularCircle_begin(self,cmd):
+        '''
+            生成矩形上的点列表
+
+            Args:
+                cmd(str):指令字符串
+        '''
+        coords = cmd.get("coords", True)  # 起始点
+        length = cmd.get("length", None)  # 长度m）
+        width = cmd.get("width", None)  # 宽度（m）
+        speed = cmd.get("speed", None)  # 运动速度（m）
+        period = cmd.get("period", None)  # 运动周期
+        points = alg.drive.rectangular_circle_cal(width,length,speed,period,coords)
+        self._set_waypoints(points[1:])  # 去掉当前点,否则导致计算速度时，speed 为0
+
+    def _rectangularCircle_end(self,cmd):
+        repeat = cmd.get("repeat", False)
+        if repeat is True and ( not self._maneuver_cmds):
+            self._maneuver_cmds.appendleft(cmd)  # 继续
+            return 
+        if isinstance(repeat, int) and repeat > 0:
+            cmd["repeat"] = repeat-1
+            self._maneuver_cmds.appendleft(cmd)  # 继续
+            return 
+
+class _PlaneMotor(ManeuverMotor):
+    """ 飞机机动组件，作为固定翼和旋转翼飞机机动组件的基类
+    """
+    def __init__(self, unit, model):
+        super().__init__(unit, model)
+        self._send_rtb = False
+
+    # def get_current_mode(self):
+    #     if self._current_maneuver_cmd is not None:
+    #         return self._current_maneuver_cmd["mode"]
+    #     return None
+
+    def get_next_mode(self):
+        if not self._maneuver_cmds:
+            return None
+        else:
+            return self._maneuver_cmds[0]["mode"]
+
+    def _Climb_begin(self, cmd):
+        # 爬升指令
+        climb_point = self.coords
+        climb_az = self.course
+        climb_dis = self.attr["climb_dis"] # 起飞阶段爬升的水平距离
+        climb_height = self.attr["climb_height"] # 起飞阶段爬升的垂直距离
+        points = alg.trajectory.plane_climb_points(climb_point, climb_az, climb_dis, climb_height)
+        self._set_waypoints(points[1:,:].tolist())
+
+    def _Climb_end(self, cmd):
+        # 爬升指令
+        # import pdb; pdb.set_trace()
+        if not self._maneuver_cmds:
+            # 如果后续没有机动指令
+            self._maneuver_cmds.append({"mode":"Hover", "repeat":True}) 
+            # self._begin_maneuver_cmd({"mode":"Hover", "repeat":True})
+
+    def _Turn_begin(self, cmd):
+        # 转弯指令
+        coords = self.coords
+        course = self.course
+        radius = max(self.attr["turn_radius"], cmd.get("turn_radius", 0)) # 转弯半径
+        theta = cmd["theta"] # 转弯角度
+        clockwise = cmd.get("clockwise", True) # 顺时针或逆时针
+        points = alg.drive.turnPointsCal(coords, course, theta, radius=radius, clockwise=clockwise)
+        self._set_waypoints(points[1:]) # 去掉当前点
+
+    def _FlyOnCourse_begin(self, cmd):
+        # 按航线飞行
+        waypoints = cmd["waypoints"]
+        speeds = cmd.get("speeds", None)
+        speed = cmd.get("speed", None)
+        events = cmd.get("events", None)
+        self._set_waypoints(waypoints, speeds=speeds, speed=speed, events=events)
+        # import pdb; pdb.set_trace()
+
+    def _FlyOnCourse_end(self, cmd):
+        # 按航线飞行
+        # 重复指令
+        repeat = cmd.get("repeat", False)
+        if repeat is True and ( not self._maneuver_cmds):
+            self._maneuver_cmds.appendleft(cmd)  # 重复执行，闭合曲线
+            return 
+        if isinstance(repeat, int) and repeat > 0:
+            cmd["repeat"] = repeat-1
+            self._maneuver_cmds.appendleft(cmd)  # 重复执行，闭合曲线
+            return 
+        # 折返指令
+        retrace = cmd.get("retrace", False)
+        if retrace is True and ( not self._maneuver_cmds):
+            waypoints = cmd["waypoints"]
+            cmd["waypoints"] = waypoints[::-1]
+            self._maneuver_cmds.appendleft(cmd)  # 继续
+            return 
+        if isinstance(retrace, int) and retrace > 0:
+            waypoints = cmd["waypoints"]
+            cmd["waypoints"] = waypoints[::-1]
+            cmd["retrace"] = retrace-1
+            self._maneuver_cmds.appendleft(cmd)  # 继续
+            return 
+
+    def _ReturnToBase_begin(self, cmd):
+        # 返回基地
+        aim_coords = self.unit.home_unit.coords.copy()
+        aim_coords[2] = self.coords[2]
+        speeds = cmd.get("speeds", None)
+        speed = cmd.get("speed", None)
+        if self.speed == 0:
+            speed = 300
+        self._set_waypoints([aim_coords], speeds=speeds, speed=speed)
+
+    def _ReturnToBase_end(self, cmd):
+        # 返回基地
+        if alg.geo.distance(self.coords[0:2], self.unit.home_unit.coords[0:2]) <= 1000:
+            event = message.event.EventReturnToBase("End")
+            self._send_event(self.unit.driver, event)
+        else:
+            self._maneuver_cmds.appendleft(cmd)
+
+    def _Decline_begin(self, cmd):
+        # 下降
+        pass
+
+    # 暂时不判断航程是否超过
+    # def _move(self):
+    #     super()._move()
+    #     if self._ref_unit: return
+    #     if self.distance > 0.5 * self.attr.dmax and (not self._send_rtb):
+    #         # 航程不足，需返回基地事件
+    #         # import pdb; pdb.set_trace()
+    #         if self.unit.home_unit:
+    #             self._send_rtb = True
+    #             event = message.event.EventReturnToBase("Begin")
+    #             self._send_event(self.unit.driver, event)
+
+
+class FixedWingMotor(_PlaneMotor):
+    def _TakeOff_begin(self, cmd):
+        # 起飞指令
+        # tf_dis = self.attr["tf_dis"] # 起飞阶段滑行距离
+        tf_time = self.attr["tf_time"] # 起飞时间
+        tf_speed = self.attr["speed"] # 起飞速度默认为与正常飞行速度一致
+        az_rad = np.deg2rad(self.course)
+        vx = tf_speed*np.sin(az_rad)
+        vy = tf_speed*np.cos(az_rad)
+        self._velocity = np.array([-vx, -vy, 0])
+        if self.speed > 0:
+            self._velocity = np.array([-vx, -vy, 0]) # 逆向起飞
+        else:
+            self._velocity = np.array([vx, vy, 0]) # 陆上固定机场
+        # dst_point =  self._coords + self._velocity*tf_time
+        # self._set_waypoints([dst_point])
+        self._set_duration(tf_time)
+
+    def _TakeOff_end(self, cmd):
+        # 起飞指令
+        prob = self.attr["tf_failure_prob"]
+        if np.random.random() < prob:
+            flag = "Failure"
+        else:
+            flag = "Success"   
+        # 发送起飞消息
+        event = message.event.EventTakeOff(self.unit, flag)
+        self._send_event(self.unit, event)
+        if flag == "Success":
+            self._maneuver_cmds.appendleft({"mode":"Climb"}) 
+            # self._begin_maneuver_cmd({"mode":"Climb"}) 
+
+    def _LandOn_begin(self, cmd):
+        # 开始着陆
+        print(self.engine.tick,f"{self.unit.name} 开始在{self.unit.home_unit.name}着陆")
+        aim_coords = self.unit.home_unit.coords.copy()
+        aim_coords[2] = 500
+        if self.speed == 0:
+            self._set_waypoints([aim_coords],speed = 300)
+        else:
+            self._set_waypoints([aim_coords])
+
+    def _LandOn_end(self, cmd):
+        # 着陆
+        print(self.engine.tick,f"{self.unit.name} 完成在{self.unit.home_unit.name}着陆")
+        prob = self.attr["lo_failure_prob"]
+        if np.random.random() < prob:
+            flag = "Failure"
+        else:
+            flag = "Success" 
+        event = message.event.EventLandOn(self.unit, flag)
+        self._send_event(self.unit, event)
+        
+    def _Hover_begin(self, cmd):
+        # 盘旋指令
+        coords = self.coords
+        course = self.course
+        # length = cmd.get("hover_length", self.attr["hover_length"]) # 跑道长度
+        # width = cmd.get("hover_width", self.attr["hover_width"]) # 跑道宽度
+        clockwise = cmd.get("clockwise", True) # 顺时针或逆时针
+        style = cmd.get("style", "O")
+        if style == "O":
+            theta = 360 # 盘旋角度
+            radius = cmd.get("hover_radius", self.attr["hover_radius"]) # 盘旋半径
+            points = alg.drive.turnPointsCal(coords, course, theta, radius=radius, clockwise=clockwise)
+        elif style == "8":
+            az = cmd["az"]
+            radius = cmd.get("hover_radius", self.attr["hover_radius"]) # 盘旋半径
+            points = alg.drive.path8PointsCal(coords, course, az, radius=radius, clockwise=clockwise)
+        elif style == "0":
+            # 跑道形
+            az = cmd["az"]
+            length = cmd["length"]
+            width = cmd["width"]
+            init_dis = cmd.get("init_dis", None)
+            points = alg.drive.path0PointsCal(coords, course, az, length, width, clockwise=clockwise, init_dis=init_dis)
+        self._set_waypoints(points[1:]) # 去掉当前点
+
+    def _Hover_end(self, cmd):
+        # 重复盘旋指令
+        repeat = cmd.get("repeat", True) # 默认Hover的repeat为True
+        if repeat is True and ( not self._maneuver_cmds):
+            self._maneuver_cmds.appendleft(cmd)  # 继续
+            return 
+        if isinstance(repeat, int) and repeat > 0:
+            cmd["repeat"] = repeat-1
+            self._maneuver_cmds.appendleft(cmd)  # 继续
+            return         
+
+
+class RotaryWingMotor(_PlaneMotor):
+    def _TakeOff_begin(self, cmd):
+        # 起飞指令 
+        tf_speed = self.attr["tf_speed"] # 起飞速度默认为与正常飞行速度一致
+        assert tf_speed > 0
+        tf_height = self.attr["tf_height"] # 起飞高度
+        tf_time = tf_height / tf_speed
+        self._velocity = np.array([0, 0, tf_speed], dtype=np.float)
+        self._set_duration(tf_time)
+
+    def _TakeOff_end(self, cmd):
+        # 起飞指令
+        prob = self.attr["tf_failure_prob"]
+        if np.random.random() < prob:
+            flag = "Failure"
+        else:
+            flag = "Success"   
+        # 发送起飞消息
+        event = message.event.EventTakeOff(self.unit, flag)
+        self._send_event(self.unit, event)
+        if flag == "Success":
+            self._velocity =  np.array([0, 0, 0], dtype=np.float)
+
+    def _LandOn_begin(self, cmd):
+        # 开始着陆
+        print(self.engine.tick,f"{self.unit.name} 开始在{self.unit.home_unit.name}着陆")
+        aim_coords = self.unit.home_unit.coords.copy()
+        aim_coords[2] = 500
+        if self.speed == 0:
+            self._set_waypoints([aim_coords],speed=300)
+        else:
+            self._set_waypoints([aim_coords])
+
+    def _LandOn_end(self, cmd):
+        # 着陆
+        print(self.engine.tick,f"{self.unit.name} 完成在{self.unit.home_unit.name}着陆")
+        prob = self.attr["lo_failure_prob"]
+        if np.random.random() < prob:
+            flag = "Failure"
+        else:
+            flag = "Success" 
+        event = message.event.EventLandOn(self.unit, flag)
+        self._send_event(self.unit, event)
+        
+    def _Hover_begin(self, cmd):
+        # 盘旋指令
+        print(f"Rotary Plane {self.unit.name} Begin Hover, speed is changed to 0 !!!")
+        self.change_speed(0, ignore = True)
+        duration = cmd.get("duration", 0)
+        if duration > 0:
+            self._set_duration(duration)
+
+class ShipMotor(ManeuverMotor):
+    """ 舰船机动组件 """
+    def __init__(self, unit, model):
+        super().__init__(unit, model)
+        self.is_back = False
+
+
+class ShipMotor2(ManeuverMotor):
+    def __init__(self, unit, model):
+        super().__init__(unit, model)
+        self.is_back = False
+
+    def _begin_maneuver_cmd(self):
+
+        self._completed_end_cmd = False
+        cmd = self._current_maneuver_cmd
+        if cmd["mode"] == "Advance":
+            # 前进指令　　　　
+            advance_time = self.attr["advance_time"]  # 前进时间
+            advance_speed = self.attr["speed"]  # 前进速度默认为与正常航行速度一致
+            az_rad = np.deg2rad(self.course)
+            vx = advance_speed * np.sin(az_rad)
+            vy = advance_speed * np.cos(az_rad)
+            self._velocity = np.array([vx, vy, 0])
+            # dst_point =  self._coords + self._velocity*tf_time
+            # self._set_waypoints([dst_point])
+            self._set_duration(advance_time)
+        elif cmd["mode"] == "Back":
+            # 倒退指令
+            reverse_time = self.attr["reverse_time"]  # 倒退时间
+            reverse_speed = self.attr["reverse_speed"]  # 倒退速度默认与正常前行速度一致
+            az_rad = np.deg2rad(self.course)
+            vx = reverse_speed * np.sin(az_rad)
+            vy = reverse_speed * np.cos(az_rad)
+            self._velocity = np.array([-vx, -vy, 0])
+            self.is_back = True
+            self._set_duration(reverse_time)
+        elif cmd["mode"] == "Turn":
+            # 转弯指令
+            coords = self.coords
+            course = self.course
+            radius = max(self.attr["turn_radius"], cmd.get("turn_radius", 0))  # 转弯半径
+            theta = cmd["theta"]  # 转弯角度
+            clockwise = cmd.get("clockwise", True)  # 顺时针或逆时针
+            points = alg.drive.turnPointsCal(coords, course, theta, radius=radius, clockwise=clockwise)
+            self._set_waypoints(points[1:])  # 去掉当前点
+        elif cmd["mode"] == "SailOnCourse":
+            # 按航线航行
+            import pdb;pdb.set_trace()
+            waypoints = cmd["waypoints"]
+            speeds = cmd.get("speeds", None)
+            speed = cmd.get("speed", None)
+            self._set_waypoints(waypoints, speeds=speeds, speed=speed)
+        else:
+            super()._begin_maneuver_cmd()
+
+    def _end_maneuver_cmd(self):
+        self._completed_end_cmd = True
+        cmd = self._current_maneuver_cmd
+        if cmd["mode"] == "Advance":
+            # 前进指令
+            pass
+        elif cmd["mode"] == "Back":
+            self.is_back = False
+        elif cmd["mode"] == "Turn":
+            # 转弯指令
+            repeat = cmd.get("repeat", False)
+            if not self._maneuver_cmds:
+                # 继续转弯
+                self._maneuver_cmds.appendleft(cmd) # 继续绕圈
+        elif cmd["mode"] == "SailOnCourse":
+            # 按航线航行
+            turn_back = cmd.get("turn_back", True)
+            if turn_back:
+                cmd["waypoints"] = cmd["waypoints"][::-1] # 按航线折返
+                cmd["turn_back"] = False
+                self._maneuver_cmds.appendleft(cmd)
+        else:
+            super()._end_maneuver_cmd()
+class ShipMotor052D(ShipMotor):
+    pass
+
+class ShipMotor054A(ShipMotor):
+    pass
+
+class NormalShip(ShipMotor2):
+    def __init__(self, unit, model):
+        super().__init__(unit, model)
+        self._motor = self.unit.motor
+        self._cplan = None  # 位置计划
+        self._splan = None  # 标量速度 计划，可与位置计划相容
+        self._tcplan = None  # 时间、位置计划
+        self._simple_plan = None  # 简单一次性机动指令
+        self._quaternions = collections.deque()  # 时间、位置四元数序列
+        self._points = collections.deque()  # 位置序列
+        self._is_adjust_course = True  # cplan和splan使用
+        self._repeat_times = None  # cplan使用
+        self._upper_tick = None  # cplan和splan使用
+        self._end_tick = None  # splan和simple_plan使用
+        self._move_plans = collections.deque()  # 机动计划序列
+
+    def set_move_plan(self, cplan = None, splan = None,tcplan = None,simple_plan = None, mode = "clear"):
+        """受领或设置航行计划任务并着手计算并下发
+
+
+        Args:
+            cplan: 三维位置计划, dict
+            splan: 标量速度计划,dict
+            tcplan: 时间、位置计划,list
+            simple_plan: 简单一次性机动指令，如改变速度、改变航向等,dict
+            mode: 模式
+                append: 追加模式，追加到机动计划序列之后
+                clear: 立即模式，清空当前机动计划序列，并立即执行
+        """
+        assert cplan or splan or tcplan or simple_plan, "必有一个非空"
+        assert not ((cplan or splan) and tcplan and simple_plan), "不能同时非空"
+        if mode == "clear":
+            self._cplan = None
+            self._splan = None
+            self._tcplan = None
+            self._simple_plan = None
+            self._move_plans.append([cplan, splan, tcplan, simple_plan])
+            self._work()  # 立即工作
+        else:
+            self._move_plans.append([cplan, splan, tcplan, simple_plan])
+
+    def _handle_move_plan(self, cplan, splan, tcplan, simple_plan):
+        self._cplan = cplan
+        self._splan = splan
+        self._tcplan = tcplan
+        self._simple_plan = simple_plan
+        self._upper_tick = self.engine.tick
+        if simple_plan:
+            if "duration" in simple_plan:
+                self._end_tick = self.engine.tick + simple_plan["duration"]*1000
+            else:
+                self._end_tick = self.engine.tick  # 不持续
+            self._handle_simple_plan()
+        if cplan:
+            self._is_adjust_course = True
+            self._handle_cplan()
+        if splan:
+            if "duration" in splan:
+                self._end_tick = self.engine.tick + splan["duration"]*1000
+            else:
+                self._end_tick = np.inf
+        if tcplan:
+            self._quaternions = collections.deque()
+            self._quaternions.extend(tcplan.copy())
+
+    def _handle_simple_plan(self):
+        """简单的一次性机动指令
+        """
+        if self._simple_plan['mode'] == 'velocity':
+            self._motor.change_velocity(np.array(self._simple_plan['velocity']))
+        elif self._simple_plan['mode'] == 'speed':
+            self._motor.change_speed(self._simple_plan['speed'])
+        elif self._simple_plan['mode'] == 'course':
+            self._motor.change_course(self._simple_plan['course'])
+        elif self._simple_plan['mode'] == 'acce':
+            self._motor.change_acce(np.array(self._simple_plan['acce']))
+        else:
+            raise RuntimeError("unknown simple plan %s" % self._cplan['mode'])
+
+    def _handle_cplan(self):
+        """   根据航行计划任务生成速度和时刻数组
+        """
+        self._points = collections.deque()
+        points = []
+        if self._cplan['mode'] == 'Turn':  # 转弯
+            self._repeat_times = 1  # 不重复
+            coords = self.coords
+            course = self.course
+            theta = self._cplan["theta"]  # 转弯角度
+            radius = self._cplan["radius"]  # 转弯半径
+            clockwise = True if "clockwise" not in self._cplan else self._cplan["clockwise"]
+            self._cplan["clockwise"] = clockwise
+            sign = 1 if clockwise else -1
+            self._cplan["end_course"] = course + sign*theta
+            points = np.array(alg.drive.turnPointsCal(coords, course, theta, radius=radius, clockwise=clockwise))
+            self._cplan["points"] = points[1:]  # 去掉当前点
+            # 或者直接
+            # self.motor.add_maneuver_cmd({"mode": "Turn"})
+        elif self._cplan["mode"] == "Advance":  # 前进
+            self.motor.add_maneuver_cmd({"mode": "Advance"})
+        elif self._cplan["mode"] == "Back":  # 倒退
+            self.motor.append_manuever_cmd({"mode": "Back"})
+        else:
+            raise RuntimeError("unknown coords plan %s" % self._cplan['mode'])
+        self._points.extend(points)
+
+    def _work(self):
+        # 判断当前的机动计划是否执行完毕
+        if not (self._cplan or self._splan or self._tcplan or self._simple_plan):
+            if self._move_plans:
+                cplan, splan, tcplan, simple_plan = self._move_plans.popleft()
+                self._handle_move_plan(cplan, splan, tcplan. simple_plan)
+        # 执行机动计划
+        if self._simple_plan:
+            if self.engine.tick >= self._end_tick:
+                self._simple_plan = None
+        if self._tcplan:
+            self._quaternions_adjust()
+        if self._splan:
+            self._speed_adjust()  # 调整速度大小
+        if self._cplan:
+            self._course_adjust()  # 根据航路点调整速度方向
+
+    def _quaternions_adjust(self):
+        assert self._motor.state == "MOVE"
+        t1, *pos1 = self._quaternions[0]
+        period = self._motor._state_period
+        gap = max(self._motor.speed*period, MIN_DIS)  # 如果速度很小，则最小取MIN_DIS = 100m
+        if alg.geo.distance(self._motor.coords, pos1) < gap:
+            self._quaternions.popleft()
+            if self._quaternions:
+                t2, *pos2 = self._quaternions[0]
+                v = (np.array(pos2, dtype = np.float) - self._motor.coords)/(t2-t1)
+                self._motor.change_velocity(v)
+            else:
+                self._tcplan = None
+
+    def _speed_adjust(self):
+        """  调整标量速度的大小
+        """
+        if self.engine.tick > self._end_tick:
+            self._splan = None
+            return
+        else:
+            raise RuntimeError("unknown velocity plan %s" % self._splan['mode'])
+
+    def _course_adjust(self):
+        if self._points:
+            assert self._motor.state == "Move"
+            period = self._state_period
+            while self._points:
+                # 如果多个点均满足条件，均pop
+                if alg.geo.distance(self._motor.coords, self._points[0]) < self._motor.speed*period:
+                    self._points.popleft()
+                    self._is_adjust_course = True
+                else:
+                    break
+        if self._points and self._is_adjust_course:
+            v = alg.drive.velocity(self._motor.speed, self._motor.coords, self._points[0])
+            self._motor.change_velocity(v)
+            self._is_adjust_course = False
+        if not self._points:
+            self._repeat_times -= 1
+            if self._repeat_times > 0:
+                points = self._cplan["points"]
+                self._points.extend(points)
+                self._course_adjust()
+            else:
+                if self._cplan["mode"] == "turn":
+                    end_course = self._cplan["end_course"]
+                    self._motor.change_course(end_course)  # 调整航向，修正转弯后航向不合理的现象
+                self._cplan = None
+
+class ShipMotor3(NormalShip):
+    def __init__(self, unit, model):
+        super().__init__(unit, model)
+        self._speed_df = self.engine.db[self.attr.speed_data]
+        self._turn_df = self.engine.db[self.attr.turn_data]
+        self._inertia_df = self.engine.db[self.attr.inertia_data]
+        self._main_engine = self.attr.main_engine  # 主机
+        self._working_condition = None  # 工况，初始状态为None
+        self._working_condition_log = collections.deque()  # 未来的工况序列
+        self._is_back_log = collections.deque()  # 未来的是否倒车状态序列
+        self._mplan = None  # 当前的机动计划
+        self._mplan_num = 0  # 当前的机动计划对应的分解机动计划数量
+        self._motor_plans = collections.deque()  # 机动计划序列
+
+    def set_move_plan(self, cplan=None, splan=None, tcplan=None, simple_plan=None, mode="clear"):
+        raise RuntimeError("禁用该方法")
+
+    def set_motor_plan(self, mplan, mode = "clear"):
+        if mode == "clear":
+            self._cplan = None
+            self._splan = None
+            self._tcplan = None
+            self._simple_plan = None
+            self._mplan = None
+            self._mplan_num = 0
+            self._motor_plans.append(mplan)
+            self._work() # 立即工作
+        else:
+            self._motor_plans.append(mplan)
+
+    def _query_speed(self, cmd):
+        df = self._speed_df
+        df = df[df["主机"]==self._main_engine]
+        assert cmd in set(df["工况"].values)
+        df = df[df["工况"] == cmd]
+        speed = df.values[0][-1] * 1.852 / 3.6  # 节转换为m/s
+        tag = 1  # 速度方向是否与原方向相反(倒车),1:相同,-1:相反
+        if (self._working_condition is None) or ("停车" in self._working_condition):
+            if "进" in cmd:
+                tag = 1
+            elif "退" in cmd:
+                tag = -1
+            else:
+                raise RuntimeError("工况不合理")
+        elif "退" in self._working_condition:
+            if "进" in cmd or "停车" in cmd:
+                tag = -1
+            elif "退" in cmd:
+                tag = 1
+            else:
+                raise RuntimeError("工况不合理")
+        elif "进" in self._working_condition:
+            if "退" in cmd or "停车" in cmd:
+                tag = -1
+            elif "进" in cmd:
+                tag = 1
+            else:
+                raise RuntimeError("工况不合理")
+        else:
+            raise RuntimeError("工况不合理")
+        return speed * tag
+
+    def _query_inertia(self, wc1, wc2):
+        df = self._inertia_df
+        df = df[df["主机"] == self._main_engine]
+        flag = wc1 + ":" + wc2
+        if flag in set(df["工况"].values):
+            df = df[df["工况"] == flag]
+            inertia_dis = df.values[0][-1]
+            inertia_time = df.values[0][-2]
+            return inertia_dis, inertia_time
+        else:
+            return None
+
+    def _query_turn(self, wc, duojiao):
+        df = self._turn_df
+        df = df[df["主机"] == self._main_engine]
+        assert wc in set(df["工况"].values)
+        df = df[df["工况"] == wc]
+        assert duojiao in set(df["舵角(度)"].values)
+        df = df[df["舵角(度)"] == duojiao]
+        speed = df.values[0][3] * 1.852 / 3.6  # 节转换为m/s
+        r = df.values[0][4] * 0.5  # 半径
+        return speed, r
+
+    def _handle_motor_plan(self, mplan):
+        assert self._working_condition not in ["惯性", "转弯"], "   可能是下达clear模式命令的时机不对"
+        self._mplan = mplan
+        if mplan["mode"] == "speed":
+            cmd = mplan["cmd"]
+            duration = mplan.get("duration", 0)  # 持续时间（不含惯性时间）
+            speed = self._query_speed(cmd)
+            if self._working_condition is None:
+                # 初始状态不考虑惯性，但考虑前进后退
+                sign = -1 if "退" in cmd else 1
+                is_back = True if "退" in cmd else False
+                super().set_move_plan(simple_plan={"mode":"speed", "speed":speed*sign, "duration":duration}, mode="append")
+                self._working_condition_log.append(cmd)
+                self._is_back_log.append(is_back)
+                self._mplan_num = 1
+            else:
+                out = self._query_inertia(self._working_condition, cmd)
+                if out:
+                    inertia_dis, inertia_time = out
+                    # assert duration > inertia_time, f"{cmd}的持续时间应大于惯性时间{inertia_time:.2f}" # 持续时间不含惯性时间
+                    # 双段加速，每段加速时间各为总时间的一半，计算每段的加速度
+                    v1 = self.speed
+                    v2 = speed
+                    t = inertia_time
+                    d = inertia_dis
+                    a2 = (v2 - v1) / t - 4 * d / (t ** 2) + 2 * (v1 + v2) / t
+                    a1 = 2 * (v2 - v1) / t - a2
+                    acce1 = a1 / self.speed * self.velocity
+                    acce2 = a2 / self.speed * self.velocity
+                    # import pdb; pdb.set_trace()
+                    num = 0
+                    if a1 < 0 and -v1/a1 < t/2:
+                        super().set_move_plan(simple_plan={"mode": "acce", "acce": acce1, "duration": -v1 / a1}, mode="append")
+                        self._working_condition_log.append("惯性")
+                        self._is_back_log.append(self.unit.motor.is_back)
+                        num += 1
+                        super().set_move_plan(simple_plan={"mode": "acce", "acce": acce1, "duration": t / 2 + v1 / a1}, mode="append")
+                        self._working_condition_log.append("惯性")
+                        self._is_back_log.append(not self._is_back_log[-1])
+                        num += 1
+                    else:
+                        super().set_move_plan(simple_plan={"mode": "acce", "acce": acce1, "duration": t / 2}, mode="append")
+                        self._working_condition_log.append("惯性")
+                        self._is_back_log.append(self.unit.motor.is_back)
+                        num += 1
+                    v_mid = v1 + a1 * inertia_time / 2  # 中间时刻的速度
+                    if v_mid * a2 < 0 and -v_mid / a2 < inertia_time / 2:
+                        super().set_move_plan(simple_plan={"mode": "acce", "acce": acce2, "duration": -v_mid / a2}, mode="append")
+                        self._working_condition_log.append("惯性")
+                        self._is_back_log.append(self._is_back_log[-1])
+                        num += 1
+                        super().set_move_plan(simple_plan={"mode": "acce", "acce": acce2, "duration": t / 2 + v_mid / a2}, mode="append")
+                        self._working_condition_log.append("惯性")
+                        self._is_back_log.append(not self._is_back_log[-1])
+                        num += 1
+                    else:
+                        super().set_move_plan(simple_plan={"mode": "acce", "acce": acce2, "duration": t / 2}, mode="append")
+                        self._working_condition_log.append("惯性")
+                        self._is_back_log.append(self._is_back_log[-1])
+                        num += 1
+                    super().set_move_plan(simple_plan={"mode": "acce", "acce": [0, 0, 0], "duration": duration}, mode="append")
+                    self._working_condition_log.append(cmd)
+                    self._is_back_log.append(self._is_back_log[-1])
+                    num += 1
+                    self._mplan_num = num
+                else:
+                    # 按默认惯性加速度处理，并考虑前进和后退
+                    v1 = self.speed
+                    v2 = speed
+                    t = abs(v2 - v1) / self.attr.default_acce
+                    # assert duration >= t, f"{cmd}的持续时间应大于惯性时间{t:.2f}" # 持续时间不含惯性时间
+                    a = np.sign(v2 - v1) * self.attr.default_acce
+                    acce = a / self.speed * self.velocity
+                    num = 0
+                    if a < 0 and -v1 / a < t:
+                        super().set_move_plan(simple_plan={"mode": "acce", "acce": acce, "duration": -v1 / a}, mode="append")
+                        self._working_condition_log.append("惯性")
+                        self._is_back_log.append(self.unit.motor.is_back)
+                        num += 1
+                        super().set_move_plan(simple_plan={"mode": "acce", "acce": acce, "duration": t + v1 / a}, mode="append")
+                        self._working_condition_log.append("惯性")
+                        self._is_back_log.append(not self._is_back_log[-1])
+                        num += 1
+                    else:
+                        super().set_move_plan(simple_plan={"mode": "acce", "acce": acce, "duration": t}, mode="append")
+                        self._working_condition_log.append("惯性")
+                        self._is_back_log.append(self.unit.motor.is_back)
+                        num += 1
+                    super().set_move_plan(simple_plan={"mode": "acce", "acce": [0, 0, 0], "duration": duration}, mode="append")
+                    self._working_condition_log.append(cmd)
+                    self._is_back_log.append(self._is_back_log[-1])
+                    num += 1
+                    self._mplan_num = num
+        elif mplan["mode"] == "turn":
+            assert "进" in self._working_condition  # 只有在前进状态下才能转弯
+            assert not self.unit.motor.is_back  # 只有在前进状态下才能转弯,与上句等价
+            duojiao = mplan["duojiao"]  # 舵角
+            theta = mplan["theta"]  # 转弯角度
+            clockwise = mplan.get("clockwise", True)
+            speed, r = self._query_turn(self._working_condition, duojiao)
+            super().set_move_plan(simple_plan={"mode": "speed", "speed": speed}, mode="append")
+            super().set_move_plan(cplan={"mode": "turn", "radius": r, "theta": theta, "clockwise": clockwise}, mode="append")
+            speed = self._query_speed(self._working_condition)
+            super().set_move_plan(simple_plan={"mode": "speed", "speed": speed}, mode="append")
+            self._working_condition_log.extend(["转弯", "转弯", self._working_condition])
+            self._is_back_log.extend([False, False, False])
+            self._mplan_num = 3
+        else:
+            raise RuntimeError("unknown motor plan mode")
+
+        def _work(self):
+            # 判断当前的机动计划和驾驶计划是否执行完毕
+            if not (self._cplan or self._splan or self._tcplan or self._simple_plan):
+                if self._mplan_num == 0:
+                    self._mplan = None
+                    if self._motor_plans:
+                        mplan = self._motor_plans.popleft()
+                        self._handle_motor_plan(mplan)
+                        # 日志输出
+                        if mplan["mode"] == "speed":
+                            s = f" 直航 切换工况[{mplan['cmd']}] 持续时间[{mplan.get('duration', 0)}s]"
+                        elif mplan["mode"] == "turn":
+                            s = f" 转弯 舵角[{mplan['duojiao']}度] 转弯角度[{mplan['theta']}度]"
+                        self.engine.log_decision("机动指令 "+s)
+                if self._move_plans:
+                    cplan, splan, tcplan, simple_plan = self._move_plans.popleft()
+                    self._handle_move_plan(cplan, splan, tcplan, simple_plan)
+                    # 更新工况, 否则停留在上一个状态
+                    self._working_condition = self._working_condition_log.popleft()
+                    self.unit.motor.is_back = self._is_back_log.popleft()
+                    flag = "后退" if self.unit.motor.is_back else "前进"
+                    self._mplan_num -= 1
+                    if self._mplan_num < 1:
+                        wc = self._working_condition
+                    else:
+                        wc = self._working_condition_log[self._mplan_num-1]+"[" + self._working_condition +"]"
+                    a = np.linalg.norm(self.acce)
+                    self.engine.log_decision(f"分解指令 工况:{wc}[{flag}] 速度:{self.speed:.2f}m/s {self.speed*3.6/1.852:.2f}节 加速度:{a:.5f}m/s^2")
+
+            # 执行机动计划
+            if self._simple_plan:
+                if self.engine.tick >= self._end_tick:
+                    self._simple_plan = None
+            if self._tcplan:
+                self._quaternions_adjust()
+            if self._splan:
+                self._speed_adjust() # 调整速度大小
+            if self._cplan:
+                self._course_adjust() # 根据航路点调整速度方向
+
+        def check(self):
+            assert self.unit.motor.__class__.__name__ == "ShipMotor2"
+
+
+class Ship052D(ShipMotor3):
+    pass
+
+
+class Ship054A(Ship052D):
+    def __init__(self, unit, model):
+        super().__init__(unit, model)
+        self._sailing_mode = self.attr.sailing_mode
+
+    def _query_inertia(self, wc1, wc2):
+        df = self._inertia_df
+        df = df[df["航行模式"] == self._sailing_mode]
+        flag = wc1 + ":" + wc2
+        if flag in set(df["工况"].values):
+            df = df[df["工况"] == flag]
+            inertia_dis = df.values[0][2]
+            inertia_time = df.values[0][3]
+            return inertia_dis, inertia_time
+        else:
+            return None
+
+    def check(self):
+        assert self.unit.motor.__class__.__name__ == "ShipMotor2"
+        assert self._main_engine == "柴油机"
+
+class SubmarineMotor(ManeuverMotor):
+    ''' 潜艇机动组件
+    '''
+    def __init__(self, unit, model):
+        super().__init__(unit, model)
+    
+    def _Rise_begin(self, cmd, cmd_data=None):
+        # 上浮指令
+        self._rise_last_velocity = self._velocity.copy()
+        depth = self.coords[2]
+        dest_depth = cmd['dest_depth']
+        rise_speed = cmd['speed']
+        if depth == 0 or dest_depth < depth or rise_speed <= 0:
+            if cmd_data is not None:
+                cmd_data.res = '失败'     
+            return
+        rise_time = (dest_depth - depth) / rise_speed
+        self._velocity = np.array([0, 0, rise_speed])
+        self._set_duration(rise_time)
+
+    def _Rise_end(self, cmd):
+        self.change_velocity(self._rise_last_velocity, ignore=True)
+        
+    def _Dive_begin(self, cmd, cmd_data=None):
+        # 下潜指令
+        self._dive_last_velocity = self._velocity.copy()
+        depth = self.coords[2]
+        dest_depth = cmd['dest_depth']
+        dive_speed = cmd['speed']
+        if depth == 0 or dest_depth > depth or dive_speed <= 0:
+            if cmd_data is not None:
+                cmd_data.res = '失败'     
+            return
+        rise_time = (dest_depth - depth) / dive_speed
+        self._velocity = np.array([0, 0, dive_speed])
+        self._set_duration(rise_time)
+
+    def _Dive_end(self, cmd):
+        self.change_velocity(self._dive_last_velocity, ignore=True)

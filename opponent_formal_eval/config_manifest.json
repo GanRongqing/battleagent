@@ -1,0 +1,71 @@
+{
+ "agent_hash": "a7842b29c81cc567ea63cae262cb6ab0b9d9bd9df90903c4115eaa6e6c6f0f66",
+ "skill_hash": "155b02019dc92c6e6c0095949439a413cd86310ad1026cd394ad185c3d13552e",
+ "prompt_hash": "fb4c5641b4ea55c7c38fc2d36894e3a9765fffd346e10c5bbdd9036a303fce54",
+ "opponent_profiles_hash": "377fcc0ef9829c7f510963ab284c84b36094a900d0d575247977e16eac1f9661",
+ "scenario_builder_hash": "413525c8168730bc3dd4110a85882229398e65845ba0d14e743e9183676b33c5",
+ "temp_py_hash": "a9d9ea32b7a70bfaf59fb7827b75093c9d8b17fc0fd004b74cadff00b02e4f74",
+ "evaluator_version": "maritime_metrics.py:27eed0649648",
+ "simulator_version": "tzb_engine.py:396ba7a3e294 engine.py:58aab5ad4cdb",
+ "git_commit": "4c7594ff16edcda4bda62a9da7f75f1b7b3ce1b6",
+ "git_dirty": true,
+ "experiment_time": "2026-08-27 23:58:35",
+ "seeds": [
+  1001,
+  1002,
+  1003,
+  1004,
+  1005,
+  1006,
+  1007,
+  1008,
+  1009,
+  1010,
+  1011,
+  1012,
+  1013,
+  1014,
+  1015,
+  1016,
+  1017,
+  1018,
+  1019,
+  1020,
+  1021,
+  1022,
+  1023,
+  1024,
+  1025,
+  1026,
+  1027,
+  1028,
+  1029,
+  1030
+ ],
+ "settings": {
+  "S1": {
+   "friendly_usv": 5,
+   "friendly_uav": 5,
+   "enemy_combat_usv": 10,
+   "enemy_uav": 0
+  },
+  "S2": {
+   "friendly_usv": 10,
+   "friendly_uav": 10,
+   "enemy_combat_usv": 20,
+   "enemy_uav": 0
+  },
+  "S3": {
+   "friendly_usv": 15,
+   "friendly_uav": 15,
+   "enemy_combat_usv": 30,
+   "enemy_uav": 0
+  }
+ },
+ "opponents": [
+  "B0_RANDOM",
+  "B3_ADAPTIVE"
+ ],
+ "paired_seeds": true,
+ "notes": "B0 column reuses frozen formal run (formal_eval_20260825) + game-log pressure metrics; B3 column fresh with live pressure + B3 event counters. paired by initial scenario seed; trajectories may diverge after policy interaction."
+}

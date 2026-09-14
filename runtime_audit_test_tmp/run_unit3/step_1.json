@@ -1,0 +1,106 @@
+{
+ "run_id": "unit3",
+ "audit_step_id": 1,
+ "prev_audit_step_id": 0,
+ "sim_time": 900.0,
+ "wall_time": 3000.0,
+ "A_raw_observation": {
+  "status": {
+   "局内时间": "00:05:00",
+   "已结束": false,
+   "对局结果": null,
+   "资源快照": {
+    "统计": {
+     "usv_total": 1,
+     "usv_alive": 1,
+     "uav_total": 0,
+     "uav_alive": 0,
+     "uav_flying": 0,
+     "enemy_visible": 0
+    },
+    "单位状态": {
+     "white_usv_states": [
+      {
+       "name": "white_usv1",
+       "position": [
+        100000,
+        300000
+       ],
+       "is_alive": true,
+       "is_frozen": false,
+       "is_locking": false,
+       "locking_unit": null,
+       "battery_pct": 100
+      }
+     ],
+     "white_uav_states": []
+    },
+    "观察信息": {
+     "white_observation": {
+      "雷达捕获": [],
+      "被动告警": []
+     }
+    }
+   },
+   "奖励信号": {
+    "black_killed": 0,
+    "black_hit": 0,
+    "white_ship_killed": 0,
+    "white_uav_killed": 0,
+    "black_breakthrough": 0
+   }
+  },
+  "obs": null,
+  "legal_actions": {},
+  "truncated": []
+ },
+ "B_fused_state": {},
+ "E_intermediate": {
+  "intent": null,
+  "allocator": null,
+  "controller": null
+ },
+ "F_execution_feedback": {
+  "requested_actions": null,
+  "filtered_actions": null,
+  "apply_payload": null,
+  "apply_response": null,
+  "feedback_link": null
+ },
+ "C_llm_request": {
+  "request_id": 1,
+  "generation": 1,
+  "source_step_id": 1,
+  "source_state_signature": [
+   5,
+   1,
+   0,
+   1,
+   0,
+   0,
+   1.0,
+   0,
+   true,
+   0,
+   2
+  ],
+  "model": "deepseek-v4-flash",
+  "max_tokens": 2000,
+  "thinking_disabled": true,
+  "system": "你是 Maritime Fleet Commander。\n你不直接控制舰艇。\n你的任务是根据当前有限观测的战术摘要，给底层 deterministic controllers 提供战略级资源配置建议。\n你必须遵守 Maritime Commander Skill。\n你不知道敌方当前使用哪个 script，不能假设固定敌人数量、位置、航向或策略。\n敌方的运动可能不确定或正在机动。预测航迹只是信念，不是真值。\n不要输出 move / lock / fly 等具体动作。\n只输出符合 schema 的 JSON StrategicIntent。\n你的建议会被 deterministic controller 和 safety layer 校验。\n\n目标优先级：\n1. 防止突破\n2. 降低高威胁目标\n3. 建立局部兵力优势\n4. 保留必要侦察与预备力量\n5. 避免无意义地把全部兵力同时 commit\n\n在不确定敌情下：不要把预测当成真值。\n当信息质量下降（低置信/高不确定 lost track）：优先考虑 UAV reacquire，而不是直接大量投入 USV；\n但若突破风险极高，必须立即拦截。\n对已经稳定 engagement 的目标：不要无意义重新分配已锁 USV。\n\n只输出 JSON，不要 markdown。\n\n=== Maritime Commander Skill ===\n\ntest\n\n=== Output Schema ===\n\n输出 JSON StrategicIntent，字段与约束：\n{\n  \"posture\": \"balanced\",                 // cautious | balanced | aggressive\n  \"focus_level\": 2,                      // int 1~3（常规交战每目标攻击者数）\n  \"emergency_focus_level\": 3,            // int 2~4（临近突破高威胁的攻击者数）\n  \"reserve_ratio\": 0.20,                 // float 0~0.5（预备比例 = 预备USV/当前可用USV；\n                                         //   规模无关：敌情不明时高，临近突破时可降到 0）\n  \"overmatch_policy\": \"balanced\",        // economical | balanced | decisive（局部数量优势力度）\n  \"recon_mode\": \"balanced\",              // broad_search | balanced | screen_priority | reacquire_priority\n  \"standoff_preference\": \"medium\",       // low | medium | high（交战保持距离偏好）\n  \"uncertainty_tolerance\": 0.35,         // float 0~1（对不确定的容忍度；低=更谨慎提交 USV）\n  \"threat_bias\": \"breakthrough_eta\",     // breakthrough_eta | nearest | highest_confidence | balanced\n  \"priority_tracks\": [\"E3\",\"E7\"],        // 只能是 CURRENT TACTICAL STATE 中当前存在的 track id（小规模兼容）\n  \"uav_mode\": \"search_and_reacquire\",    // broad_search | search_and_reacquire | focused_reacquire\n  \"uav_priority_tracks\": [\"E7\"],         // 只能是当前存在的 track id\n  \"recon_aggressiveness\": 0.7,           // 0~1（侦察投入程度）\n  \"engagement_aggressiveness\": 0.7,      // 0~1（交战积极程度）\n  \"coverage_priority\": 0.6,              // 0~1（全局覆盖/重搜投入偏好；mission-unresolved 时高）\n  \"priority_clusters\": [\"cluster_1\"],    // 只能是 THREAT CLUSTERS 中出现的 cluster id（首选）\n  \"reason\": \"短文本，仅日志用\"\n}\n注意：\n- priority_clusters 只能选战术摘要中 THREAT CLUSTERS 出现的 id；无重点给空数组。\n- priority_tracks / uav_priority_tracks 只能选当前存在的 track id（小规模兼容，非主接口）。\n- 输出必须是合法 JSON 对象，不要 markdown 围栏，不要解释。",
+  "user": "CURRENT TACTICAL STATE:\n\nsummary\n\nReturn the next StrategicIntent."
+ },
+ "D_llm_response": {
+  "request_id": 1,
+  "source_step_id": 1,
+  "stale": false,
+  "applied": true,
+  "rejected_reason": null,
+  "raw_text": "{\"posture\":\"aggressive\",\"focus_level\":3,\"reason\":\"t\"}",
+  "parsed": "posture=aggressive focus=3 emergency=3 reserve_ratio=0.20 reserve_usvs=auto bias=breakthrough_eta priority=[] uav_mode=search_and_reacquire uav_priority=[] recon=0.6 engage=0.7 overmatch=balanced recon_mode=balanced standoff=medium unc_tol=0.35",
+  "latency": 0.0,
+  "error": null,
+  "source": "deepseek",
+  "sim_time": 0.0
+ }
+}

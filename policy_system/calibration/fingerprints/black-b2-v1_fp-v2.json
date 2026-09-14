@@ -1,0 +1,430 @@
+{
+  "policy_id": "B2_COORDINATED_PRESSURE",
+  "fingerprint_version": "fp-v2",
+  "scenario": "S2",
+  "seed_set": [
+    7001,
+    7002,
+    7003,
+    7004,
+    7005,
+    7006,
+    7007,
+    7008,
+    7009,
+    7010
+  ],
+  "episode_count": 10,
+  "behavioral": {
+    "adaptation": {
+      "adaptive_replan_count": {
+        "n": 10,
+        "mean": 0,
+        "median": 0.0,
+        "p25": 0,
+        "p75": 0,
+        "std": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "lane_shift_count": {
+        "n": 10,
+        "mean": 0,
+        "median": 0.0,
+        "p25": 0,
+        "p75": 0,
+        "std": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "dispersion_event_count": {
+        "n": 10,
+        "mean": 0,
+        "median": 0.0,
+        "p25": 0,
+        "p75": 0,
+        "std": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "detected_white_event_count": {
+        "n": 10,
+        "mean": 0,
+        "median": 0.0,
+        "p25": 0,
+        "p75": 0,
+        "std": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "replan_frequency_per_1000s": {
+        "n": 10,
+        "mean": 0.0,
+        "median": 0.0,
+        "p25": 0.0,
+        "p75": 0.0,
+        "std": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "contact_to_replan_latency": {
+        "n": 10,
+        "mean": null,
+        "median": null,
+        "p25": null,
+        "p75": null,
+        "std": null,
+        "min": null,
+        "max": null
+      }
+    },
+    "coordination": {
+      "arrival_front_sync_std_s": {
+        "n": 10,
+        "mean": 1020.2,
+        "median": 469.95,
+        "p25": 148.1,
+        "p75": 827.0,
+        "std": 1302.083,
+        "min": 117.3,
+        "max": 3586.4
+      },
+      "arrival_front_mean_s": {
+        "n": 10,
+        "mean": 2440.39,
+        "median": 2154.65,
+        "p25": 2040.4,
+        "p75": 2328.1,
+        "std": 631.9338,
+        "min": 2016.3,
+        "max": 3949.2
+      },
+      "approach_bearing_entropy": {
+        "n": 10,
+        "mean": 1.2297,
+        "median": 1.2146,
+        "p25": 1.113,
+        "p75": 1.3875,
+        "std": 0.1471,
+        "min": 1.0332,
+        "max": 1.4658
+      },
+      "group_arrival_sync": {
+        "n": 10,
+        "mean": 1020.2,
+        "median": 469.95,
+        "p25": 148.1,
+        "p75": 827.0,
+        "std": 1302.083,
+        "min": 117.3,
+        "max": 3586.4
+      }
+    },
+    "spatial": {
+      "approach_lane_entropy": {
+        "n": 10,
+        "mean": 1.2297,
+        "median": 1.2146,
+        "p25": 1.113,
+        "p75": 1.3875,
+        "std": 0.1471,
+        "min": 1.0332,
+        "max": 1.4658
+      },
+      "mean_visible_group_count": {
+        "n": 10,
+        "mean": 3.97,
+        "median": 3.9,
+        "p25": 3.6,
+        "p75": 4.3,
+        "std": 0.4451,
+        "min": 3.3,
+        "max": 4.7
+      },
+      "mean_group_spacing_km": {
+        "n": 10,
+        "mean": 91921.1,
+        "median": 90063.5,
+        "p25": 87579.0,
+        "p75": 94045.0,
+        "std": 6607.0822,
+        "min": 85012.0,
+        "max": 108444.0
+      },
+      "peak_simultaneous_visible": {
+        "n": 10,
+        "mean": 18.5,
+        "median": 19.0,
+        "p25": 18.0,
+        "p75": 20.0,
+        "std": 1.6882,
+        "min": 15.0,
+        "max": 20.0
+      },
+      "visible_pairwise_dist_km_median": {
+        "n": 10,
+        "mean": 76.1224,
+        "median": 73.2735,
+        "p25": 68.1965,
+        "p75": 85.1601,
+        "std": 8.7008,
+        "min": 65.2331,
+        "max": 92.1982
+      },
+      "visible_y_spread_km_median": {
+        "n": 10,
+        "mean": 178.0419,
+        "median": 168.9161,
+        "p25": 161.1011,
+        "p75": 198.1771,
+        "std": 22.9062,
+        "min": 143.3809,
+        "max": 214.0603
+      },
+      "visible_peak_count": {
+        "n": 10,
+        "mean": 18.4,
+        "median": 18.5,
+        "p25": 18,
+        "p75": 20,
+        "std": 1.4967,
+        "min": 15,
+        "max": 20
+      },
+      "visible_window_start_s": {
+        "n": 10,
+        "mean": 1980.3,
+        "median": 1987.0,
+        "p25": 1945,
+        "p75": 2020,
+        "std": 44.2765,
+        "min": 1894,
+        "max": 2039
+      }
+    },
+    "temporal": {
+      "first_contact_time": {
+        "n": 10,
+        "mean": 1857.3,
+        "median": 1859.0,
+        "p25": 1847.0,
+        "p75": 1865.0,
+        "std": 10.0703,
+        "min": 1842.0,
+        "max": 1875.0
+      },
+      "first_engagement_time": {
+        "n": 10,
+        "mean": 7394.4,
+        "median": 7390.5,
+        "p25": 7375.0,
+        "p75": 7396.0,
+        "std": 25.0008,
+        "min": 7371.0,
+        "max": 7458.0
+      },
+      "first_attack_time": {
+        "n": 10,
+        "mean": 8312.6,
+        "median": 8301.5,
+        "p25": 8293.0,
+        "p75": 8327.0,
+        "std": 28.2319,
+        "min": 8278.0,
+        "max": 8371.0
+      },
+      "resolution_time": {
+        "n": 10,
+        "mean": 26145.0,
+        "median": 25815.5,
+        "p25": 24450.0,
+        "p75": 28234.0,
+        "std": 2148.3995,
+        "min": 23121.0,
+        "max": 29806.0
+      },
+      "phase_switch_count": {
+        "n": 10,
+        "mean": null,
+        "median": null,
+        "p25": null,
+        "p75": null,
+        "std": null,
+        "min": null,
+        "max": null
+      }
+    }
+  },
+  "response": {
+    "failure": {
+      "failure_reason": {
+        "n": 10,
+        "note": "non-numeric/text field"
+      }
+    },
+    "outcomes": {
+      "victory": {
+        "n": 10,
+        "mean": 0,
+        "median": 0.0,
+        "p25": 0,
+        "p75": 0,
+        "std": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "clean_win": {
+        "n": 10,
+        "mean": 0,
+        "median": 0.0,
+        "p25": 0,
+        "p75": 0,
+        "std": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "breakthrough_count": {
+        "n": 10,
+        "mean": 0.8,
+        "median": 1.0,
+        "p25": 0.0,
+        "p75": 1.0,
+        "std": 0.6,
+        "min": 0.0,
+        "max": 2.0
+      },
+      "white_friendly_losses": {
+        "n": 10,
+        "mean": 7.4,
+        "median": 10.5,
+        "p25": 2.0,
+        "p75": 12.0,
+        "std": 5.142,
+        "min": 0.0,
+        "max": 13.0
+      },
+      "enemy_kills": {
+        "n": 10,
+        "mean": 15.2,
+        "median": 15.0,
+        "p25": 15.0,
+        "p75": 16.0,
+        "std": 1.7776,
+        "min": 11.0,
+        "max": 18.0
+      },
+      "explored_ratio": {
+        "n": 10,
+        "mean": 0.5325,
+        "median": 0.5097,
+        "p25": 0.4952,
+        "p75": 0.5648,
+        "std": 0.0484,
+        "min": 0.4878,
+        "max": 0.6372
+      },
+      "white_reacquire_count": {
+        "n": 10,
+        "mean": 2.3,
+        "median": 2.0,
+        "p25": 1.0,
+        "p75": 3.0,
+        "std": 1.1874,
+        "min": 1.0,
+        "max": 5.0
+      }
+    }
+  },
+  "availability": {
+    "adaptation.adaptive_replan_count": [
+      "available"
+    ],
+    "adaptation.lane_shift_count": [
+      "available"
+    ],
+    "adaptation.dispersion_event_count": [
+      "available"
+    ],
+    "adaptation.detected_white_event_count": [
+      "available"
+    ],
+    "adaptation.replan_frequency_per_1000s": [
+      "available"
+    ],
+    "adaptation.contact_to_replan_latency": [
+      "unavailable"
+    ],
+    "coordination.arrival_front_sync_std_s": [
+      "proxy"
+    ],
+    "coordination.arrival_front_mean_s": [
+      "proxy"
+    ],
+    "coordination.approach_bearing_entropy": [
+      "proxy"
+    ],
+    "coordination.group_arrival_sync": [
+      "proxy"
+    ],
+    "spatial.approach_lane_entropy": [
+      "proxy"
+    ],
+    "spatial.mean_visible_group_count": [
+      "proxy"
+    ],
+    "spatial.mean_group_spacing_km": [
+      "proxy"
+    ],
+    "spatial.peak_simultaneous_visible": [
+      "proxy"
+    ],
+    "spatial.visible_pairwise_dist_km_median": [
+      "proxy"
+    ],
+    "spatial.visible_y_spread_km_median": [
+      "proxy"
+    ],
+    "spatial.visible_peak_count": [
+      "proxy"
+    ],
+    "spatial.visible_window_start_s": [
+      "proxy"
+    ],
+    "temporal.first_contact_time": [
+      "available"
+    ],
+    "temporal.first_engagement_time": [
+      "available"
+    ],
+    "temporal.first_attack_time": [
+      "available"
+    ],
+    "temporal.resolution_time": [
+      "available"
+    ],
+    "temporal.phase_switch_count": [
+      "unavailable"
+    ],
+    "outcomes.victory": [
+      "available"
+    ],
+    "outcomes.clean_win": [
+      "available"
+    ],
+    "outcomes.breakthrough_count": [
+      "available"
+    ],
+    "outcomes.white_friendly_losses": [
+      "available"
+    ],
+    "outcomes.enemy_kills": [
+      "available"
+    ],
+    "outcomes.explored_ratio": [
+      "available"
+    ],
+    "outcomes.white_reacquire_count": [
+      "available"
+    ]
+  }
+}

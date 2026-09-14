@@ -1,0 +1,46 @@
+{
+ "policy_id": "black-b0-v1",
+ "version": "1.0.0",
+ "side": "black",
+ "strategy_family": "random_maneuver",
+ "declared_intent": {
+  "pressure_objectives": [
+   "random independent approach"
+  ],
+  "target_priority": "none",
+  "operational_goal": "random waypoint advance toward break line",
+  "key_assumptions": [],
+  "intended_failure_modes": [
+   "predictable scatter",
+   "no coordination"
+  ]
+ },
+ "trigger_and_switch": [],
+ "known_strengths": [
+  "simple baseline",
+  "cheap to run"
+ ],
+ "known_weaknesses": [
+  [
+   "no coordination or adaptivity",
+   "declared"
+  ],
+  [
+   "does not exploit multi-axis pressure reliably",
+   "inferred"
+  ]
+ ],
+ "declared_traits": {
+  "aggression": "moderate",
+  "dispersion": "random",
+  "coordination": "none",
+  "adaptivity": "none",
+  "recon_dependency": "none"
+ },
+ "status": "sealed",
+ "evaluation_role": "historical_anchor",
+ "parent_policy_id": null,
+ "description": "Legacy random-waypoint baseline opponent (B0_RANDOM)",
+ "created_at": "2026-09-10T00:10:08",
+ "updated_at": "2026-09-10T00:10:08"
+}

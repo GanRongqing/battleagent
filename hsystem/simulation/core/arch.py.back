@@ -1,0 +1,1691 @@
+from operator import truediv
+import time
+import numpy as np
+import copy
+import collections
+
+from .. import algorithm as alg
+from .. import core
+
+class Attribute(core.base.Node):
+    """ 目标属性类 
+        为了实现 engine 的 save 功能, 包含 __getattr__ 方法的类都需要实现 __getstate__ 方法
+    """
+
+
+    def __init__(self, parent, db):
+        super().__init__(parent)
+        self.db = copy.deepcopy(db)
+        # self.__dict__.update(db)
+        self._parent = parent
+
+    # 覆盖 Node 类中的 parent, 计划解决 engine 加载后 Attribute.parent 
+    # 使用 __getattr__('parent') 函数导致报错的情况
+    @property
+    def parent(self):
+        return self._parent
+
+    def update(self, **kwargs):
+        """更新装备性能数据
+        """
+        # self.__dict__.update(kwargs)
+        self.db.update(kwargs)
+        # 如果定义到__dict__中
+        # 不知为何在该类中不能用@property对函数进行装饰，否则调用时会显示找不到而报错
+        # 而且不能用与其本身已有的key重名，比如period/dis_max,因此加后缀_alias以区别
+        # 因此定义到db中，既支持通过属性获取，也支持通过key获取
+        # 当然也可以通过db获取，而且仍然支持hasattr判断
+    def __getitem__(self, key):
+        # return self.__dict__[key]
+        return self.db[key]
+
+    def __getattr__(self, attr):
+        return self.db[attr]
+
+    def has_attr(self, attr):
+        return attr in self.db
+
+    def __getstate__(self):
+        return {
+            'db': self.db,
+            '_parent': self._parent
+        }
+    
+    def __setstate__(self, state):
+        self.db = state['db']
+        self._parent = state['_parent']
+
+class Unit(core.entity.Router):
+    """
+    Unit是下面组件类及其继承类的对象的容器
+    因用到消息转发，因此继承Router，但不继承转态机
+    """
+
+    def __init__(self, engine):
+        super().__init__(engine, engine)
+        self.engine.units_add(self) # 将自身加载到引擎中
+        # self.engine.add(self) 
+        self._components = core.base.Bag() # 记录所有的组件
+        self._name_comps = {}
+        self._model_comps = collections.defaultdict(list)
+        self._is_assembled = False
+        self._is_implemented = False
+        self._is_checked = False
+
+    def employ(self, component):
+        """ 添加一个组件到Unit
+        """
+        self._components.add(component)
+        assert "." not in component.name, "名字中不能包含'.'"
+        self._name_comps[component.name] = component
+        assert "." not in component.model, "类别中不能包含'.'"
+        assert "[" not in component.model and "]" not in component.model, "类别中不能包含'['和']',以区分类别和名字"
+        self._model_comps[component.model].append(component)
+
+    # def clear_components(self):
+    #     self._components = core.base.Bag()
+
+    def component(self, id):
+        """ 根据id查询unit上指定的组件
+
+        复杂度: O(log(n))
+        Returns:
+            component or None
+        """
+        return self._components.find(id)
+
+    def comp_by_name(self, name):
+        return self._name_comps[name]
+
+    def comps_by_model(self, model):
+        return self._model_comps[model]
+
+    def components(self, fun=None):
+        """ 查询unit上指定的组件
+
+        返回符合指定过滤函数filtering function的组件列表或[].
+        复杂度: O(n)
+        """
+        return list(filter(fun, self._components))
+        # if fun is None:
+        #     return self._components.tolist()
+        # if hasattr(fun, "__call__"):
+        #     res = [c for c in self._components if fun(c)]
+        #     return res
+        # assert False, "invalid fun for components search"
+
+    def message_handle(self, message):
+        """ 处理消息
+        """
+        if not self.isactive:
+            self.engine.log_debug("Inactive %s cannot handle message %s" % (self, message))
+            return
+        name = message.body.content.__class__.__name__
+
+        if name not in self._message_handlers:
+            # 如果消息头名称不在处理范围内，不能处理
+            raise RuntimeError("%s cannot handle message %s" % (self, name))
+        self.engine.log_debug("MessageHandle %s handle message[%s]", self, name)
+        self._message_handlers[name](message.body)
+
+        # 在_add_handler函数中已经对消息的名称进行了限定，因此不必重复判断，故下述代码注释20220530
+        # if name[:5] == "Event":
+        #     self.engine.log_debug("MessageHandle %s handle message[%s]", self, name)
+        #     self._message_handlers[name](message.body)
+        # else:
+        #     raise RuntimeError("message.body.content的类名应以Event之一开头")
+
+        # Unit除了处理这两类事件外还要处理其他事件，因此不特别列出, 故下述代码注释
+        # if name == "EventCollided":
+        #     # 处理碰撞事件
+        #     self._collided_handler(message.body)
+        # elif name == "EventHit":
+        #     # 处理被命中事件
+        #     self._hit_handler(message.body)
+        # else:
+        #     raise RuntimeError("%s cannot handle message %s" % (self, name))
+    def _send_event(self, dst, content, delay=0):
+        """ Unit仅可以发送事件，消息和指令不能发送，因只是一个容器 """
+        assert content.__class__.__name__[:5] == "Event"
+        body = core.message.Event(self, dst, self.engine.time, content)
+        if dst is None:
+            import pdb; pdb.set_trace()
+        self._notify(dst, body, delay_ms=int(delay*1000)) 
+
+    def _add_handler(self, name, handler):
+        """ Unit仅可以处理事件，消息和指令不能处理，因只是一个容器 """
+        if name[:5] == "Event":
+            self._message_handlers[name] = handler
+        else:
+            raise RuntimeError("the name must start with Event!")
+
+    def assemble(self):
+        """ 配置属性参数等 """
+        self._is_assembled = True
+        for component in self._components:
+            component.assemble()
+
+    def implement(self):
+        """ 添加状态、消息处理等 """
+        assert self._is_assembled, "%s先执行assemble或直接执行activate" % self
+        self._is_implemented = True
+        for component in self._components:
+            component.implement()
+
+    def check(self):
+        """ 检查配置 """
+        assert self._is_implemented, "先执行implement或直接执行activate"
+        self._is_checked = True
+        for component in self._components:
+            component.check()
+
+    def start(self):
+        """ 启动 """
+        # self._isactive = True
+        assert self._is_checked, "先执行check或直接执行activate"
+        super().start()
+        for component in self._components:
+            component.start()
+           
+    def kill(self):
+        """ Turn off the unit and make it inactive. """
+        for component in self._components:
+            component.kill()
+        # self.__isactive = False
+        super().kill()
+
+    def draw(self, ax):
+        if (self.engine.render_config["components_render"] == "all" or
+            self.name in self.engine.render_config["components_render"]):
+            for component in self._components:
+                if component.isactive:
+                    component.draw(ax) 
+
+    def draw3D(self, ax):
+        if (self.engine.render_config["components_render"] == "all" or
+            self.name in self.engine.render_config["components_render"]):
+            for component in self._components:
+                if component.isactive:
+                    component.draw3D(ax)
+
+    def drawXz(self, ax):
+        if (self.engine.render_config["components_render"] == "all" or
+            self.name in self.engine.render_config["components_render"]):
+            for component in self._components:
+                if component.isactive:
+                    component.drawXz(ax)
+            
+    def drawSymbol(self):
+        items = []
+        if (self.engine.render_config["components_render"] == "all" or
+            self.name in self.engine.render_config["components_render"]):
+            for component in self._components:
+                if component.isactive:
+                    q = component.drawSymbol()
+                    if q:
+                        items.extend(q)
+        return items
+
+    def drawSymbol3D(self):
+        items = []
+        if (self.engine.render_config["components_render"] == "all" or
+            self.name in self.engine.render_config["components_render"]):
+            for component in self._components:
+                if component.isactive:
+                    q = component.drawSymbol3D()
+                    if q:
+                        items.extend(q)
+        return items
+
+
+class Platform(Unit):
+    """ 平台Unit """
+    ## 平台挂载的加载顺序很重要
+    # single代表只能挂载一个，multi表示可以挂载多个, "characteristics", "vitalities"必须挂载在前
+    single_attrs = ["characteristics", "vitalities", "comdev", "motor", "intelligence", "commander", "driver", ]
+    multi_attrs = ["radars", "sonars", "jammers", "emitters", "guiders", "weaponsystems"]
+    def __init__(self, engine, name, model, group, ptype=None, country=None):
+        super().__init__(engine)
+        self.attr = Attribute(self, self.engine.db.get(model, unit_name=name, unit_model=model)) # 属性
+        assert self.__class__.__name__ == self.attr["class"], "%s != %s" % (self.__class__.__name__, self.attr["class"])
+        self.name = name
+        assert "." not in self.name, "名字中不能包含'.'"
+        assert name not in self.engine._name_units, "名字%s已被其它单元使用"%name
+        self.engine._name_units[name] = self
+        self.model = model
+        self.group = group.upper()
+        self.ptype = ptype
+        self.country = country
+        self.isdetectable = True #是否可被雷达或声呐探测到
+        #-------承载关系描述---------
+        self.home_unit = None # 平台的母平台
+        self.is_at_home = False # 如果有母平台，是否在母平台上
+        self._children = core.base.Bag() # 子平台，不含武器弹药
+        self._munitions = core.base.Bag() # 从该平台生成或从属于该平台的弹药，类似子平台
+        # 在随母平台自毁的判断上与子平台略有区别，具体见自毁函数kill
+        self.symbol_id = self.engine.get_entity_symbol_id(self)
+        # 生成所有组件
+        self._gen_components()
+
+    def __str__(self):
+        return "%s.%s.%s.%s" % (self.group, self.__class__.__name__, self.model, self.name) 
+
+    def __repr__(self):
+        if self.coords is None:
+            return str(self) + " (nan,nan,nan)"
+        return str(self) + " (%.3f,%0.3f,%0.3f)" % tuple(self.coords)
+
+    # @property
+    # def symbol_id(self):
+    #     return self.engine.get_entity_symbol_id(self)
+
+    def _gen_components(self, home_unit=None):
+        """ 生成平台上所有组件并挂载到平台上 """
+        for attr in self.single_attrs: 
+            if self.attr.has_attr(attr) and self.attr[attr]:
+                if isinstance(self.attr[attr], str):
+                    model = self.attr[attr]
+                    obj = self._gen_component(model, home_unit=home_unit)
+                else:
+                    # 在生成组件对象的同时,设置组件相对平台的位置和作用扇面角
+                    assert isinstance(self.attr[attr], list)
+                    try:
+                        model, pd, paz, ph, *sector = self.attr[attr]
+                    except:
+                        import pdb;pdb.set_trace()
+                    obj = self._gen_component(model, home_unit=home_unit)
+                    obj.set_pdah(pd, paz, ph)
+                    assert len(sector) in [0, 2]
+                    if sector:
+                        obj.set_sector(sector)
+                setattr(self, attr, obj)
+            else:
+                setattr(self, attr, None)
+        for attr in self.multi_attrs:
+            setattr(self, attr, [])
+            if self.attr.has_attr(attr) and self.attr[attr]:
+                for e in self.attr[attr]:
+                    if isinstance(e, str):
+                        model = e
+                        obj = self._gen_component(model, home_unit=home_unit)
+                    else:
+                        # 在生成组件对象的同时,设置组件相对平台的位置和作用扇面角
+                        assert isinstance(e, list), e
+                        model, pd, paz, ph, *sector = e
+                        obj = self._gen_component(model, home_unit=home_unit)
+                        obj.set_pdah(pd, paz, ph)
+                        assert len(sector) in [0, 2]
+                        if sector:
+                            obj.set_sector(sector)
+                    getattr(self, attr).append(obj)
+
+    def _gen_component(self, comp_model, home_unit=None):
+        """ 生成平台上的指定组件 """
+        try:
+            if home_unit is None:
+                model_dct = self.engine.db.get(comp_model, unit_name=self.name, unit_model=self.model)
+            else:
+                model_dct = self.engine.db.get(comp_model, unit_name=home_unit.name, unit_model=home_unit.model)
+            cls_ = core.CLASS[model_dct["class"]]
+            obj = cls_(self, comp_model)
+            return obj
+        except:
+            import pdb; pdb.set_trace()
+
+    def add_child(self, child, detectable=False):
+        child.home_unit = self
+        child.is_at_home = True
+        child.isdetectable = detectable
+        self._children.add(child)
+
+    @property
+    def munitions(self):
+        return self._munitions
+
+    def add_munition(self, munition, detectable=False):
+        munition.home_unit = self
+        munition.is_at_home = True
+        munition.isdetectable = detectable
+        self._munitions.add(munition)
+
+    def set_move_param(self, coords, velocity, coordinate_system="Cartesian"):
+        """ 设置运动参数
+
+        Args:
+            coords: 位置参数，如果coordinate_system="Cartesian"，代表x, y, z
+                             如果coordinate_system="Geodetic", 代表经度、纬度、高度(m)
+                             如果coords[0]是tuple或，表示度、分、秒，否则表示浮点度
+            velocity: 速度矢量，坐标系始终为"Cartesian"
+        """
+        if self.coords is not None:
+            self.engine.log_warning("运动参数已经设置，重复设置会清除之前的设置")
+
+        assert coordinate_system in ["Cartesian", "Geodetic"]
+
+        if coordinate_system == "Cartesian":
+            _coords = coords
+        elif coordinate_system == "Geodetic":
+            if isinstance(coords[0], (tuple, list)):
+                lng = coords[0][0] + coords[0][1]/60.0 + coords[0][2]/3600.0
+            else:
+                lng = coords[0]
+            if isinstance(coords[1], (tuple, list)):
+                lat = coords[1][0] + coords[1][1]/60.0 + coords[1][2]/3600.0
+            else:
+                lat = coords[1]
+            x, y = self.engine.lnglat2xy(lng, lat)
+            _coords = np.array([x, y, coords[2]])
+        else:
+            _coords = coords
+            self.engine.log_warning("坐标系设置不正确，默认使用Cartesian坐标系")
+        self.motor.set_motivate_param(_coords, velocity)
+
+    @property
+    def coords(self):
+        """ 空间位置坐标 """
+        return self.motor.coords
+
+    @property
+    def lnglat(self):
+        """ 经纬度 """
+        return self.motor.lnglat
+
+    @property
+    def velocity(self):
+        return self.motor.velocity
+
+    @property
+    def acce(self):
+        return self.motor.acce
+
+    @property
+    def speed(self):
+        return self.motor.speed
+
+    @property
+    def course(self):
+        """ 速度平面方向 """
+        return self.motor.course
+
+    @property
+    def pitch(self):
+        return self.motor.pitch
+
+    @property
+    def heading(self):
+        """ 平台(舰艏)朝向 
+        """
+        return self.course
+
+    def _hit_handler(self, event):
+        """
+        判断击中次数是否达到阈值，如达到则自毁
+        """
+        if not self.isactive:
+            return
+        attacker = event.src
+        self.engine.log_info("BeHit %s %s %s %s",
+            self, "(%.2f,%.2f,%.2f)" % tuple(self.coords),
+            attacker,  "(%.2f,%.2f,%.2f)" % tuple(attacker.coords))
+        
+        if isinstance(self.vitalities.threshold.damage, int):
+            self.vitalities.current.damage += 1
+            if self.vitalities.current.damage >= self.vitalities.threshold.damage:
+                self.kill()
+        elif isinstance(self.vitalities.threshold.damage, dict):
+            src_model = event.src.model
+            self.vitalities.current.damage += self.vitalities.threshold.damage.get(src_model, 0)
+            if self.vitalities.current.damage >= self.vitalities.threshold.damage['THRESHOLD']:
+                self.kill()
+                self.engine.log_physics("BeKilled %s %s",
+                    self, "(%.2f,%.2f,%.2f)" % tuple(self.coords))
+    
+    def set_damage_threshold(self, damage):
+        self.vitalities.threshold.damage = damage
+
+    def kill(self):
+        """ Turn off the unit and make it inactive. """
+        assert self.isactive
+        for munition in self._munitions:
+            if munition.isactive:
+                if munition.is_at_home:
+                    munition.kill()
+                elif munition.is_killed_with_home:
+                    munition.kill()
+        for child in self._children:
+            if child.isactive:
+                if child.is_at_home:
+                    child.kill()
+        super().kill()
+        self.engine.log_physics("BeKilled %s %s",
+            self, "(%.2f,%.2f,%.2f)" % tuple(self.coords))
+
+    def implement(self):
+        super().implement()
+        self._add_handler("EventHit", self._hit_handler)
+
+    def draw(self, ax):
+        if self.engine.render_config["component_render_units"] == "all" or self.name in self.engine.render_config["component_render_units"]:
+            for component in self._components:
+                    if component.isactive:
+                        component.draw(ax)
+
+    def draw3D(self, ax):
+        if self.engine.render_config["component_render_units"] == "all" or self.name in self.engine.render_config["component_render_units"]:
+            for component in self._components:
+                if component.isactive:
+                    component.draw3D(ax)
+
+    def drawXz(self, ax):
+        if self.engine.render_config["component_render_units"] == "all" or self.name in self.engine.render_config["component_render_units"]:
+            for component in self._components:
+                if component.isactive:
+                    component.drawXz(ax)
+            
+    def drawSymbol(self):
+        items = []
+        if self.engine.render_config["component_render_units"] == "all" or self.name in self.engine.render_config["component_render_units"]:
+            for component in self._components:
+                if component.isactive:
+                    q = component.drawSymbol()
+                    if q:
+                        items.extend(q)
+        return items
+
+    def drawSymbol3D(self):
+        items = []
+        if self.engine.render_config["component_render_units"] == "all" or self.name in self.engine.render_config["component_render_units"]:
+            for component in self._components:
+                if component.isactive:
+                    q = component.drawSymbol3D()
+                    if q:
+                        items.extend(q)
+        return items
+
+
+class Characteristics(core.entity.Entity):
+    """ 目标特性类 
+    类似Unit的组件，但和组件有所不同
+    不需要状态机和消息转发机制，因此继承Entity
+    """
+
+    def __init__(self, unit, model):
+        super().__init__(unit)
+        self.unit = unit
+        self.engine = unit.engine
+        # self.unit.employ(self) # 特殊组件，因无名字，暂不挂载到unit上
+        self.db = copy.deepcopy(self.engine.db.get(model, unit_name=unit.name, unit_model=unit.model))
+        self.model = model
+
+    def update(self, **kwargs):
+        """更新目标特性数据
+        """
+        self.db.update(kwargs)
+
+    def __getitem__(self, key):
+        return self.db[key]
+
+    def __getattr__(self, attr):
+        return self.db[attr]
+
+    def __getstate__(self):
+        return (self.unit, self.engine, self.db, self.model)
+
+    def __setstate__(self, state):
+        unit, engine, db, model = state
+        self.unit = unit
+        self.engine = engine
+        self.db = db
+        self.model = model
+
+
+class Vitalities(core.entity.Entity):
+    """ 生命力类 
+    类似Unit的组件，但和组件有所不同
+    不需要状态机和消息转发机制，因此继承Entity
+    描述的是Unit的生存能力相关的参数，与Xsim的资源属性类似
+    """
+
+    def __init__(self, unit, model):
+        super().__init__(unit)
+        self.unit = unit
+        self.engine = unit.engine
+        # self.unit.employ(self) # 特殊组件，因无名字，暂不挂载到unit上
+        self.threshold = Attribute(self, self.engine.db.get(model, unit_name=unit.name, unit_model=unit.model)) #生命力阈值
+        self.model = model
+        db = copy.deepcopy(self.engine.db.get(model, unit_name=unit.name, unit_model=unit.model))
+        db = { key: 0 for key, value in db.items() }
+        self.current = Attribute(self, db) #生命力当前值    
+
+
+class Network(core.entity.FSM):
+    """ 全联通通信网络 """ 
+    def __init__(self, engine, model):
+        super().__init__(engine, engine)
+        # self.engine = engine
+        self.engine.networks().append(self)
+        # self.engine.add_network(self)
+        self.attr = Attribute(self, engine.db[model])
+        self.model = model
+        assert self.__class__.__name__ == self.attr["class"]
+        self._comdevs = set() # 加载的通信设备
+        self._comdevs_linked = {} # key:两组通信设备, val:是否联通
+        # 生成名字
+        # key = self.__class__.__name__ + self.model
+        key = self.model # 确保名字唯一
+        if key not in self.engine.ids:            
+            idd = 1
+            self.engine.ids[key].append(idd)
+        else:
+            idd = self.engine.ids[key][-1] + 1
+            self.engine.ids[key].append(idd)
+        self.name = '%s[%d]' % (self.model, idd) 
+        # self.edges = collections.OrderedDict()
+        self._comdevs_send_time = {} # key:两组通信设备, val:发送消息的时间
+        # self.edge_effects = {}
+    
+    def __str__(self):
+        return "%s.%s" % (self.__class__.__name__, self.name)
+
+    def add_comdev(self, comdev):
+        """ 添加通信设备 """
+        if self._comdevs:
+            for dev0 in self._comdevs:
+                self._comdevs_linked[(dev0, comdev)] = False
+                core.special_effect.LinkEffect.gen(self.engine, dev0.unit.name, comdev.unit.name)
+        self._comdevs.add(comdev)
+        comdev.add_network(self)
+
+    def check_isin_net(self, comdev1, comdev2):
+        """ 判断两个通信设备是否在该网络内
+        """
+        if (comdev1, comdev2) in self._comdevs_linked or  (comdev2, comdev1) in self._comdevs_linked:
+            return True
+        return False
+
+    def check_connect(self, comdev1, comdev2):
+        """ 判断两个通信设备是否可通过该链路联通
+
+        Returns:
+            1. 如果不联通，返回-1; 如果联通，返回一个非负数，表示通信时延(s),可以为0
+            2. 如果不联通，返回[]; 如果联通，返回使用的通信链路(通信设备)列表
+        """
+        if (comdev1, comdev2) in self._comdevs_linked and  self._comdevs_linked[(comdev1, comdev2)]:
+            return self.attr.delay, [[comdev1, comdev2]]
+        elif (comdev2, comdev1) in self._comdevs_linked and  self._comdevs_linked[(comdev2, comdev1)]:
+            return self.attr.delay, [[comdev2, comdev1]]
+        else:
+            return -1, []
+
+    def _check_linked(self):
+        for comdev1, comdev2 in self._comdevs_linked.keys():
+            if alg.geo.distance(comdev1.coords, comdev2.coords) < self.attr.dis:
+                if not self._comdevs_linked[(comdev1, comdev2)]:
+                    core.special_effect.LinkEffect.update(self.engine, entity1=comdev1.unit.name, entity2=comdev2.unit.name,
+                        linkstate=core.special_effect.LinkState.CONNECT)
+                    self._comdevs_linked[(comdev1, comdev2)] = True
+            else:
+                if self._comdevs_linked[(comdev1, comdev2)]:
+                    core.special_effect.LinkEffect.update(self.engine, entity1=comdev1.unit.name, entity2=comdev2.unit.name,
+                        linkstate=core.special_effect.LinkState.DISCONNECT)
+                    self._comdevs_linked[(comdev1, comdev2)] = False
+
+    def check(self):
+        """ 查看通信距离与通信时延 """
+        assert hasattr(self.attr, "dis") # 通信距离
+        assert hasattr(self.attr, "delay") # 通信时延
+
+    def implement(self):
+        self._add_state("CHECK", self._check_linked, repeat=1, right_now=True)
+        self._add_state("DEAD", lambda: None, repeat_ms=0)
+        self._add_transfer("UNIFINED", "CHECK",lambda: True)
+
+
+class Component(core.entity.FSM):
+    """ 组件类
+
+    继承消息机制以及状态机，并对消息机制改写
+    实现对一般消息Msg、指令/命令Cmd、事件Event的发送接口、处理接口和处理
+    实现对任务Task的处理，但屏蔽了对任务Task的发送接口和处理接口，只在Commander放开
+    Componet以及其继承类中，不使用_notify发送信息
+    必须使用_send_msg、_send_event、_send_cmd、_send_task发送
+    """
+    def __init__(self, unit, model):
+        super().__init__(unit, unit.engine)
+        self.unit = unit
+        self.attr = Attribute(self, self.engine.db.get(model, unit_name=unit.name, unit_model=unit.model))
+        self.model = model
+        # self.characteristics = unit.characteristics #可直接访问Unit的目标特性属性
+        # self.vitalities = unit.vitalities #可直接访问并修改Unit的生命力属性
+        # 组件命名
+        # key = str(self.unit) + self.__class__.__name__ + self.model
+        key = self.unit.name + "." + self.model # 确保名字在平台上唯一
+        if key not in self.engine.ids:            
+            idd = 1
+            self.engine.ids[key].append(idd)
+        else:
+            idd = self.engine.ids[key][-1]+ 1
+            self.engine.ids[key].append(idd) 
+        self.name = '%s[%d]' % (self.model, idd)    
+        self.unit.employ(self) # 将组件加载到unit上
+        # 默认引擎开始更新时自动从UNIFINED跳到FREE状态，但必须同时激活组件
+        # FREE状态可接受指令并执行
+        self._add_state("FREE", lambda: None, repeat_ms=0)
+        self._add_state("DEAD", lambda: None, repeat_ms=0)
+        self._add_transfer("UNIFINED", "FREE", lambda: True)
+        
+        self._controller = None # 当前组件被控制的对象
+        self._message_handlers = {} #消息、指令、事件的处理函数
+
+        self._paz = 0 # 组件在平台上放置的方位角(相对于平台中轴线顺时针夹角)，度
+        self._pd = 0  # 组件在平台上放置的水平距离
+        self._ph = 0  # 组件在平台上放置的高度
+        self._sector = None # 组件作用扇面, 顺时针两个角度，是与平台中轴线的顺时针夹角，np.array
+
+        self._redis_links = {} # 两个unit的id，分别表示线的两端，存在表示创建,value表示上次进行消息更新的时间,按真实时间算
+
+    def __str__(self):
+        return str(self.unit) + '.' + self.__class__.__name__ + "." + self.name
+
+    def __repr__(self):
+        if self.coords is None:
+            return str(self) + " (nan,nan,nan)"
+        return str(self) + " (%.3f,%0.3f,%0.3f)" % tuple(self.coords)
+
+    @property
+    def ucname(self):
+        # 因子平台在加载组件后名字会改变，因此用函数的形式动态获取unname
+        return self.unit.name + "." + self.name
+
+    def set_pxyz(self, px=0, py=0, pz=0):
+        """ 设置组件相对于平台的坐标
+        
+        平台中轴线方向指向y轴(北)，x轴指向东
+        """
+        self._pd = np.sqrt(px**2+py**2)
+        self._paz = np.rad2deg(np.arctan(px, py))
+        self._ph = pz
+
+    def set_pdah(self, pd=0, paz=0, ph=0):
+        self._pd = pd
+        self._paz = paz
+        self._ph = ph
+
+    def set_sector(self, sector):
+        """ 设置组件的作用扇面
+        """
+        self._sector = np.array(sector)
+
+    def kill(self):
+        self._change_state("DEAD")
+        super().kill()
+
+    @property
+    def group(self):
+        return self.unit.group
+
+    @property
+    def pxyz(self):
+        """ 返回组件相对于平台的坐标
+        
+        平台中轴线方向指向y轴(北)，x轴指向东
+        """
+        if self._pd == 0:
+            return np.array([0 ,0, self._ph])
+        rad = np.deg2rad(self._paz)
+        return np.array([self._pd*np.sin(rad), self._pd*np.cos(rad), self._ph])
+
+    @property
+    def pdah(self):
+        return self._pd, self._paz, self._ph
+
+    @property
+    def sector(self):
+        return self._sector
+
+    @property
+    def coords(self):
+        """ 空间位置坐标 """
+        if self._pd == 0:
+            offset = np.array([0, 0, self._ph])
+        else:
+            rad = np.deg2rad(self._paz+self.unit.heading)
+            offset = np.array([self._pd*np.sin(rad), self._pd*np.cos(rad), self._ph])
+        return self.unit.coords + offset
+
+    @property
+    def velocity(self):
+        return self.unit.velocity
+
+    @property
+    def acce(self):
+        return self.unit.acce
+
+    @property
+    def speed(self):
+        return self.unit.speed
+
+    @property
+    def course(self):
+        """ 速度平面方向 """
+        return self.unit.course
+
+    @property
+    def pitch(self):
+        return self.unit.pitch
+
+    def message_handle(self, message):
+        """ 处理消息
+        """
+        if not self.isactive:
+            self.engine.log_debug("Inactive %s cannot handle message %s" % (self, message))
+            return
+        name = message.body.content.__class__.__name__
+
+        if name not in self._message_handlers:
+            # 如果消息头名称不在处理范围内，不能处理
+            raise RuntimeError("%s cannot handle message %s" % (self, name))
+            
+        self.engine.log_debug("MessageHandle %s handle message[%s]", self, name)
+        self._message_handlers[name](message.body)
+        # 在_add_handler函数中已经对消息的名称进行了限定，因此不必重复判断，故下述代码注释20220530
+        # if name[:3] == "Msg":
+        #     self._message_handlers[name](message.body)
+        # elif name[:3] == "Cmd":
+        #     # assert self._controller is message.body.src, "没有对该组件的控制权"
+        #     self._message_handlers[name](message.body)
+        # elif name[:5] == "Event":
+        #     self._message_handlers[name](message.body)
+        # elif name[:4] == "Task":
+        #     self._message_handlers[name](message.body)
+        # else:
+        #     raise RuntimeError("message.body.content的类名应以Msg/Cmd/Event/Task之一开头")
+
+    # --暂不考虑控制权问题，故下述代码注释20220530
+    # def acquire_cp(self, obj):
+    #     """
+    #     取得对obj的控制权，只更改控制者，不更改状态
+    #     """
+    #     assert self.unit is obj.unit, "只能获得同一个unit下的组件控制权"
+    #     if obj.state == "FREE" and obj._controller is None:
+    #         obj._controller = self
+    #         return True
+    #     return False
+
+    # def release_cp(self, obj):
+    #     """ 释放对obj的控制权
+    #     """
+    #     assert obj._controller is self, "没有对该组件的控制权"
+    #     obj._change_state("FREE")
+    #     obj._controller = None
+    # --
+
+    def __send_message_body(self, dst, body):
+        """ _send_msg、_send_cmd、_send_task的共用函数部分，统一写 
+
+        因后续不独立使用,故用私有表示(双下划线)
+        """
+        if self.engine.sim_config["ignore_com"]:
+            # 如果忽略通信限制，直接发送
+            self._notify(dst, body, delay_ms=0)
+        elif self.unit is dst.unit:
+            # 如果是一个unit内，直接发送
+            self._notify(dst, body, delay_ms=0)
+        elif self.unit.home_unit is dst.unit and self.unit.is_at_home:
+            # 如果发送方是母平台，且接收方(子平台)未脱离母平台，直接发送
+            self._notify(dst, body, delay_ms=0)
+        elif dst.unit.home_unit is self.unit and dst.unit.is_at_home:
+            # 如果接收方是母平台，且发送方(子平台)未脱离目标平台，直接发送
+            self._notify(dst, body, delay_ms=0)
+        else:
+            # 如果是不同的unit,通过通信设备转发
+            self._notify(self.unit.comdev, body, delay_ms=0)
+           
+        if self.engine.sim_config["ignore_com"]:
+            if self.unit is dst.unit:
+                pass
+            elif self.unit.home_unit is dst.unit and self.unit.is_at_home:
+                pass
+            elif dst.unit.home_unit is self.unit and dst.unit.is_at_home:
+                pass
+            else:
+                core.special_effect.LinkEffect.update(self.engine, entity1=self.unit.name, entity2=dst.unit.name,
+                        linkstate=core.special_effect.LinkState.COMMUNICATION)
+
+    def _send_msg(self, dst, content, isignored=True):
+        """ 组件发送消息接口
+
+        Args:
+            dst:消息接收者
+            content:发送的消息内容，是一个类对象
+            isignored:如果通信条件不满足，消息是否直接忽略
+        """
+        assert content.__class__.__name__[:3] == "Msg"
+        body = core.message.Msg(self, dst, self.engine.time, isignored, content)
+        self.__send_message_body(dst, body)
+
+    def _send_cmd(self, dst, content, isignored=False):
+        """ 组件发送指令接口
+
+        指令通过改变组件的属性参数或者状态来实现特定的目的。
+        指令的划分是一门艺术。
+        任务与指令的区别是任务相对指令更复杂
+        """
+        assert content.__class__.__name__[:3] == "Cmd"
+        body = core.message.Cmd(self, dst, self.engine.time, isignored, content)
+        self.__send_message_body(dst, body)
+
+    def _send_event(self, dst, content, delay=0):
+        if dst is None:
+            import pdb; pdb.set_trace()
+        assert content.__class__.__name__[:5] == "Event"
+        body = core.message.Event(self, dst, self.engine.time, content)
+        self._notify(dst, body, delay_ms=int(delay*1000)) 
+
+    def _add_handler(self, name, handler):
+        if name[:3] == "Msg":
+            self._message_handlers[name] = handler
+        elif name[:3] == "Cmd":
+            self._message_handlers[name] = handler
+        elif name[:5] == "Event":
+            self._message_handlers[name] = handler
+        else:
+            raise RuntimeError("the name must start with Msg or Cmd or Event!")
+
+    def _draw(self, ax=None, mode="draw"):
+        """ 统一绘制tkinter界面和web地图界面的函数
+
+        具体类中重写
+        """
+        items = []
+        return items
+
+    def draw(self, ax):
+        self._draw(ax, mode="draw")
+
+    def drawSymbol(self):
+        return self._draw(mode="symbol")
+
+
+class Motor(Component):
+    """ 机动组件 """
+    def __init__(self, unit, model):
+        super().__init__(unit, model)
+        self.distance = 0
+        self._coords = None
+        self._velocity = None
+        self._acce = None
+        self._prev_coords = None
+        self._prev_course = 0 # 记录历史速度方向，主要目的是当速度为0时，用历史速度作为当前航向
+        self._history_points = collections.deque(maxlen=self.engine.render_config["history_points_len"]) #记录历史上所有的航线点(t, x, y, z)
+        self._ref_unit = None # 判断是否以参考unit的位置、速度为准，在承载在某个Unit时会用到 
+        self._redis_push_time = None # 上次推送的时间
+        self._prev_pitch = 0 # 记录俯仰角
+
+    @property
+    def is_free(self):
+        """ 判断是否是自由状态
+        
+        只有自由状态下才可以直接改变速度等属性
+        在WaypointsMotor和ManeuverMotor中会重新定义is_free的判断条件
+        """
+        if self._ref_unit is None:
+            return True
+        else:
+            return False
+
+    def set_pxyz(self, px=0, py=0, pz=0):
+        raise RuntimeError("不能使用此方法") # 默认Motor在平台中心
+
+    def set_pdah(self, pd=0, paz=0, ph=0):
+        raise RuntimeError("不能使用此方法") # 默认Motor在平台中心
+
+    def set_sector(self, sector):
+        raise RuntimeError("不能使用此方法") # 默认Motor无作用扇面
+
+    def set_motivate_param(self, coords, velocity=[0, 0, 0]):
+        """ 设置机动参数
+        """
+        self._coords = np.array(coords, dtype=np.float)
+        self._velocity = np.array(velocity, dtype=np.float)
+        self._acce = np.array([0.0, 0.0, 0.0], dtype=np.float)
+        self._prev_coords = self._coords.copy()
+        self._ref_unit = None
+        self._last_course = self.course
+        assert(self._coords.shape == self._velocity.shape)
+        core.special_effect.EntityEffect.gen(self.engine, self.unit.name)
+        core.special_effect.EntityEffect.show(self.engine, self.unit.name)
+
+    def set_ref_unit(self, unit):
+        self._ref_unit = unit
+        self._coords = None
+        self._velocity = None
+        self._acce = None
+        self._prev_coords = None
+        if self.unit.coords is not None: #
+            core.special_effect.EntityEffect.gen(self.engine, self.unit.name)
+            core.special_effect.EntityEffect.hide(self.engine, self.unit.name)
+
+    @property
+    def coords(self):
+        """ 空间位置坐标 """
+        if self._ref_unit:
+            return self._ref_unit.coords
+        else:
+            return self._coords
+
+    @property
+    def lnglat(self):
+        """ 经纬度 """
+        x, y, z = self.coords
+        lng, lat = self.engine.xy2lnglat(x, y)
+        return lng, lat
+
+    # 矢量速度
+    @property
+    def velocity(self):
+        if self._ref_unit:
+            return self._ref_unit.velocity
+        else:
+            return self._velocity
+
+    @property
+    def acce(self):
+        if self._ref_unit:
+            return self._ref_unit.acce
+        else:
+            return self._acce
+
+    # 标量速度
+    @property
+    def speed(self):
+        if self._ref_unit:
+            return self._ref_unit.speed
+        else:
+            # return np.linalg.norm(self._velocity)
+            return alg.geo.norm3d(self._velocity)
+
+    @property
+    def course(self):
+        """ 速度平面方向 """
+        if self._ref_unit:
+            return self._ref_unit.course
+            
+        if self.speed == 0:
+            return self._prev_course
+        else:
+            # 求方位角
+            self._prev_course = alg.geo.azimuth(self._coords, self._coords + self._velocity)
+            return self._prev_course
+
+    @property
+    def pitch(self):
+        """ 俯仰角 """
+        if self._ref_unit:
+            return self._ref_unit.pitch
+
+        if self.speed == 0 or alg.geo.norm3d(self._velocity) == 0:
+            return self._prev_pitch
+        else:
+            try:
+                # 求俯仰角
+                self._prev_pitch = alg.geo.pitch(self._coords, self._coords + self._velocity)
+            except:
+                self._prev_pitch = 0
+            return self._prev_pitch
+
+    @property
+    def mode(self):
+        """ 模式，默认为None
+        """
+        return None
+
+    def _move(self):
+        """匀速/加速运动仿真模块
+        """
+        if self._ref_unit:
+            pass
+        else:
+            if self.engine.render_config["history_points_units"] == "all" or self.unit.name in self.engine.render_config["history_points_units"]:
+
+                if not self._history_points or self.course != self._last_course:
+                    self._history_points.append([self.engine.time, self.coords[0], self.coords[1], self.coords[2]])
+                else:
+                    self._history_points[-1] = [self.engine.time, self.coords[0], self.coords[1], self.coords[2]]
+                    
+            period = self._state_period
+            self._prev_coords = self._coords.copy()
+            self._coords += self._velocity * period + 0.5 * self._acce * period **2
+            self._velocity += self._acce * period
+            self.engine.log_debug("move")
+            self.distance += alg.geo.distance(self._coords, self._prev_coords) 
+            self._last_course = self.course
+            core.special_effect.EntityEffect.update(self.engine, self.unit.name)
+
+    def _send_msg(self, *args, **kwargs):
+        raise RuntimeError("Motor can not send message")
+
+    def _send_cmd(self, *args, **kwargs):
+        raise RuntimeError("Motor can not send command")
+
+    def _change_speed(self, cmd):
+        """ 改变速度大小
+        """
+        speed = cmd.content.speed
+        self.change_speed(speed)
+
+    def _change_course(self, cmd):
+        """ 改变速度水平方向
+        """
+        az = cmd.content.az
+        self.change_course(az)
+
+    def _change_height(self, cmd):
+        """ 直接改变高度, 慎用
+        """
+        height = cmd.content.height
+        self.change_height(height)
+
+    def _change_velocity(self, cmd):
+        """ 直接改变速度
+        """
+        v = cmd.content.velocity
+        self.change_velocity(v)
+
+    ### 其它情况慎用
+    ### -----------------------------------------------------------
+    def change_speed(self, speed, ignore=False):
+        """ 改变速度大小
+
+        Args:
+            ignore: 是否忽略is_free状态检查
+        """
+        if not ignore:
+            assert self.is_free, "%s非自由状态下不能改变速度大小, 除非明确知道这样做没问题，可以将ignore设置为True" % self
+        if self.speed > 0:
+            self._velocity = speed / self.speed * self._velocity
+        else:
+            vx = speed * np.sin(self.course / 180 * np.pi)
+            vy = speed * np.cos(self.course / 180 * np.pi)
+            self._velocity = np.array([vx, vy, 0], dtype=np.float)
+
+    def change_course(self, az, ignore=False):
+        """ 改变速度水平方向,即航向
+
+        Args:
+            ignore: 是否忽略is_free状态检查
+        """
+        if not ignore:
+            # if not self.is_free:
+            #     import pdb; pdb.set_trace()
+            assert self.is_free, "%s非自由状态下不能改变航向, 除非明确知道这样做没问题，可以将ignore设置为True" % self
+        az_rad = az * np.pi / 180
+        vxy = np.sqrt(self._velocity[0]**2 + self._velocity[1]**2)
+        vx = vxy * np.sin(az_rad)
+        vy = vxy * np.cos(az_rad)
+        self._velocity[0] = vx
+        self._velocity[1] = vy
+
+    def change_height(self, height, ignore=False):
+        """ 直接改变高度, 慎用
+        """
+        if not ignore:
+            assert self.is_free, "%s非自由状态下不能改变高度, 除非明确知道这样做没问题，可以将ignore设置为True" % self
+        self._coords[2]=height
+
+    def change_velocity(self, v, ignore=False):
+        """ 直接改变速度
+        """
+        if not ignore:
+            assert self.is_free, "%s非自由状态下不能改变速度, 除非明确知道这样做没问题，可以将ignore设置为True" % self
+        self._velocity = np.array(v, dtype=np.float)
+
+    def change_acce(self, acce, ignore=False):
+        """ 直接改变加速度
+        """
+        if not ignore:
+            assert self.is_free, "%s非自由状态下不能改变加速度, 除非明确知道这样做没问题，可以将ignore设置为True" % self
+        self._acce = np.array(acce, dtype=np.float)
+    ###-----------------------------------------------------------
+ 
+    def implement(self):
+        """Add transfer and handler"""
+        self._add_state("MOVE", self._move, repeat=self.attr.period)
+        self._add_transfer("FREE", "MOVE", lambda: True)
+        self._add_handler("CmdMotorChangeSpeed", self._change_speed)
+        self._add_handler("CmdMotorChangeVelocity", self._change_velocity)
+        self._add_handler("CmdMotorChangeCourse", self._change_course)
+        self._add_handler("CmdMotorChangeHeight", self._change_height)
+
+    def check(self):
+        self.attr.has_attr("period")
+        if self._ref_unit is None and self._coords is None:
+            raise RuntimeError("机动组件[%s]未配置位置参数" % self)
+
+    def kill(self):
+        super().kill()
+        core.special_effect.EntityEffect.kill(self.engine, self.unit.name)
+
+    def draw(self, ax):
+        super().draw(ax)
+        # 画历史航迹
+        if self.engine.render_config["history_points_units"] == "all" or self.unit.name in self.engine.render_config["history_points_units"]:
+            if self._history_points:
+                t, x, y, z = list(zip(*self._history_points))
+                ax.plot(x, y, "-", c=self.group, linewidth=1)
+        
+
+    def draw3D(self, ax):
+        # 画历史航迹
+        if self.engine.render_config["history_points_units"] == "all" or self.unit.name in self.engine.render_config["history_points_units"]:
+            if self._history_points:
+                t, x, y, z = list(zip(*self._history_points))
+                ax.plot(x, y, z, "-", c=self.group, linewidth=1)
+
+    def drawXz(self, ax):
+        # 画历史航迹
+        if self.engine.render_config["history_points_units"] == "all" or self.unit.name in self.engine.render_config["history_points_units"]:
+            if self._history_points:
+                t, x, y, z = list(zip(*self._history_points))
+                ax.plot(x, z, "-", c=self.group, linewidth=1)
+
+    def drawSymbol(self):
+        items = super().drawSymbol()
+        # 画历史航迹
+        if self.engine.render_config["history_points_units"] == "all" or self.unit.name in self.engine.render_config["history_points_units"]:
+            if self._history_points:
+                t, x, y, z = list(zip(*self._history_points))
+                symbol = alg.shape.Symbol(mode="Line", type_="MotorTrack", group=self.group, name=self.name,
+                                    x=x, y=y, color=self.group)
+                items.append(symbol)
+        return items
+
+class Comdev(Component):
+    """ 通信设备组件 """
+    def __init__(self, unit, model):
+        super().__init__(unit, model)
+        self._networks = set()
+        self.__msgs = [] #待处理消息
+
+    def add_network(self, network):
+        self._networks.add(network)
+
+    def _check_connect(self, comdev):
+        """ 判断两个通信设备之间通过通信网络是否连通
+        
+        Returns:
+            delay: -1,不联通; 或者非负数表示时延(s)
+        """
+        for network in self._networks:
+            delay, links = network.check_connect(self, comdev)
+            if delay >= 0:
+                return delay, links
+        return -1, []
+
+    def message_handle(self, message):
+        """ 重写处理消息方法，因通信设备比较特殊
+        """
+        if not self.isactive:
+            self.engine.log_debug("Inactive %s cannot handle message %s" % (self, message))
+            return    
+        
+        name = message.body.content.__class__.__name__
+        if message.body.dst is self:
+            # 如果是发给自己的，处理
+            if name not in self._message_handlers:
+                # 如果消息头名称不在处理范围内，不能处理
+                raise RuntimeError("%s cannot handle message %s" % (self, name))
+            self.engine.log_debug("MessageHandle %s handle message[%s]", self, name)
+            self._message_handlers[name](message.body)
+        else:
+            # 转发消息，可以转发Msg,Cmd,Task三类，Event直接转发，不通过通信系统
+            # --在定义发送接口时已经进行了正确封装，不必再判断，故注释下述代码。20220530
+            # mcls = message.body.__class__.__name__
+            # if mcls in ["Msg", "Cmd", "Task"]: # 消息Msg、指令Cmd和任务Task可以通过通信设备发送
+                # 因在_add_handler明确了只能处理处理Cmd或Event，因此下面三行注释掉了
+                # if name in self._message_handlers:
+                    # 判断是否是发给通信设备自身的消息Msg或任务Task
+                    # raise RuntimeError("通信组件自身(不含转发)只能接受并处理Cmd或Event!")
+                # elif message.body.dst.unit is self.unit:
+            # --
+            if message.body.dst.unit is self.unit:
+                # 在同一个平台上,因此是从外平台接收，此处的判断与Component类中的_send_msg、_send_cmd方法以及Commander类中的_send_task方法相关
+                self._notify(message.body.dst, message.body, delay_ms=0)
+                self.engine.log_info("%s Transfer message[%s] to self unit component %s", self, name, message.body.dst)
+            else:
+                # 不在同一个平台上，因此是向外平台转发
+                delay, links = self._check_connect(message.body.dst.unit.comdev)
+                if delay >= 0:
+                    self._notify(message.body.dst.unit.comdev, message.body, delay=delay)
+                    for dev1, dev2 in links:
+                        core.special_effect.LinkEffect.update(self.engine, entity1=dev1.unit.name, entity2=dev2.unit.name, linkstate=core.special_effect.LinkState.COMMUNICATION)
+                    self.engine.log_info("%s Transfer message[%s] to other unit comdev %s", self, name, message.body.dst.unit.comdev)
+                elif message.body.isignored:
+                    self.engine.log_info("%s Ignore message[%s]", self, name)
+                else:
+                    self.__msgs.append(message.body)
+
+    def _send_msg(self, *args, **kwargs):
+        raise RuntimeError("Comdev can not send message")
+
+    def _send_cmd(self, *args, **kwargs):
+        raise RuntimeError("Comdev can not send command")
+
+    # --通信设备和Component组件一样，可以接受和处理Msg/Cmd/Task多种信息，故下述代码注释20220530
+    # def _add_handler(self, name, handler):
+    #     if name[:3] == "Cmd":
+    #         self._message_handlers[name] = handler
+    #     elif name[:5] == "Event":
+    #         self._message_handlers[name] = handler
+    #     else:
+    #         raise RuntimeError("通信组件自身(不含转发)只能接受并处理Cmd或Event!")
+    # --
+
+    def _work(self):
+        idx = []
+        for i, msg in enumerate(self.__msgs):
+            delay, links = self._check_connect(msg.dst.unit.comdev)
+            if delay >= 0:
+                self._notify(msg.dst.unit.comdev, msg, delay=delay)
+                for dev1, dev2 in links:
+                    core.special_effect.LinkEffect.update(self.engine, entity1=dev1.unit.name, entity2=dev2.unit.name, linkstate=core.special_effect.LinkState.COMMUNICATION)
+                name = msg.content.__class__.__name__
+                self.engine.log_info("%s Transfer message[%s] to other unit comdev %s", self, name, msg.dst.unit.comdev)
+                idx.append(i)
+        for i in idx[::-1]:
+            self.__msgs.pop(i)
+
+    def implement(self):
+        self._add_state("WORK", self._work, repeat=self.attr.period)
+        self._add_transfer("FREE",  "WORK", lambda: True)
+
+    def check(self):
+        assert hasattr(self.attr, "period")
+        
+
+class Driver(Component):
+    """驾驶员组件
+    """
+    def __init__(self, unit, model):
+        super().__init__(unit, model)
+        self._motor = self.unit.motor
+        '''设置driver之间的关系：
+        driver之间只有两级上下级关系（即不存在上级的上级或下级的下级）
+        因此有三种角色：
+        leader:领导者
+        subordinate：从属者
+        ordinary：二者皆不是
+        '''
+        self._role = "ordinary"
+        self._leader = None #上级
+        self._subordinates = set() #下属
+        self._companions = set() #同伴，只有角色为subordinate才有，为上级的下属（不包含自己）
+    @property
+    def role(self):
+        return self._role
+
+    '''
+    下述五个处理关系的函数set_leader、_add_subordinate、_remove_subordinate、_update_subordinates_companions、_update_companions
+    其中set_leader是入口函数
+    leader如果没有下属的driver会自动降级为ordinary,然后如果需要可以为其设置leader
+    在设置关系的过程中没有通过消息机制，因此未考虑跨平台的通信的影响，后续如果需要，可以加上
+    '''
+    def set_leader(self, driver):
+        if self._role == "ordinary":
+            assert self._leader is None
+            assert not self._subordinates
+            assert not self._companions
+            self._role = "subordinate"
+            self._leader = driver
+            driver._add_subordinate(self)
+        elif self._role == "subordinate":
+            assert not self._subordinates
+            assert not self._companions
+            if self._leader is not driver:
+                self._leader._remove_subordinate(self)
+                driver._add_subordinate(self)
+                self._leader = driver
+        elif self._role == "leader":
+            raise RuntimeError("cannot set leader for a leader role")
+            
+    def _add_subordinate(self, driver):
+        if self._role == "ordinary":
+            assert self._leader is None
+            assert not self._subordinates
+            assert not self._companions
+            self._role = "leader"
+            self._subordinates.add(driver)
+        elif self._role == "subordinate":
+            assert self._leader is not None
+            assert not self._subordinates
+            # self._companions可能为空也可能不为空，故不判
+            self._leader._remove_subordinate(self)
+            self._leader = None
+            self._role = "leader"
+            self._subordinates.add(driver)
+        elif self._role == "leader":
+            assert self._leader is None
+            assert self._subordinates
+            assert not self._companions
+            self._subordinates.add(driver)
+        self._update_subordinates_companions()
+
+    def _remove_subordinate(self, driver):
+        assert self._role == "leader"
+        assert self._leader is None
+        assert self._subordinates
+        assert not self._companions
+        self._subordinates.remove(driver)
+        self._update_subordinates_companions()
+        if not self._subordinates:
+            self._role = "ordinary"
+
+    def _update_subordinates_companions(self):
+        assert self._role == "leader"
+        assert self._leader is None
+        assert self._subordinates
+        assert not self._companions
+        for sub in self._subordinates:
+            sub._role == "subordinate"
+            sub._companions = self._subordinates-set([sub])
+
+    def _work(self):
+        pass
+
+    def implement(self):
+        self._add_state("WORK", self._work, repeat=self.attr.period)
+        self._add_transfer("FREE",  "WORK", lambda: True)
+        return self
+
+class Commander(Component):
+    """指挥员组件
+    """
+    def __init__(self, unit, model):
+        super().__init__(unit, model)
+        self._superior_commander = None #上级指挥员，只能有一个
+        self._junior_commanders = set() #下级指挥员，可以为多个
+        self._intel = None
+
+    def add_junior_commander(self, commander):
+        """ 设置上下级指挥关系的入口函数 
+        
+        在添加本级的下属指挥所时，会自动将下属的上级设置为本级
+        """
+        assert commander is not self
+        assert isinstance(commander, Commander)
+        assert commander._superior_commander is None
+        self._junior_commanders.add(commander)
+        commander._superior_commander = self
+
+    def _send_task(self, dst, content, isignored=False):
+        """ 组件发送任务接口
+        只有Commander才可以发送和处理任务
+
+        Args:
+            dst:消息接收者
+            content:发送的消息内容，是一个类对象
+            isignored:如果通信条件不满足，消息是否直接忽略
+        """
+        assert content.__class__.__name__[:4] == "Task"
+        assert isinstance(dst, Commander), "目的地必须也是Commander"
+        assert self.unit is not dst.unit, "不能是同一个Unit"
+        body = core.message.Task(self, dst, self.engine.time, isignored, content)
+        self._Component__send_message_body(dst, body)
+
+    def _add_handler(self, name, handler):
+        """ 对Component的进行重写，以增加对Task的处理
+        """
+        if name[:3] == "Msg":
+            self._message_handlers[name] = handler
+        elif name[:3] == "Cmd":
+            self._message_handlers[name] = handler
+        elif name[:5] == "Event":
+            self._message_handlers[name] = handler
+        elif name[:4] == "Task":
+            self._message_handlers[name] = handler
+        else:
+            raise RuntimeError("the name must start with Msg or Cmd or Event or Task!")
+
+    def _command(self):
+        pass
+
+    def assemble(self):
+        self._intel = self.unit.intelligence
+
+    def implement(self):
+        self._add_state("COMMAND", self._command, repeat=self.attr.period)
+        self._add_transfer("FREE",  "COMMAND", lambda: True)
+        self._add_handler("MsgStateInfo", lambda msg:None)
+        #self._add_handler("MsgStateInfo", lambda: None)
+
+    def check(self):
+        self.attr.has_attr("period")
+
+
+class Sensor(Component):
+    """传感器组件
+    """
+    def __init__(self, unit, model):
+        super().__init__(unit, model)
+        self._processors = set()  # 应分发到的情报处理中心
+        self._is_on = False # 默认关机
+
+    @property
+    def is_on(self):
+        return self._is_on
+
+    def add_processor(self, processor):
+        self._processors.add(processor)
+
+    def remove_intel(self, intel):
+        self._processors.remove(intel)
+
+    def turn_on(self):
+        """开机"""
+        assert not self._is_on, self
+        self._is_on = True
+        self._change_state("WORK") # 立即进入工作状态
+
+    def turn_off(self):
+        """关机"""
+        assert self._is_on
+        self._is_on = False
+        self._change_state("FREE") # 立即进入空闲状态
+
+    def _detect(self):
+        raise RuntimeError("须在子类中定义")
+
+    def _send_track(self, track):
+        # 上报情报中心发现目标
+        content = core.message.MsgTrack(track)
+        for intel in self._processors:
+            self._send_msg(intel, content)
+
+    def _turn_on(self, cmd):
+        """开机"""
+        self.turn_on()
+
+    def _turn_off(self, cmd):
+        """关机"""
+        self.turn_off()
+
+    def assemble(self):
+        if hasattr(self.unit, "intelligence") and self.unit.intelligence is not None:
+            self._processors.add(self.unit.intelligence)
+
+    def implement(self):
+        self._add_state("WORK", self._detect, self.attr.period) 
+        self._add_handler("CmdSensorTurnOn", self._turn_on)
+        self._add_handler("CmdSensorTurnOff", self._turn_off)
+
+    def check(self):
+        assert self.attr.has_attr("period")
+
+
+class Munition(Platform):
+    """ 弹药平台
+    """
+    multi_attrs = []
+    single_attrs = ["characteristics", "vitalities", "lethality", "seeker", "motor", "monitor"]
+    def __init__(self, home_unit, model):
+        super().__init__(home_unit.engine, str(self.id), model, home_unit.group, ptype=model)
+        home_unit.add_munition(self, detectable=False) # 加到母平台弹药中
+        self.is_killed_with_home = False # 当母平台自毁且已离开母平台时是否随母平台自毁
+        # 生成名字
+        # key = str(self.home_unit) + self.__class__.__name__ + model
+        key = home_unit.name + "_" + model
+        if key not in self.engine.ids:            
+            idd = 1
+            self.engine.ids[key].append(idd)
+        else:
+            idd = self.engine.ids[key][-1]+ 1
+            self.engine.ids[key].append(idd)
+        self.name = '%s_%s[%d]' % (home_unit.name, model, idd) # 确保名字唯一
+        self._str_name = '%s[%d]' % (model, idd)
+        assert "." not in self.name, "名字中不能包含'.'"
+        assert self.name not in self.engine._name_units
+        self.engine._name_units[self.name] = self
+        self.engine._name_units.pop(str(self.id))
+        # 因当前母平台不为空，且参数应以母平台为准，重新生成所有组件; 因弹药上的组件无法如此生成，暂废弃。
+        # self.clear_components() # 先清除，再重新生成
+        # self._gen_components(home_unit=home_unit)
+        self.motor.set_ref_unit(home_unit) #完全以母Unit的运动参数为准
+        self.foe = None
+        self.strike_chain = None
+        
+    def __str__(self):
+        return str(self.home_unit) + '.' + self.__class__.__name__ + "." + self._str_name
+
+    def set_move_param(self, coords, velocity):
+        raise RuntimeError("Munition cannot use set_move_param, should use emit")
+
+    def emit(self):
+        self.is_at_home = False
+        raise RuntimeError("须在子类中实现该方法")
+
+    def draw(self, ax):
+        super().draw(ax)
+        try:
+            x, y, _ = self.coords # 可能因多线程导致的开始画时刚好位置还未生成
+        except:
+            return
+        ax.scatter(x, y, c=self.group, 
+            marker=(3, 0, self.course), s=20, alpha=0.5)
+
+    def draw3D(self, ax):
+        super().draw3D(ax)
+        x, y, z = self.coords
+        ax.scatter(x, y, z, c=self.group, marker="o")
+
+
+class Lethality(Component):
+    """ 弹药的杀伤能力类/战斗部类
+    """
+    def __init__(self, unit, model):
+        assert isinstance(unit, Munition)
+        super().__init__(unit, model)
+
+    def is_lethal(self, foe):
+        assert RuntimeError("子类中实现该方法")
+
+
+class ChildPlatform(Platform):
+    """ 子平台，可从母平台脱离
+    """
+    multi_attrs = []
+    single_attrs = ["characteristics", "vitalities", "motor"]
+    def __init__(self, home_unit, model):
+        super().__init__(home_unit.engine, str(self.id), model, home_unit.group)
+        home_unit.add_child(self, detectable=False) # 加到母平台子集中
+        self.is_killed_with_home = False # 当母平台自毁且已离开母平台时是否随母平台自毁
+        # 生成名字
+        # key = str(self.home_unit) + self.__class__.__name__ + model
+        key = home_unit.name + "_" + model
+        if key not in self.engine.ids:            
+            idd = 1
+            self.engine.ids[key].append(idd)
+        else:
+            idd = self.engine.ids[key][-1]+ 1
+            self.engine.ids[key].append(idd)
+        self.name = '%s_%s[%d]' % (home_unit.name, model, idd) # 确保名字唯一
+        self._str_name = '%s[%d]' % (model, idd)
+        assert "." not in self.name, "名字中不能包含'.'"
+        assert self.name not in self.engine._name_units
+        self.engine._name_units[self.name] = self
+        self.engine._name_units.pop(str(self.id))
+        # 因当前母平台不为空，且参数应以母平台为准，重新生成所有组件; 因子平台上的组件无法如此生成，暂废弃。
+        # self.clear_components() # 先清除，再重新生成
+        # self._gen_components(home_unit=home_unit)
+        self.motor.set_ref_unit(home_unit) #完全以母Unit的运动参数为准
+        
+    def __str__(self):
+        return str(self.home_unit) + '.' + self.__class__.__name__ + "." + self._str_name
+
+    def set_move_param(self, coords, velocity):
+        raise RuntimeError("Munition cannot use set_move_param, should use emit")
+
+    def release(self):
+        self.is_at_home = False
+        raise RuntimeError("须在子类中实现该方法")
+
+    def draw(self, ax):
+        super().draw(ax)
+        try:
+            x, y, _ = self.coords # 可能因多线程导致的开始画时刚好位置还未生成
+        except:
+            return
+        ax.scatter(x, y, c=self.group, 
+            marker=(3, 0, self.course), s=20, alpha=0.5)
+
+    def draw3D(self, ax):
+        super().draw3D(ax)
+        x, y, z = self.coords
+        ax.scatter(x, y, z, c=self.group, marker="o")
+
+
+class DependentPlatform(ChildPlatform):
+    """ 依附平台
+        该平台只能依附于某个具体的平台，不能独立移动
+        该平台主要是起到一个Unit的作用,挂载指挥机构等。
+    """
+    single_attrs = ["characteristics", "vitalities", "comdev", "motor", "intelligence", "commander"]
+    # 虽然设置了"characteristics"和"vitalities"，但只是留有接口，避免程序报错，目前均为空
+    multi_attrs = []
+
+    def set_move_param(self, coords, velocity):
+        # 禁用该方法
+        raise RuntimeError("DependentPlatform cannot use set_move_param")
+
+    def release(self):
+        # 禁用该方法
+        raise RuntimeError("DependentPlatform cannot use release")
+
+class FixedPlatform(Platform):
+    def check(self):
+        super().check()
+        assert self.motor.model == "FixedMotor", self
+        
+    def draw(self, ax):
+        super().draw(ax)
+        x, y, _ = self.coords
+        ax.scatter(x, y, c=self.group, marker=alg.marker.IconMarker("Base", self.course), s=150)
+        if self.engine.render_config["name"]:
+            ax.text(x, y, self.name, fontsize=6)
+
+    def drawXz(self, ax):
+        super().drawXz(ax)
+        x, _, z = self.coords
+        ax.scatter(x, z, c=self.group, marker="D", s=150)
+        if self.engine.render_config["name"]:
+            ax.text(x, z, self.name, fontsize=6)
+
+    def draw3D(self, ax):
+        super().draw3D(ax)
+        x, y, z = self.coords
+        ax.scatter(x, y, z, c=self.group, marker="D")
+        if self.engine.render_config["name"]:
+            ax.text(x, y, z, self.name, fontsize=6)
+
+
+
+        

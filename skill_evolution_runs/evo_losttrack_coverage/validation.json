@@ -1,0 +1,120 @@
+{
+ "status": "VALIDATED",
+ "schema": {
+  "pass": true,
+  "errors": {
+   "analyst": "ok",
+   "critic": "ok",
+   "editor": "ok"
+  }
+ },
+ "unit_tests": {
+  "pass": true,
+  "tests": {
+   "test_v3_units.py": {
+    "rc": 0,
+    "pass": true
+   },
+   "test_v4_units.py": {
+    "rc": 0,
+    "pass": true
+   },
+   "test_v5_units.py": {
+    "rc": 0,
+    "pass": true
+   },
+   "test_v6_audit_units.py": {
+    "rc": 0,
+    "pass": true
+   },
+   "audit_variable_cardinality.py": {
+    "rc": 0,
+    "pass": true
+   },
+   "audit_scale_generalization.py": {
+    "rc": 0,
+    "pass": true
+   }
+  }
+ },
+ "tiny_regression": {
+  "pass": true,
+  "scenarios": {
+   "regr_5v5_harness": {
+    "run_success": true,
+    "rc": 0,
+    "wall": 144.1,
+    "meta": {
+     "result": "Result.Victory",
+     "victory_time": "14236",
+     "commander_source": "default_intent",
+     "commander_calls": "0",
+     "commander_parse_failures": "0",
+     "commander_api_failures": "0",
+     "commander_policy_failures": "0",
+     "commander_avg_latency": "0.0",
+     "breakthrough": "0"
+    },
+    "http_or_trace_errors": 0
+   },
+   "regr_10v10_harness": {
+    "run_success": true,
+    "rc": 0,
+    "wall": 175.9,
+    "meta": {
+     "result": "Result.Victory",
+     "victory_time": "13381",
+     "commander_source": "default_intent",
+     "commander_calls": "0",
+     "commander_parse_failures": "0",
+     "commander_api_failures": "0",
+     "commander_policy_failures": "0",
+     "commander_avg_latency": "0.0",
+     "breakthrough": "0"
+    },
+    "http_or_trace_errors": 0
+   },
+   "regr_5v5_commander": {
+    "run_success": true,
+    "rc": 0,
+    "wall": 115.6,
+    "meta": {
+     "result": "Result.Victory",
+     "victory_time": "11469",
+     "commander_source": "deepseek",
+     "commander_calls": "13",
+     "commander_parse_failures": "0",
+     "commander_api_failures": "0",
+     "commander_policy_failures": "0",
+     "commander_avg_latency": "3.4",
+     "breakthrough": "0"
+    },
+    "http_or_trace_errors": 0
+   }
+  },
+  "baseline": {
+   "harness_5v5": {
+    "result": "Result.Victory",
+    "victory_time": "8785",
+    "commander_source": "default_intent",
+    "commander_calls": "0",
+    "commander_parse_failures": "0",
+    "commander_api_failures": "0",
+    "commander_policy_failures": "0",
+    "commander_avg_latency": "0.0",
+    "breakthrough": "0"
+   },
+   "commander_5v5": {
+    "result": "Result.Victory",
+    "victory_time": "9715",
+    "commander_source": "deepseek",
+    "commander_calls": "13",
+    "commander_parse_failures": "0",
+    "commander_api_failures": "0",
+    "commander_policy_failures": "0",
+    "commander_avg_latency": "3.7",
+    "breakthrough": "0"
+   }
+  }
+ }
+}

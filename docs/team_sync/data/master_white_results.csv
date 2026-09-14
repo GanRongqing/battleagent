@@ -1,0 +1,17 @@
+experiment_id,category,scenario,white_policy,black_policy,seed_start,seed_end,valid_n,status,clean_rate,breakthrough_rate,defeat_rate,loss_mean,resolution_mean,result_file,source
+formal_eval_20260825,white_vs_black,S1/S2/S3,W5,B0(black-b0-v1),1001,1030,90,HISTORICAL,0.944,0.056,0.011,4.17,13733.0,formal_eval_20260825/episode_results.csv,formal_eval_20260825/episode_results.csv
+opponent_formal_eval[B0_RANDOM],white_vs_black,S1/S2/S3,W5,B0_RANDOM,1001,1030,90,HISTORICAL,0.944,0.056,0.011,4.17,13733.0,opponent_formal_eval/episode_results.csv,opponent_formal_eval/episode_results.csv
+opponent_formal_eval[B3_ADAPTIVE],white_vs_black,S1/S2/S3,W5,B3_ADAPTIVE,1001,1030,90,HISTORICAL,0.822,0.156,0.056,3.72,22438.0,opponent_formal_eval/episode_results.csv,opponent_formal_eval/episode_results.csv
+auto_harness_phase0,white_vs_black,S2,W5,B3_ADAPTIVE,6001,6100,100,COMPLETE,0.65,0.35,0.09,3.55,25920.0,auto_harness/phase0/corpus/AUTO_HARNESS_EPISODES.csv,auto_harness/phase0/corpus/AUTO_HARNESS_EPISODES.csv
+white_phase1_dev_w5,white_candidate,S2,W5,B3_ADAPTIVE,8001,8030,30,COMPLETE,0.5,0.467,0.133,3.2,27736.0,auto_harness/phase1/dev_w5/EPISODES.csv,auto_harness/phase1/dev_w5/EPISODES.csv
+white_phase1_dev_cand,white_candidate,S2,white-auto-0001-v1,B3_ADAPTIVE,8001,8018,18,PAUSED,0.722,0.278,0.167,3.06,25420.0,auto_harness/phase1/dev_cand/EPISODES.csv,auto_harness/phase1/dev_cand/EPISODES.csv
+common_calibration[B0_RANDOM],white_vs_black,S2,W5,B0_RANDOM,7001,7010,10,COMPLETE,0.9,0.1,0.0,5.2,15799.0,policy_system/calibration/COMMON_CALIBRATION_EPISODES.csv,policy_system/calibration/COMMON_CALIBRATION_EPISODES.csv
+common_calibration[B1_MULTI_AXIS],white_vs_black,S2,W5,B1_MULTI_AXIS,7001,7010,10,COMPLETE,0.0,0.9,1.0,1.3,29450.0,policy_system/calibration/COMMON_CALIBRATION_EPISODES.csv,policy_system/calibration/COMMON_CALIBRATION_EPISODES.csv
+common_calibration[B2_COORDINATED_PRESSURE],white_vs_black,S2,W5,B2_COORDINATED_PRESSURE,7001,7010,10,COMPLETE,0.0,0.7,1.0,1.4,26145.0,policy_system/calibration/COMMON_CALIBRATION_EPISODES.csv,policy_system/calibration/COMMON_CALIBRATION_EPISODES.csv
+common_calibration[B3_ADAPTIVE],white_vs_black,S2,W5,B3_ADAPTIVE,7001,7010,10,COMPLETE,0.6,0.4,0.1,2.5,28711.0,policy_system/calibration/COMMON_CALIBRATION_EPISODES.csv,policy_system/calibration/COMMON_CALIBRATION_EPISODES.csv
+b0_v2_pilot,white_vs_black,S2,W5,black-b0-v2,9001,9009,9,COMPLETE,1.0,0.0,0.0,4.56,13319.0,b0_v2/pilot/EPISODES.csv,b0_v2/pilot/EPISODES.csv
+b0_v2_full,white_vs_black,S2,W5,black-b0-v2,9001,9090,90,COMPLETE,0.989,0.011,0.0,3.58,12837.0,b0_v2/full/EPISODES.csv,b0_v2/full/EPISODES.csv
+auto_0001_s2,white_vs_black,S2,W5,black-auto-0001-v1,7001,7010,10,COMPLETE,0.8,0.2,0.1,3.4,29395.0,policy_system/evolution/auto_0001/calibration_s2/EPISODES.csv,policy_system/evolution/auto_0001/calibration_s2/EPISODES.csv
+auto_0001_fresh,white_vs_black,S2,W5,black-auto-0001-v1,7101,7110,10,COMPLETE,0.7,0.3,0.2,3.8,28503.0,policy_system/evolution/auto_0001/fresh_candidate/EPISODES.csv,policy_system/evolution/auto_0001/fresh_candidate/EPISODES.csv
+auto_0001_cross_s1,white_vs_black,S1,W5,black-auto-0001-v1,7201,7205,5,COMPLETE,0.6,0.2,0.2,1.8,30026.0,policy_system/evolution/auto_0001/cross_S1_candidate/EPISODES.csv,policy_system/evolution/auto_0001/cross_S1_candidate/EPISODES.csv
+auto_0001_cross_s3,white_vs_black,S3,W5,black-auto-0001-v1,7201,7205,5,COMPLETE,0.8,0.0,0.2,6.6,28702.0,policy_system/evolution/auto_0001/cross_S3_candidate/EPISODES.csv,policy_system/evolution/auto_0001/cross_S3_candidate/EPISODES.csv

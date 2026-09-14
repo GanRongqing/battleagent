@@ -1,0 +1,161 @@
+== test_hidden_white_truth_counterfactual ==
+  [PASS] observe_black contains only detected White
+  [PASS] B3: identical legal obs + different hidden White truth → identical action
+  [PASS] B3: pure determinism (same obs → same plan)
+  [PASS] B3: responsive to legal (detected) White position
+== test_white_internal_state_mask ==
+  [PASS] Black policy source has no White-internal references
+  [PASS] observe_black runs without touching White intel
+  [PASS] B3AdaptiveController runs against mock engine (mask OK)
+== test_scale_generation ==
+  [PASS] B1/B2/B3 n=3 path validity
+  [PASS] B1/B2/B3 n=3 path validity
+  [PASS] B1/B2/B3 n=3 path validity
+  [PASS] B1/B2/B3 n=10 path validity
+  [PASS] B1/B2/B3 n=10 path validity
+  [PASS] B1/B2/B3 n=10 path validity
+  [PASS] B1/B2/B3 n=20 path validity
+  [PASS] B1/B2/B3 n=20 path validity
+  [PASS] B1/B2/B3 n=20 path validity
+  [PASS] B1/B2/B3 n=30 path validity
+  [PASS] B1/B2/B3 n=30 path validity
+  [PASS] B1/B2/B3 n=30 path validity
+  [PASS] B1/B2/B3 n=50 path validity
+  [PASS] B1/B2/B3 n=50 path validity
+  [PASS] B1/B2/B3 n=50 path validity
+  [PASS] no per-count hardcode branches
+== test_scale_plan ==
+  [PASS] B3 plan runs at n=3 (3 replans)
+  [PASS] B3 n=3 waypoint valid (black_usv3)
+  [PASS] B3 n=3 waypoint valid (black_usv1)
+  [PASS] B3 n=3 waypoint valid (black_usv2)
+  [PASS] B3 plan runs at n=10 (10 replans)
+  [PASS] B3 n=10 waypoint valid (black_usv10)
+  [PASS] B3 n=10 waypoint valid (black_usv1)
+  [PASS] B3 n=10 waypoint valid (black_usv2)
+  [PASS] B3 n=10 waypoint valid (black_usv3)
+  [PASS] B3 n=10 waypoint valid (black_usv4)
+  [PASS] B3 n=10 waypoint valid (black_usv5)
+  [PASS] B3 n=10 waypoint valid (black_usv6)
+  [PASS] B3 n=10 waypoint valid (black_usv7)
+  [PASS] B3 n=10 waypoint valid (black_usv8)
+  [PASS] B3 n=10 waypoint valid (black_usv9)
+  [PASS] B3 plan runs at n=20 (20 replans)
+  [PASS] B3 n=20 waypoint valid (black_usv20)
+  [PASS] B3 n=20 waypoint valid (black_usv1)
+  [PASS] B3 n=20 waypoint valid (black_usv2)
+  [PASS] B3 n=20 waypoint valid (black_usv3)
+  [PASS] B3 n=20 waypoint valid (black_usv4)
+  [PASS] B3 n=20 waypoint valid (black_usv5)
+  [PASS] B3 n=20 waypoint valid (black_usv6)
+  [PASS] B3 n=20 waypoint valid (black_usv7)
+  [PASS] B3 n=20 waypoint valid (black_usv8)
+  [PASS] B3 n=20 waypoint valid (black_usv9)
+  [PASS] B3 n=20 waypoint valid (black_usv10)
+  [PASS] B3 n=20 waypoint valid (black_usv11)
+  [PASS] B3 n=20 waypoint valid (black_usv12)
+  [PASS] B3 n=20 waypoint valid (black_usv13)
+  [PASS] B3 n=20 waypoint valid (black_usv14)
+  [PASS] B3 n=20 waypoint valid (black_usv15)
+  [PASS] B3 n=20 waypoint valid (black_usv16)
+  [PASS] B3 n=20 waypoint valid (black_usv17)
+  [PASS] B3 n=20 waypoint valid (black_usv18)
+  [PASS] B3 n=20 waypoint valid (black_usv19)
+  [PASS] B3 plan runs at n=30 (30 replans)
+  [PASS] B3 n=30 waypoint valid (black_usv30)
+  [PASS] B3 n=30 waypoint valid (black_usv1)
+  [PASS] B3 n=30 waypoint valid (black_usv2)
+  [PASS] B3 n=30 waypoint valid (black_usv3)
+  [PASS] B3 n=30 waypoint valid (black_usv4)
+  [PASS] B3 n=30 waypoint valid (black_usv5)
+  [PASS] B3 n=30 waypoint valid (black_usv6)
+  [PASS] B3 n=30 waypoint valid (black_usv7)
+  [PASS] B3 n=30 waypoint valid (black_usv8)
+  [PASS] B3 n=30 waypoint valid (black_usv9)
+  [PASS] B3 n=30 waypoint valid (black_usv10)
+  [PASS] B3 n=30 waypoint valid (black_usv11)
+  [PASS] B3 n=30 waypoint valid (black_usv12)
+  [PASS] B3 n=30 waypoint valid (black_usv13)
+  [PASS] B3 n=30 waypoint valid (black_usv14)
+  [PASS] B3 n=30 waypoint valid (black_usv15)
+  [PASS] B3 n=30 waypoint valid (black_usv16)
+  [PASS] B3 n=30 waypoint valid (black_usv17)
+  [PASS] B3 n=30 waypoint valid (black_usv18)
+  [PASS] B3 n=30 waypoint valid (black_usv19)
+  [PASS] B3 n=30 waypoint valid (black_usv20)
+  [PASS] B3 n=30 waypoint valid (black_usv21)
+  [PASS] B3 n=30 waypoint valid (black_usv22)
+  [PASS] B3 n=30 waypoint valid (black_usv23)
+  [PASS] B3 n=30 waypoint valid (black_usv24)
+  [PASS] B3 n=30 waypoint valid (black_usv25)
+  [PASS] B3 n=30 waypoint valid (black_usv26)
+  [PASS] B3 n=30 waypoint valid (black_usv27)
+  [PASS] B3 n=30 waypoint valid (black_usv28)
+  [PASS] B3 n=30 waypoint valid (black_usv29)
+  [PASS] B3 plan runs at n=50 (50 replans)
+  [PASS] B3 n=50 waypoint valid (black_usv50)
+  [PASS] B3 n=50 waypoint valid (black_usv1)
+  [PASS] B3 n=50 waypoint valid (black_usv2)
+  [PASS] B3 n=50 waypoint valid (black_usv3)
+  [PASS] B3 n=50 waypoint valid (black_usv4)
+  [PASS] B3 n=50 waypoint valid (black_usv5)
+  [PASS] B3 n=50 waypoint valid (black_usv6)
+  [PASS] B3 n=50 waypoint valid (black_usv7)
+  [PASS] B3 n=50 waypoint valid (black_usv8)
+  [PASS] B3 n=50 waypoint valid (black_usv9)
+  [PASS] B3 n=50 waypoint valid (black_usv10)
+  [PASS] B3 n=50 waypoint valid (black_usv11)
+  [PASS] B3 n=50 waypoint valid (black_usv12)
+  [PASS] B3 n=50 waypoint valid (black_usv13)
+  [PASS] B3 n=50 waypoint valid (black_usv14)
+  [PASS] B3 n=50 waypoint valid (black_usv15)
+  [PASS] B3 n=50 waypoint valid (black_usv16)
+  [PASS] B3 n=50 waypoint valid (black_usv17)
+  [PASS] B3 n=50 waypoint valid (black_usv18)
+  [PASS] B3 n=50 waypoint valid (black_usv19)
+  [PASS] B3 n=50 waypoint valid (black_usv20)
+  [PASS] B3 n=50 waypoint valid (black_usv21)
+  [PASS] B3 n=50 waypoint valid (black_usv22)
+  [PASS] B3 n=50 waypoint valid (black_usv23)
+  [PASS] B3 n=50 waypoint valid (black_usv24)
+  [PASS] B3 n=50 waypoint valid (black_usv25)
+  [PASS] B3 n=50 waypoint valid (black_usv26)
+  [PASS] B3 n=50 waypoint valid (black_usv27)
+  [PASS] B3 n=50 waypoint valid (black_usv28)
+  [PASS] B3 n=50 waypoint valid (black_usv29)
+  [PASS] B3 n=50 waypoint valid (black_usv30)
+  [PASS] B3 n=50 waypoint valid (black_usv31)
+  [PASS] B3 n=50 waypoint valid (black_usv32)
+  [PASS] B3 n=50 waypoint valid (black_usv33)
+  [PASS] B3 n=50 waypoint valid (black_usv34)
+  [PASS] B3 n=50 waypoint valid (black_usv35)
+  [PASS] B3 n=50 waypoint valid (black_usv36)
+  [PASS] B3 n=50 waypoint valid (black_usv37)
+  [PASS] B3 n=50 waypoint valid (black_usv38)
+  [PASS] B3 n=50 waypoint valid (black_usv39)
+  [PASS] B3 n=50 waypoint valid (black_usv40)
+  [PASS] B3 n=50 waypoint valid (black_usv41)
+  [PASS] B3 n=50 waypoint valid (black_usv42)
+  [PASS] B3 n=50 waypoint valid (black_usv43)
+  [PASS] B3 n=50 waypoint valid (black_usv44)
+  [PASS] B3 n=50 waypoint valid (black_usv45)
+  [PASS] B3 n=50 waypoint valid (black_usv46)
+  [PASS] B3 n=50 waypoint valid (black_usv47)
+  [PASS] B3 n=50 waypoint valid (black_usv48)
+  [PASS] B3 n=50 waypoint valid (black_usv49)
+== test_b0_unchanged ==
+  [PASS] B0 path generator unchanged (same seed → same paths)
+  [PASS] B0 not routed through opponent generator (ValueError raised)
+== test_doctrine_mix ==
+  [PASS] B4 seed 1001 → doctrine in B1/B2/B3
+  [PASS] B4 seed 2002 → doctrine in B1/B2/B3
+  [PASS] B4 seed 3003 → doctrine in B1/B2/B3
+  [PASS] B4 seed 4004 → doctrine in B1/B2/B3
+  [PASS] B4 seed 5005 → doctrine in B1/B2/B3
+  [PASS] resolve_profile deterministic
+  [PASS] resolve_profile passthrough for B1
+  [PASS] B4(n=10) resolved=B2_COORDINATED_PRESSURE valid paths
+  [PASS] B4(n=20) resolved=B2_COORDINATED_PRESSURE valid paths
+  [PASS] B4(n=30) resolved=B2_COORDINATED_PRESSURE valid paths
+============================================================
+PASS: 153  FAIL: 0

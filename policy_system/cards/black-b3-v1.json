@@ -1,0 +1,62 @@
+{
+ "policy_id": "black-b3-v1",
+ "version": "1.0.0",
+ "side": "black",
+ "strategy_family": "adaptive_multi_axis_penetration",
+ "declared_intent": {
+  "pressure_objectives": [
+   "dispersion",
+   "search burden",
+   "adaptive evasion",
+   "penetration"
+  ],
+  "target_priority": "break-line",
+  "operational_goal": "legal-observation-driven runtime replanning: lane shift away from detected White proximity (60km), evade > brute-force",
+  "key_assumptions": [
+   "White radar may reveal"
+  ],
+  "intended_failure_modes": [
+   "White early recon continuity",
+   "concentration denial"
+  ]
+ },
+ "trigger_and_switch": [
+  {
+   "trigger": "White detected within 60km of group centroid",
+   "response": "lateral lane shift (replan)",
+   "source": "code"
+  },
+  {
+   "trigger": "15s interval tick",
+   "response": "recompute lanes (anti-spam heading-change gate)",
+   "source": "code"
+  }
+ ],
+ "known_strengths": [
+  "adaptive evasion/dispersion",
+  "raises exploration/resolution burden"
+ ],
+ "known_weaknesses": [
+  [
+   "no offensive firepower increase vs B0 (evasion-oriented)",
+   "declared"
+  ],
+  [
+   "geometrically late against well-positioned interception (inferred from FREE-reinforcement analyses)",
+   "inferred"
+  ]
+ ],
+ "declared_traits": {
+  "aggression": "moderate",
+  "dispersion": "high (adaptive)",
+  "coordination": "high",
+  "adaptivity": "high",
+  "recon_dependency": "high"
+ },
+ "status": "active",
+ "evaluation_role": "stress_test",
+ "parent_policy_id": "black-b2-v1",
+ "description": "B3_ADAPTIVE legal replanning opponent",
+ "created_at": "2026-09-10T00:10:08",
+ "updated_at": "2026-09-10T00:10:08"
+}

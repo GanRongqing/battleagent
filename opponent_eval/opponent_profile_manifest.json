@@ -1,0 +1,33 @@
+{
+ "white_frozen": {
+  "agent_hash": "a7842b29c81cc567ea63cae262cb6ab0b9d9bd9df90903c4115eaa6e6c6f0f66",
+  "skill_hash": "155b02019dc92c6e6c0095949439a413cd86310ad1026cd394ad185c3d13552e"
+ },
+ "black_profiles": {
+  "B0_RANDOM": "existing random-waypoint baseline (unchanged)",
+  "B1_MULTI_AXIS": "dynamic spatial groups, multi-lateral approach lanes",
+  "B2_COORDINATED_PRESSURE": "group-synchronized lanes + staggered arrival (B1 + coordination)",
+  "B3_ADAPTIVE": "runtime legal replanning from Black radar intel (B2 + adaptive)",
+  "B4_DOCTRINE_MIX": "seed-driven doctrine mix (B1/B2/B3), recorded evaluator-side, invisible to White"
+ },
+ "physics_unchanged": true,
+ "white_internal_accessed_by_black": false,
+ "black_observation": "get_black_targets() only (Black radar intel) + own BLUE units",
+ "smoke": {
+  "white": "5 USV + 5 UAV",
+  "black": "10 combat USV + 0 UAV",
+  "seeds": [
+   1001,
+   1002,
+   1003
+  ],
+  "profiles": [
+   "B0_RANDOM",
+   "B1_MULTI_AXIS",
+   "B2_COORDINATED_PRESSURE",
+   "B3_ADAPTIVE"
+  ]
+ },
+ "opponent_profiles_hash": "4166910006c2b42bd20e87a867ec8698630603473e75c33afbc10eba4997818c",
+ "note": "smoke is NOT for statistical significance; confirms ladder pressure differences + no policy/sim bug"
+}

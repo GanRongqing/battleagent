@@ -1,0 +1,29 @@
+{
+ "strategy_id": "white-w6",
+ "name": "White Harness W6",
+ "side": "white",
+ "generation": "W6",
+ "type": "harness",
+ "status": "completed",
+ "runtime_mode": "dev3",
+ "parent": "W5",
+ "agent_entrypoint": "agent_hybrid_w6.py",
+ "agent_hash": "d73b85489952554fbdaa496574eb7682f0fe07b4bdf57daa8de04597cc17ae94",
+ "anti_evasion_dir_hash": "b4f9ea6b4d19a44c5fb981dd26cd09253b783d95efe474b3a5df956d4f7e7283",
+ "skill_hash": "155b02019dc92c6e6c0095949439a413cd86310ad1026cd394ad185c3d13552e",
+ "prompt_hash": "155b02019dc92c6e6c0095949439a413cd86310ad1026cd394ad185c3d13552e",
+ "w5_hash": "e823e7bed219f4693aa778a838df1400c161f8e7e44001502e5bceb0ae804252",
+ "execution_controller": "LEGACY_W5 (agent_hybrid_v5.USVController/UAVManager)",
+ "fair_play": true,
+ "variable_cardinality": true,
+ "execution_override": false,
+ "created_at": "2026-09-07T12:09:10",
+ "description": "W6 completed deliverable (dev3 semantics): allocator/execution decoupling; W6 owns WHO/TASK/TARGET via allocator overlay (prediction/risk/pursuit/handoff/reserve as features), legacy W5 controller owns HOW. Not a win-rate improvement over W5 by evidence; delivered as an auditable adaptive-harness generation.",
+ "known_limitations": [
+  "assignment-level actionability low in many states",
+  "FREE reinforcement falsified (ETA-ratio and breakthrough-deadline)",
+  "SOFT rebalancing transient / persistence non-generalizing",
+  "no stable clean-win improvement over W5 observed",
+  "dev4.1/dev4.2 experimental triggers excluded from deliverable"
+ ]
+}

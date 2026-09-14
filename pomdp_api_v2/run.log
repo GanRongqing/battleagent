@@ -1,0 +1,22 @@
+INFO:     Started server process [75608]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8001 (Press CTRL+C to quit)
+2026-09-02 01:22:59 [INFO] gRPC 已连接 → 127.0.0.1:6000
+2026-09-02 01:22:59 [INFO] GET /health → 200 (29.6 ms)
+========================================================
+  仿真 POMDP API
+  监听: 0.0.0.0:8001
+  后端: 127.0.0.1:6000
+  用户: admin
+  日志: sim_api.log
+  ⚠ 未设置 API_HOST，/docs 链接不可用，请设置后重启
+  宏观步步长: 30.0s（仿真秒数）
+========================================================
+INFO:     127.0.0.1:60002 - "GET /health HTTP/1.1" 200 OK
+2026-09-02 01:22:59 [INFO] GET /openapi.json → 200 (60.3 ms)
+INFO:     127.0.0.1:60004 - "GET /openapi.json HTTP/1.1" 200 OK
+2026-09-02 01:23:48 [INFO] GET /health → 200 (9.2 ms)
+INFO:     127.0.0.1:45284 - "GET /health HTTP/1.1" 200 OK
+2026-09-02 01:23:49 [INFO] GET /openapi.json → 200 (0.9 ms)
+INFO:     127.0.0.1:45290 - "GET /openapi.json HTTP/1.1" 200 OK

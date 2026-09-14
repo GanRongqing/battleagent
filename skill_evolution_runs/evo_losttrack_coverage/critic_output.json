@@ -1,0 +1,28 @@
+{
+ "role": "critic",
+ "evidence_refs": [
+  "EVID-001"
+ ],
+ "accept_analyst": false,
+ "counterexamples": [
+  "EVID-001 中 commander_intent 的 reserve_ratio=0.00 且 allocator 返回空 {}，说明实际集中并非由 Commander 决策造成，而是 harness 未产生分配。Analyst 将根因归为文档缺乏覆盖指导，但证据显示 allocator 完全未给出分配，可能是 harness 或接口问题，而非 doctrine 缺失。",
+  "原则 '任何目标的攻击者分配不得超过维持全局覆盖所需的兵力余量' 将 Commander 的表达能力扩展到分配细节——文档明确 Commander 只输出 overmatch_policy 等战略偏好，精确分配由 allocator 负责。此建议违反 'Commander role' 边界，且相当于固定了分配逻辑。",
+  "提出 'coverage quality 应作为集中力度的输入' 会绑定到 coverage 指标的具体定义和阈值，属于场景化指标，不应该写入长期 doctrine。"
+ ],
+ "overfit_risks": [
+  "EVID-001 仅为单局单步，uncovered_ships=3 可能源于分配器异常或信息延迟，不能证明普遍规律；据此修改 doctrine 有过拟合风险。",
+  "Analyst 的 '若覆盖显著低于正常水平' 中 '正常水平' 无明确标准，隐式假设 coverage quality 有固定基线，此绑定场景。",
+  "提出的三条原则本质上重复现有 'Local force concentration' 和 'coverage floor' 已覆盖的内容，新增详细规则可能引入固定数量假设（如 '至少一名攻击者' 在 endgame 或特殊策略下不一定最优）。"
+ ],
+ "constraint_conflicts": [
+  "与 'Commander role' 冲突：Analyst 建议 Commander 应 '分配不得超过...兵力余量'、'优先分配单舰覆盖'，这是 allocator 的具体分配职责，不是 Commander 的战略输出。",
+  "与 'Fair-play doctrine' 无直接冲突，但 'coverage quality 作为输入' 隐含依赖 harness 内部指标，可能超出 Commander 允许使用的信息范围。",
+  "与 'Marginal overmatch' 和 'Local force concentration' 的既有表达冲突：现有文档已通过 overmatch_policy 表达集中力度，Analyst 的建议试图把分配细节写死。"
+ ],
+ "recommended_changes": [
+  "拒绝 Analyst 的结构化改动；不修改 skill 文档。",
+  "将 EVID-001 视为 allocator 输出为空 的技术问题，建议单独排查 harness 分配逻辑，而非作为 doctrine 修订的证据。",
+  "若确需补充，可在 'Low-confidence commitment' 中增加一句 '覆盖缺口优先于边际集中' 的原则性表述，但不引入具体数量/指标分支。"
+ ],
+ "confidence": 0.85
+}

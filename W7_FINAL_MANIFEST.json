@@ -1,0 +1,38 @@
+{
+ "strategy_id": "white-w7",
+ "name": "White Harness W7",
+ "side": "white",
+ "generation": "W7",
+ "type": "harness",
+ "status": "completed_no_robust_improvement",
+ "parent": "W5",
+ "runtime_entrypoint": "agent_hybrid_v5.py (W5-equivalent baseline retained)",
+ "runtime_mode": "w5-equivalent",
+ "modules": [
+  "recon-a(DROP)",
+  "kc-a(DROP)",
+  "recon-b1(DROP)",
+  "fastpath(DROP, profile)",
+  "gap-a(DROP)"
+ ],
+ "agent_hash": "e823e7bed219f4693aa778a838df1400c161f8e7e44001502e5bceb0ae804252",
+ "skill_hash": "155b02019dc92c6e6c0095949439a413cd86310ad1026cd394ad185c3d13552e",
+ "opponent_hash": "7aa12e1d8b7c588feadd5e2fa908267f1ee131a452c01b6e9a163426590dff6c",
+ "physics_hash": "engine.py:58aab5ad4cdb tzb:396ba7a3e294",
+ "execution_controller": "W5 USVController/UAVManager",
+ "execution_override": 0,
+ "fair_play": true,
+ "variable_cardinality": true,
+ "candidate_search_summary": "5 attack surfaces tested on S2xB3 (DEV 4001-4005/4001-4010): recon-a DROP, kc-a DROP, recon-b1 DROP, fastpath DROP (latency not bottleneck), gap-a DROP (N10 clean 0.60 vs W5 0.80). None robustly beat W5.",
+ "DEV_seed_policy": "4001-4010",
+ "FINAL_seed_policy": "5001-5010 (NOT used; no robust candidate to hold out)",
+ "DEV_performance": {
+  "W5_clean": 0.8,
+  "best_candidate": "none"
+ },
+ "known_limitations": [
+  "no robust win-rate improvement over W5 found in tested hand-crafted search space",
+  "W5 remains strongest deterministic baseline on S2xB3"
+ ],
+ "created_at": "2026-09-07T15:16:59"
+}

@@ -1,0 +1,48 @@
+{
+ "agent_hash": "a7842b29c81cc567ea63cae262cb6ab0b9d9bd9df90903c4115eaa6e6c6f0f66",
+ "skill_hash": "155b02019dc92c6e6c0095949439a413cd86310ad1026cd394ad185c3d13552e",
+ "prompt_hash": "fb4c5641b4ea55c7c38fc2d36894e3a9765fffd346e10c5bbdd9036a303fce54",
+ "bt_harness_interface_hash": "395835667c1f81e2f224c5961acc7b47c54ff8b4d50073b29bbe90acc307cbe2",
+ "bt_real_trees_hash": "b5bf0a8cdfe0820f01f059518e6ebf18b1f6aceef6323e99d71a87f717c1ed5a",
+ "bt_bridge_hash": "b5bf0a8cdfe0:BTBridge",
+ "action_safety_hash": "agent_hybrid_v5.py:ActionSafety:a7842b29c81c",
+ "scenario_builder_hash": "ae3df1b36680dfc60af4360dcee477ece668d57dd2641bb3352a26b620e9f6f8",
+ "git_commit": "4c7594ff16edcda4bda62a9da7f75f1b7b3ce1b6",
+ "git_dirty": true,
+ "experiment_time": "2026-08-30 23:17:47",
+ "integration": {
+  "scales": [
+   "S1",
+   "S2",
+   "S3"
+  ],
+  "profiles": [
+   "B0_RANDOM",
+   "B3_ADAPTIVE"
+  ],
+  "seeds": [
+   1101,
+   1102,
+   1103
+  ]
+ },
+ "paired_regression": {
+  "scales": [
+   "S1",
+   "S2",
+   "S3"
+  ],
+  "profiles": [
+   "B0_RANDOM",
+   "B3_ADAPTIVE"
+  ],
+  "seeds": [
+   1201,
+   1202,
+   1203,
+   1204,
+   1205
+  ]
+ },
+ "notes": "unit/contract tests + 18-ep integration + 30+30 paired semantic regression (NEW BT vs legacy harness same seeds)"
+}

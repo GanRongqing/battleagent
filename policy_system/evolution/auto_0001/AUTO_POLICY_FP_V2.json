@@ -1,0 +1,550 @@
+{
+  "policy_id": "black-auto-0001-v1",
+  "fingerprint_version": "fp-v2",
+  "scenario": "S2",
+  "seed_set": [
+    7001,
+    7002,
+    7003,
+    7004,
+    7005,
+    7006,
+    7007,
+    7008,
+    7009,
+    7010
+  ],
+  "episode_count": 10,
+  "behavioral": {
+    "adaptation": {
+      "adaptive_replan_count": {
+        "n": 10,
+        "mean": 0,
+        "median": 0.0,
+        "p25": 0,
+        "p75": 0,
+        "std": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "lane_shift_count": {
+        "n": 10,
+        "mean": 0,
+        "median": 0.0,
+        "p25": 0,
+        "p75": 0,
+        "std": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "dispersion_event_count": {
+        "n": 10,
+        "mean": 0,
+        "median": 0.0,
+        "p25": 0,
+        "p75": 0,
+        "std": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "detected_white_event_count": {
+        "n": 10,
+        "mean": 0,
+        "median": 0.0,
+        "p25": 0,
+        "p75": 0,
+        "std": 0.0,
+        "min": 0,
+        "max": 0
+      },
+      "replan_frequency_per_1000s": {
+        "n": 10,
+        "mean": 0.0,
+        "median": 0.0,
+        "p25": 0.0,
+        "p75": 0.0,
+        "std": 0.0,
+        "min": 0.0,
+        "max": 0.0
+      },
+      "contact_to_replan_latency": {
+        "n": 10,
+        "mean": null,
+        "median": null,
+        "p25": null,
+        "p75": null,
+        "std": null,
+        "min": null,
+        "max": null
+      }
+    },
+    "coordination": {
+      "arrival_front_sync_std_s": {
+        "n": 10,
+        "mean": null,
+        "median": null,
+        "p25": null,
+        "p75": null,
+        "std": null,
+        "min": null,
+        "max": null
+      },
+      "arrival_front_mean_s": {
+        "n": 10,
+        "mean": null,
+        "median": null,
+        "p25": null,
+        "p75": null,
+        "std": null,
+        "min": null,
+        "max": null
+      },
+      "approach_bearing_entropy": {
+        "n": 10,
+        "mean": 0.6452,
+        "median": 0.5912,
+        "p25": 0.2734,
+        "p75": 0.9449,
+        "std": 0.3762,
+        "min": 0.1191,
+        "max": 1.3143
+      },
+      "group_arrival_sync": {
+        "n": 10,
+        "mean": null,
+        "median": null,
+        "p25": null,
+        "p75": null,
+        "std": null,
+        "min": null,
+        "max": null
+      }
+    },
+    "spatial": {
+      "approach_lane_entropy": {
+        "n": 10,
+        "mean": 0.6452,
+        "median": 0.5912,
+        "p25": 0.2734,
+        "p75": 0.9449,
+        "std": 0.3762,
+        "min": 0.1191,
+        "max": 1.3143
+      },
+      "mean_visible_group_count": {
+        "n": 10,
+        "mean": 4.54,
+        "median": 4.5,
+        "p25": 4.2,
+        "p75": 4.9,
+        "std": 0.3169,
+        "min": 4.1,
+        "max": 5.0
+      },
+      "mean_group_spacing_km": {
+        "n": 10,
+        "mean": 43006.5,
+        "median": 36374.0,
+        "p25": 32343.0,
+        "p75": 53956.0,
+        "std": 14997.3801,
+        "min": 24625.0,
+        "max": 72804.0
+      },
+      "peak_simultaneous_visible": {
+        "n": 10,
+        "mean": 19.8,
+        "median": 20.0,
+        "p25": 20.0,
+        "p75": 20.0,
+        "std": 0.4,
+        "min": 19.0,
+        "max": 20.0
+      },
+      "visible_pairwise_dist_km_median": {
+        "n": 10,
+        "mean": null,
+        "median": null,
+        "p25": null,
+        "p75": null,
+        "std": null,
+        "min": null,
+        "max": null
+      },
+      "visible_y_spread_km_median": {
+        "n": 10,
+        "mean": null,
+        "median": null,
+        "p25": null,
+        "p75": null,
+        "std": null,
+        "min": null,
+        "max": null
+      },
+      "visible_peak_count": {
+        "n": 10,
+        "mean": null,
+        "median": null,
+        "p25": null,
+        "p75": null,
+        "std": null,
+        "min": null,
+        "max": null
+      },
+      "visible_window_start_s": {
+        "n": 10,
+        "mean": null,
+        "median": null,
+        "p25": null,
+        "p75": null,
+        "std": null,
+        "min": null,
+        "max": null
+      }
+    },
+    "structure": {
+      "reserve_fraction": {
+        "n": 10,
+        "mean": 0.805,
+        "median": 0.8,
+        "p25": 0.8,
+        "p75": 0.8,
+        "std": 0.015,
+        "min": 0.8,
+        "max": 0.85
+      },
+      "early_force_commitment_ratio": {
+        "n": 10,
+        "mean": 0.105,
+        "median": 0.1,
+        "p25": 0.05,
+        "p75": 0.15,
+        "std": 0.0472,
+        "min": 0.05,
+        "max": 0.2
+      },
+      "late_force_commitment_ratio": {
+        "n": 10,
+        "mean": 0.2,
+        "median": 0.2,
+        "p25": 0.2,
+        "p75": 0.2,
+        "std": 0.0,
+        "min": 0.2,
+        "max": 0.2
+      },
+      "early_late_concentration_delta": {
+        "n": 10,
+        "mean": 0.095,
+        "median": 0.1,
+        "p25": 0.05,
+        "p75": 0.15,
+        "std": 0.0472,
+        "min": 0.0,
+        "max": 0.15
+      },
+      "role_asymmetry_index": {
+        "n": 10,
+        "mean": 2.1631,
+        "median": 2.1383,
+        "p25": 2.0822,
+        "p75": 2.2525,
+        "std": 0.0958,
+        "min": 2.0453,
+        "max": 2.3104
+      },
+      "dominant_axis_shift_count": {
+        "n": 10,
+        "mean": 1,
+        "median": 1.0,
+        "p25": 1,
+        "p75": 1,
+        "std": 0.0,
+        "min": 1,
+        "max": 1
+      },
+      "phase_switch_count": {
+        "n": 10,
+        "mean": 1.6,
+        "median": 2.0,
+        "p25": 1,
+        "p75": 2,
+        "std": 0.4899,
+        "min": 1,
+        "max": 2
+      },
+      "main_force_commit_time": {
+        "n": 10,
+        "mean": 7020.0,
+        "median": 7020.0,
+        "p25": 7020.0,
+        "p75": 7020.0,
+        "std": 0.0,
+        "min": 7020.0,
+        "max": 7020.0
+      },
+      "continuous_replan_count": {
+        "n": 10,
+        "mean": 13.2,
+        "median": 13.0,
+        "p25": 13,
+        "p75": 13,
+        "std": 0.4,
+        "min": 13,
+        "max": 14
+      }
+    },
+    "temporal": {
+      "first_contact_time": {
+        "n": 10,
+        "mean": 1858.3,
+        "median": 1858.5,
+        "p25": 1854.0,
+        "p75": 1863.0,
+        "std": 7.3082,
+        "min": 1843.0,
+        "max": 1870.0
+      },
+      "first_engagement_time": {
+        "n": 10,
+        "mean": 7393.0,
+        "median": 7396.5,
+        "p25": 7386.0,
+        "p75": 7399.0,
+        "std": 9.2736,
+        "min": 7373.0,
+        "max": 7403.0
+      },
+      "first_attack_time": {
+        "n": 10,
+        "mean": 8422.8,
+        "median": 8345.5,
+        "p25": 8313.0,
+        "p75": 8627.0,
+        "std": 142.8095,
+        "min": 8293.0,
+        "max": 8652.0
+      },
+      "resolution_time": {
+        "n": 10,
+        "mean": 29395.2,
+        "median": 30980.5,
+        "p25": 17045.0,
+        "p75": 40404.0,
+        "std": 10918.2452,
+        "min": 15847.0,
+        "max": 41169.0
+      },
+      "phase_switch_count": {
+        "n": 10,
+        "mean": null,
+        "median": null,
+        "p25": null,
+        "p75": null,
+        "std": null,
+        "min": null,
+        "max": null
+      }
+    }
+  },
+  "response": {
+    "failure": {
+      "failure_reason": {
+        "n": 10,
+        "note": "non-numeric/text field"
+      }
+    },
+    "outcomes": {
+      "victory": {
+        "n": 10,
+        "mean": 0.9,
+        "median": 1.0,
+        "p25": 1,
+        "p75": 1,
+        "std": 0.3,
+        "min": 0,
+        "max": 1
+      },
+      "clean_win": {
+        "n": 10,
+        "mean": 0.8,
+        "median": 1.0,
+        "p25": 1,
+        "p75": 1,
+        "std": 0.4,
+        "min": 0,
+        "max": 1
+      },
+      "breakthrough_count": {
+        "n": 10,
+        "mean": 0.2,
+        "median": 0.0,
+        "p25": 0.0,
+        "p75": 0.0,
+        "std": 0.4,
+        "min": 0.0,
+        "max": 1.0
+      },
+      "white_friendly_losses": {
+        "n": 10,
+        "mean": 8.4,
+        "median": 8.0,
+        "p25": 3.0,
+        "p75": 14.0,
+        "std": 4.984,
+        "min": 2.0,
+        "max": 15.0
+      },
+      "enemy_kills": {
+        "n": 10,
+        "mean": 19.7,
+        "median": 20.0,
+        "p25": 20.0,
+        "p75": 20.0,
+        "std": 0.6403,
+        "min": 18.0,
+        "max": 20.0
+      },
+      "explored_ratio": {
+        "n": 10,
+        "mean": 0.4498,
+        "median": 0.4456,
+        "p25": 0.3586,
+        "p75": 0.5331,
+        "std": 0.0994,
+        "min": 0.3236,
+        "max": 0.6398
+      },
+      "white_reacquire_count": {
+        "n": 10,
+        "mean": 1.4,
+        "median": 0.5,
+        "p25": 0.0,
+        "p75": 2.0,
+        "std": 2.3324,
+        "min": 0.0,
+        "max": 8.0
+      }
+    }
+  },
+  "availability": {
+    "adaptation.adaptive_replan_count": [
+      "available"
+    ],
+    "adaptation.lane_shift_count": [
+      "available"
+    ],
+    "adaptation.dispersion_event_count": [
+      "available"
+    ],
+    "adaptation.detected_white_event_count": [
+      "available"
+    ],
+    "adaptation.replan_frequency_per_1000s": [
+      "available"
+    ],
+    "adaptation.contact_to_replan_latency": [
+      "unavailable"
+    ],
+    "coordination.arrival_front_sync_std_s": [
+      "unavailable"
+    ],
+    "coordination.arrival_front_mean_s": [
+      "unavailable"
+    ],
+    "coordination.approach_bearing_entropy": [
+      "proxy"
+    ],
+    "coordination.group_arrival_sync": [
+      "unavailable"
+    ],
+    "spatial.approach_lane_entropy": [
+      "proxy"
+    ],
+    "spatial.mean_visible_group_count": [
+      "proxy"
+    ],
+    "spatial.mean_group_spacing_km": [
+      "proxy"
+    ],
+    "spatial.peak_simultaneous_visible": [
+      "proxy"
+    ],
+    "spatial.visible_pairwise_dist_km_median": [
+      "unavailable"
+    ],
+    "spatial.visible_y_spread_km_median": [
+      "unavailable"
+    ],
+    "spatial.visible_peak_count": [
+      "unavailable"
+    ],
+    "spatial.visible_window_start_s": [
+      "unavailable"
+    ],
+    "structure.reserve_fraction": [
+      "available"
+    ],
+    "structure.early_force_commitment_ratio": [
+      "available"
+    ],
+    "structure.late_force_commitment_ratio": [
+      "available"
+    ],
+    "structure.early_late_concentration_delta": [
+      "available"
+    ],
+    "structure.role_asymmetry_index": [
+      "available"
+    ],
+    "structure.dominant_axis_shift_count": [
+      "available"
+    ],
+    "structure.phase_switch_count": [
+      "available"
+    ],
+    "structure.main_force_commit_time": [
+      "available"
+    ],
+    "structure.continuous_replan_count": [
+      "available"
+    ],
+    "temporal.first_contact_time": [
+      "available"
+    ],
+    "temporal.first_engagement_time": [
+      "available"
+    ],
+    "temporal.first_attack_time": [
+      "available"
+    ],
+    "temporal.resolution_time": [
+      "available"
+    ],
+    "temporal.phase_switch_count": [
+      "unavailable"
+    ],
+    "outcomes.victory": [
+      "available"
+    ],
+    "outcomes.clean_win": [
+      "available"
+    ],
+    "outcomes.breakthrough_count": [
+      "available"
+    ],
+    "outcomes.white_friendly_losses": [
+      "available"
+    ],
+    "outcomes.enemy_kills": [
+      "available"
+    ],
+    "outcomes.explored_ratio": [
+      "available"
+    ],
+    "outcomes.white_reacquire_count": [
+      "available"
+    ]
+  },
+  "empirical_behavior_class": "phased_feint_switch_pressure"
+}

@@ -1,0 +1,200 @@
+{
+ "source": {
+  "type": "audit-run",
+  "run_id": "ep4_1787234142",
+  "step_id": 336,
+  "dir": "runtime_audit/run_ep4_1787234142"
+ },
+ "evidence": [
+  {
+   "run_id": "ep4_1787234142",
+   "step_id": 336,
+   "sim_time": 6598.0,
+   "engine_result": null,
+   "clean_result": null,
+   "failure_category": null,
+   "mission_state": "NORMAL_COMBAT",
+   "trigger": "lost_high_threat",
+   "threat_clusters": [
+    {
+     "id": "cluster_1",
+     "ships": 5,
+     "visible": 4,
+     "lost": 1,
+     "avg_conf": 1.0,
+     "min_x": 194044,
+     "friendly_committed": 5,
+     "local_force_ratio": 1.0,
+     "near_break": false,
+     "recon_coverage": "low",
+     "describe": "CLUSTER cluster_1: tracks=5 visible=4 lost=1 avg_conf=1.00 min_breakthrough_x=194044 friendly_committed=5 local_force_ratio=1.00 near_break=false recon_coverage=low"
+    }
+   ],
+   "coverage": {
+    "quality": 0.161,
+    "cells_covered": 29,
+    "cells_total": 56
+   },
+   "track_beliefs": {
+    "black_usv3": {
+     "visible": false,
+     "engaged": false,
+     "assigned_usvs": [
+      "white_usv1",
+      "white_usv2",
+      "white_usv5"
+     ],
+     "confidence": 0.5,
+     "point_confidence": 1.0,
+     "age": 64,
+     "uncertainty": 6880.0,
+     "predicted_position": [
+      194044.6,
+      402435.1
+     ],
+     "is_ship": true,
+     "maneuver_score": 0.0
+    },
+    "black_usv2": {
+     "visible": true,
+     "engaged": false,
+     "assigned_usvs": [
+      "white_usv3",
+      "white_usv4"
+     ],
+     "confidence": 1.0,
+     "point_confidence": 1.0,
+     "age": 0,
+     "uncertainty": 4000.0,
+     "predicted_position": [
+      194128.7,
+      394205.3
+     ],
+     "is_ship": true,
+     "maneuver_score": 0.0
+    },
+    "black_usv4": {
+     "visible": true,
+     "engaged": false,
+     "assigned_usvs": [],
+     "confidence": 1.0,
+     "point_confidence": 1.0,
+     "age": 0,
+     "uncertainty": 4000.0,
+     "predicted_position": [
+      196103.7,
+      436549.3
+     ],
+     "is_ship": true,
+     "maneuver_score": 0.0
+    },
+    "black_usv1": {
+     "visible": true,
+     "engaged": false,
+     "assigned_usvs": [],
+     "confidence": 1.0,
+     "point_confidence": 1.0,
+     "age": 0,
+     "uncertainty": 4000.0,
+     "predicted_position": [
+      195775.0,
+      386834.3
+     ],
+     "is_ship": true,
+     "maneuver_score": 0.0
+    },
+    "black_usv5": {
+     "visible": true,
+     "engaged": false,
+     "assigned_usvs": [],
+     "confidence": 1.0,
+     "point_confidence": 1.0,
+     "age": 0,
+     "uncertainty": 4000.0,
+     "predicted_position": [
+      194691.7,
+      435783.7
+     ],
+     "is_ship": true,
+     "maneuver_score": 0.0
+    }
+   },
+   "commander_intent": {
+    "source": "deepseek",
+    "describe": "posture=balanced focus=2 emergency=3 reserve_ratio=0.00 reserve_usvs=auto bias=breakthrough_eta priority=['black_usv1', 'black_usv5', 'black_usv4'] uav_mode=search_and_reacquire uav_priority=['black_usv3'] recon=0.7 engage=0.7 overmatch=balanced recon_mode=screen_priority standoff=medium unc_tol=0.35",
+    "reason": "All 5 enemy USVs visible, high threat, none near breakthrough but three uncovered. Maintain coverage and balanced overmatch; reserve 0 to ensure all threats covered."
+   },
+   "allocator_decision": {
+    "result": {},
+    "margin": null,
+    "candidates": []
+   },
+   "controller_actions": {
+    "usv_actions": [
+     [
+      "white_usv1 移动 target_speed=20.0 target_course=79.1",
+      "move"
+     ],
+     [
+      "white_usv2 移动 target_speed=20.0 target_course=85.2",
+      "move"
+     ],
+     [
+      "white_usv5 移动 target_speed=20.0 target_course=103.6",
+      "move"
+     ],
+     [
+      "white_usv3 移动 target_speed=20.0 target_course=94.0",
+      "move"
+     ],
+     [
+      "white_usv4 移动 target_speed=20.0 target_course=100.1",
+      "move"
+     ]
+    ],
+    "uav_actions": [
+     [
+      "white_uav1 飞行 target_speed=100.0 target_course=138.7",
+      "fly"
+     ],
+     [
+      "white_uav5 飞行 target_speed=100.0 target_course=13.9",
+      "fly"
+     ],
+     [
+      "white_uav3 飞行 target_speed=100.0 target_course=26.0",
+      "fly"
+     ],
+     [
+      "white_uav4 飞行 target_speed=100.0 target_course=40.7",
+      "fly"
+     ],
+     [
+      "white_uav2 飞行 target_speed=100.0 target_course=115.5",
+      "fly"
+     ]
+    ],
+    "usv_fsm": {
+     "white_usv1": "INTERCEPTING",
+     "white_usv2": "INTERCEPTING",
+     "white_usv5": "INTERCEPTING",
+     "white_usv3": "INTERCEPTING",
+     "white_usv4": "INTERCEPTING"
+    },
+    "uav_fsm": {
+     "white_uav1": "REACQUIRE",
+     "white_uav5": "SCREEN",
+     "white_uav3": "SCREEN",
+     "white_uav4": "SCREEN",
+     "white_uav2": "SCREEN"
+    }
+   },
+   "a_to_f_ref": "runtime_audit/run_ep4_1787234142/step_336.json",
+   "metrics": {
+    "lost_high_threat": 1,
+    "uncovered_ships": 3
+   },
+   "evidence_id": "EVID-001"
+  }
+ ]
+}

@@ -1,0 +1,41 @@
+{
+  "policy_id": "black-b0-v2",
+  "version": "1.0.0",
+  "side": "black",
+  "strategy_family": "random_uncoordinated",
+  "declared_intent": {
+    "role": "random waypoint baseline (unchanged doctrine)",
+    "added": "legal stochastic speed diversity for behavior-space coverage",
+    "not": "no coordination, no adaptation, no structured pressure"
+  },
+  "trigger_and_switch": [
+    "no tactical phase switching",
+    "episode_target_speed sampled at episode start (Uniform 5-10 m/s)",
+    "waypoints = original B0 random behavior"
+  ],
+  "known_strengths": [
+    "simple stochastic baseline",
+    "broad random geometric coverage",
+    "now includes speed diversity",
+    "useful for behavior-space stratification"
+  ],
+  "known_weaknesses": [
+    "no coordination",
+    "no adaptation",
+    "no deliberate target pressure",
+    "speed diversity may reduce direct comparability with B0-v1",
+    "extreme speed samples may produce weaker tactical pressure"
+  ],
+  "declared_traits": {
+    "coordination": "none",
+    "adaptivity": "none",
+    "phase_structure": "none",
+    "speed_model": "episode_uniform_5_10"
+  },
+  "status": "candidate",
+  "evaluation_role": "historical_anchor",
+  "parent_policy_id": "black-b0-v1",
+  "description": "B0 random baseline with legal episode-level variable speed",
+  "created_at": "2026-09-14T01:34:39",
+  "updated_at": "2026-09-14T01:34:39"
+}

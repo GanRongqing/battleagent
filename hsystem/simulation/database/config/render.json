@@ -1,0 +1,166 @@
+{
+	"xlim":{
+		"name": "X轴范围",
+		"comment":"2长的列表，单位米",
+		"value":[]
+    },
+	"ylim":{
+		"name": "Y轴范围",
+		"comment":"2长的列表，单位米",
+		"value":[]
+    },	
+	"zlim":{
+		"name": "Z轴范围",
+		"comment":"2长的列表，单位米",
+		"value":[]
+	},
+	"equal":{
+		"name": "matplotlib绘制XY图时的aspect是否为1",
+		"value":true
+	},
+	"name":{
+		"name": "是否显示飞机、舰艇、潜艇的Name",
+		"comment":"true:显示，false：不显示",
+		"value":false
+    },
+	"network":{
+		"name": "是否显示通信网络通信范围",
+		"comment":"true:显示，false：不显示",
+		"value":false
+	},
+	"network_link":{
+		"name": "",
+		"comment":"true:显示，false：不显示",
+		"value":true
+	},
+	"link_com_duration":{
+		"name": "(现实时间,s)",
+		"value":1
+	},
+	"sonar":{
+		"name": "",
+		"comment":"true:显示，false：不显示",
+		"value":false
+    },
+	"sonar_wave":{
+		"name": "",
+		"comment":"当sonar为true时，true:显示，false：不显示",
+		"value":false
+	},
+	"radar":{
+		"name": "",
+		"comment":"true:显示，false：不显示",
+		"value":false
+    },
+    "radar_envelope":{
+		"name": "",
+		"comment":"true:显示，false：不显示",
+		"value":false
+    },
+    "attack_range_envelope":{
+		"name": "",
+		"comment":"true:显示，false：不显示",
+		"value":true
+    },
+	"lethality":{
+		"name": "",
+		"value":false
+	},
+	"crosspoint":{
+		"name": "",
+		"value":false
+	},
+	"attack_range":{
+		"name": "",
+		"value":false
+	},
+	"ship_shape":{
+		"name": "",
+		"comment":"简化为长方形或长方体",
+		"value":false
+	},
+	"seeker_sector":{
+		"name": "",
+		"value":false
+	},
+	"task_area":{
+		"name": "",
+		"value":false
+	},
+	"guider":{
+		"name": "",
+		"value":false
+	},
+	"guide_line":{
+		"name": "",
+		"value":false
+	},
+	"short":{
+		"name": "",
+		"value":false
+	},
+	"target":{
+		"name": "参考目标",
+		"comment":"绘制杀伤区探测范围等的参考目标特性",
+		"value":{"rcs":0.1, "speed":255, "height": 1000, "type_": "SSMissile"}
+	},
+	"terrain":{
+		"name": "",
+		"value": false
+	},
+	"explode_duration":{
+		"name": "(现实时间,s)",
+		"value":2
+	},
+	"highlight_duration":{
+		"name": "(现实时间,s)",
+		"value":2
+	},
+	"redis_move_update_interval":{
+		"name": "运动位置信息更新间隔(现实时间,s)",
+		"value":0.2
+	},
+	"redis_turn_update_interval":{
+		"name": "转弯时位置信息更新间隔(现实时间,s)",
+		"value":0.02
+	},
+	"intels_relation":{
+		"name": "",
+		"value": false	
+	},
+	"commander_friend_relation":{
+		"name": "",
+		"value": true	
+	},	
+	"commander_distributed_relation":{
+		"name": "",
+		"value": false	
+	},
+	"commander_hierarchy_relation":{
+		"name": "",
+		"value": false	
+	},
+	"history_points_units":{
+		"name": "",
+		"comment":"all:全部显示, []不显示，[unit_name, ...]显示指定的",
+		"value":[]
+	},
+	"history_points_len":{
+		"name": "",
+		"value":10000
+	},
+	"component_render_units":{
+		"name": "",
+		"comment":"all:全部绘制, []:全部不绘制, [unit_name, ...]绘制指定的",
+		"value":"all"
+	},
+	"satellite":{
+		"name": "",
+		"value":true
+	},
+	"waypoints_units":{
+		"name": "",
+		"comment":"all:全部显示, []不显示，[unit_name, ...]显示指定的",
+		"value": []
+	}
+}

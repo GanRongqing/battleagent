@@ -1,0 +1,285 @@
+========================================================================
+HYBRID AGENT V5 — Variable-Cardinality Hierarchical Maritime Agent
+  启用UAV: True | LLM_ENABLED: True
+========================================================================
+对局 26 开始
+      [UAV RELAUNCH] white_uav1
+      [UAV RELAUNCH] white_uav3
+      [UAV RELAUNCH] white_uav4
+      [UAV RELAUNCH] white_uav2
+      [UAV RELAUNCH] white_uav5
+[COMMANDER REQUEST] t=0s trigger=periodic
+[COMMANDER RESPONSE] posture=balanced focus=2 emergency=3 reserve_ratio=0.25 reserve_usvs=auto bias=balanced priority=[] uav_mode=broad_search uav_priority=[] recon=0.7 engage=0.5 overmatch=balanced recon_mode=broad_search standoff=medium unc_tol=0.40 reason='No contacts yet, maintain broad search, hold reserves, moderate engagement readiness.' latency_real=1.5s sim_equiv=77s
+[t=198s] step=10 | MISSION=NORMAL_C | USV: 5/5 (avail=5 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.25
+  [INTENT APPLIED]
+    ThreatAllocator: focus 2 emergency 3 reserve_ratio 0.25 reserve_usvs None bias balanced
+    UAVManager: mode broad_search uav_priority []
+[t=377s] step=20 | MISSION=NORMAL_C | USV: 5/5 (avail=5 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.25
+[t=557s] step=30 | MISSION=NORMAL_C | USV: 5/5 (avail=5 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.25
+[t=737s] step=40 | MISSION=NORMAL_C | USV: 5/5 (avail=5 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.25
+[t=917s] step=50 | MISSION=NORMAL_C | USV: 5/5 (avail=5 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.25
+[COMMANDER REQUEST] t=971s trigger=periodic
+[t=1,097s] step=60 | MISSION=NORMAL_C | USV: 5/5 (avail=5 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.25
+[COMMANDER RESPONSE] posture=balanced focus=2 emergency=3 reserve_ratio=0.25 reserve_usvs=auto bias=balanced priority=[] uav_mode=broad_search uav_priority=[] recon=0.7 engage=0.5 overmatch=balanced recon_mode=broad_search standoff=medium unc_tol=0.40 reason='No enemy tracks detected; maintain broad search with all UAVs to establish initial picture, keep balanced posture and moderate reserve.' latency_real=1.9s sim_equiv=93s
+[t=1,302s] step=70 | MISSION=NORMAL_C | USV: 5/5 (avail=5 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.25
+[t=1,527s] step=80 | MISSION=NORMAL_C | USV: 5/5 (avail=5 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.25
+      [DETECT] black_uav4
+      [DETECT] black_uav5
+      [DETECT] black_uav6
+      [DETECT] black_uav7
+      [DETECT] black_uav2
+      [DETECT] black_uav3
+[COMMANDER REQUEST] t=1573s trigger=threat_spike
+      [DETECT] black_uav1
+[COMMANDER RESPONSE] posture=balanced focus=2 emergency=3 reserve_ratio=0.20 reserve_usvs=auto bias=breakthrough_eta priority=[] uav_mode=broad_search uav_priority=[] recon=0.7 engage=0.5 overmatch=balanced recon_mode=broad_search standoff=medium unc_tol=0.40 reason='All known tracks are enemy UAVs, not breakthrough threats. Continue broad search, maintain balanced posture, no USV commitment to UAVs.' latency_real=1.7s sim_equiv=86s
+[t=1,767s] step=90 | MISSION=NORMAL_C | USV: 5/5 (avail=5 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=7 lost=0 engaged=0 | TOP: black_uav4(x206,218) black_uav5(x206,218) black_uav6(x206,218) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.25
+      [DETECT] black_usv5
+      [DETECT] black_usv4
+      [ASSIGN] white_usv3->black_usv5
+      [ASSIGN] white_usv5->black_usv4
+      [ASSIGN] white_usv2->black_usv4
+      [ASSIGN] white_usv4->black_usv5
+      [DETECT] black_usv3
+      [DETECT] black_usv6
+      [ASSIGN] white_usv1->black_usv3
+      [DETECT] black_usv2
+      [DETECT] black_usv7
+      [DETECT] black_usv8
+      [DETECT] black_usv1
+[t=1,975s] step=100 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=10 lost=2 engaged=0 | TOP: black_usv2(x240,271) black_usv7(x240,317) black_usv1(x240,609) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+  [INTENT APPLIED]
+    ThreatAllocator: focus 2 emergency 3 reserve_ratio 0.20 reserve_usvs None bias breakthrough_eta
+    UAVManager: mode broad_search uav_priority []
+[t=2,169s] step=110 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=6 lost=2 engaged=0 | TOP: black_usv2(x238,342) black_usv7(x238,387) black_usv1(x238,711) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+      [DETECT] black_uav7
+[COMMANDER REQUEST] t=2188s trigger=lost_high_threat
+[t=2,372s] step=120 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=3 lost=6 engaged=0 | TOP: black_usv2(x236,315) black_usv7(x236,371) black_usv1(x236,721) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[COMMANDER RESPONSE] posture=balanced focus=2 emergency=3 reserve_ratio=0.15 reserve_usvs=auto bias=breakthrough_eta priority=['black_usv2', 'black_usv7'] uav_mode=focused_reacquire uav_priority=['black_usv2', 'black_usv7'] recon=0.7 engage=0.6 overmatch=balanced recon_mode=reacquire_priority standoff=medium unc_tol=0.35 reason='4 lost tracks include 2 high-threat (USV2/USV7) near breakthrough line; need reacquire before committing more USV, but maintain coverage.' latency_real=2.0s sim_equiv=98s
+[t=2,597s] step=130 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=8 lost=0 engaged=0 | TOP: black_usv2(x234,070) black_usv7(x234,131) black_usv1(x234,514) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.15
+  [INTENT APPLIED]
+    ThreatAllocator: focus 2 emergency 3 reserve_ratio 0.15 reserve_usvs None bias breakthrough_eta
+    UAVManager: mode focused_reacquire uav_priority ['black_usv2', 'black_usv7']
+[COMMANDER REQUEST] t=2789s trigger=periodic
+[t=2,808s] step=140 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=8 lost=0 engaged=0 | TOP: black_usv2(x231,966) black_usv7(x232,032) black_usv1(x232,446) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.15
+[COMMANDER RESPONSE] posture=balanced focus=2 emergency=3 reserve_ratio=0.15 reserve_usvs=auto bias=breakthrough_eta priority=['black_usv2', 'black_usv7'] uav_mode=search_and_reacquire uav_priority=['black_usv2', 'black_usv7'] recon=0.7 engage=0.6 overmatch=balanced recon_mode=screen_priority standoff=medium unc_tol=0.35 reason='All tracks visible, high confidence, near breakthrough line. Maintain coverage with balanced focus, prioritize closest threats, keep reserve for flexibility, sustain screen recon.' latency_real=2.1s sim_equiv=106s
+[t=3,001s] step=150 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=8 lost=0 engaged=0 | TOP: black_usv2(x230,039) black_usv7(x230,110) black_usv1(x230,553) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.15
+  [INTENT APPLIED]
+    ThreatAllocator: focus 2 emergency 3 reserve_ratio 0.15 reserve_usvs None bias breakthrough_eta
+    UAVManager: mode search_and_reacquire uav_priority ['black_usv2', 'black_usv7']
+[t=3,204s] step=160 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=8 lost=0 engaged=0 | TOP: black_usv2(x228,016) black_usv7(x228,092) black_usv1(x228,564) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.15
+[t=3,417s] step=170 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=8 lost=0 engaged=0 | TOP: black_usv2(x225,889) black_usv7(x225,970) black_usv1(x226,473) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.15
+[COMMANDER REQUEST] t=3465s trigger=threat_spike
+[COMMANDER RESPONSE] posture=balanced focus=2 emergency=3 reserve_ratio=0.20 reserve_usvs=auto bias=breakthrough_eta priority=['black_usv2', 'black_usv7'] uav_mode=search_and_reacquire uav_priority=['black_usv2', 'black_usv7'] recon=0.7 engage=0.7 overmatch=balanced recon_mode=screen_priority standoff=medium unc_tol=0.35 reason='All 8 enemy USVs visible, no lost tracks; maintain balanced commitment, prioritize highest-threat leading tracks while preserving some reserve.' latency_real=2.0s sim_equiv=100s
+[t=3,658s] step=180 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=8 lost=0 engaged=0 | TOP: black_usv2(x223,484) black_usv7(x223,571) black_usv1(x224,110) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.15
+[t=3,890s] step=190 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=8 lost=0 engaged=0 | TOP: black_usv2(x221,164) black_usv7(x221,256) black_usv1(x221,829) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+  [INTENT APPLIED]
+    ThreatAllocator: focus 2 emergency 3 reserve_ratio 0.20 reserve_usvs None bias breakthrough_eta
+    UAVManager: mode search_and_reacquire uav_priority ['black_usv2', 'black_usv7']
+[COMMANDER REQUEST] t=4117s trigger=threat_spike
+[t=4,117s] step=200 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=8 lost=0 engaged=0 | TOP: black_usv2(x218,905) black_usv7(x219,002) black_usv1(x219,609) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[COMMANDER RESPONSE] (no_change) posture=balanced focus=2 emergency=3 reserve_ratio=0.20 reserve_usvs=auto bias=breakthrough_eta priority=['black_usv2', 'black_usv7'] uav_mode=search_and_reacquire uav_priority=['black_usv2', 'black_usv7'] recon=0.7 engage=0.7 overmatch=balanced recon_mode=screen_priority standoff=medium unc_tol=0.35 latency_real=2.3s sim_equiv=117s
+[t=4,344s] step=210 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=8 lost=0 engaged=0 | TOP: black_usv2(x216,640) black_usv7(x216,743) black_usv1(x217,383) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+      [DETECT] black_uav6
+      [DETECT] black_uav5
+      [DETECT] black_uav3
+      [DETECT] black_uav4
+      [DETECT] black_uav2
+      [DETECT] black_uav1
+      [DETECT] black_uav7
+[t=4,564s] step=220 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=15 lost=0 engaged=0 | TOP: black_usv2(x214,445) black_usv7(x214,553) black_usv1(x215,226) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[COMMANDER REQUEST] t=4790s trigger=threat_spike
+[t=4,790s] step=230 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=15 lost=0 engaged=0 | TOP: black_usv2(x212,190) black_usv7(x212,304) black_usv1(x213,010) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[COMMANDER RESPONSE] posture=aggressive focus=2 emergency=3 reserve_ratio=0.00 reserve_usvs=auto bias=breakthrough_eta priority=['black_usv2', 'black_usv7'] uav_mode=search_and_reacquire uav_priority=['black_usv2', 'black_usv7'] recon=0.7 engage=0.9 overmatch=decisive recon_mode=screen_priority standoff=medium unc_tol=0.35 reason='Eight enemy USVs approaching breakthrough line, none engaged except two with 1-2 attackers; all visible with high confidence. Prioritize immediate coverage of unengaged high-threat tracks to prevent b' latency_real=2.3s sim_equiv=117s
+[t=5,039s] step=240 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=15 lost=0 engaged=0 | TOP: black_usv7(x209,825) black_usv1(x210,568) black_usv8(x213,083) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.00
+  [INTENT APPLIED]
+    ThreatAllocator: focus 2 emergency 3 reserve_ratio 0.00 reserve_usvs None bias breakthrough_eta
+    UAVManager: mode search_and_reacquire uav_priority ['black_usv2', 'black_usv7']
+[t=5,311s] step=250 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=8 lost=7 engaged=0 | TOP: black_usv7(x207,118) black_usv1(x207,901) black_usv8(x210,552) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.00
+[COMMANDER REQUEST] t=5404s trigger=lost_high_threat
+[t=5,628s] step=260 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=15 lost=0 engaged=0 | TOP: black_usv7(x203,963) black_usv1(x204,792) black_usv8(x207,602) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.00
+[COMMANDER RESPONSE] posture=aggressive focus=2 emergency=3 reserve_ratio=0.00 reserve_usvs=auto bias=breakthrough_eta priority=['black_usv2', 'black_usv7'] uav_mode=search_and_reacquire uav_priority=['black_usv2', 'black_usv7'] recon=0.7 engage=0.9 overmatch=decisive recon_mode=screen_priority standoff=medium unc_tol=0.35 reason='Continue aggressive stance: multiple high-threat unengaged contacts, breakthrough risk moderate, decisive overmatch to reduce threats, maintain screen and reacquire lost high-threat track.' latency_real=2.0s sim_equiv=102s
+[t=5,930s] step=270 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=9 lost=6 engaged=0 | TOP: black_usv7(x200,957) black_usv1(x201,831) black_usv8(x204,791) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.00
+[COMMANDER REQUEST] t=6025s trigger=breakthrough_risk
+[t=6,223s] step=280 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=8 lost=0 engaged=0 | TOP: black_usv7(x198,040) black_usv1(x198,958) black_usv8(x202,064) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.00
+[COMMANDER RESPONSE] posture=balanced focus=2 emergency=3 reserve_ratio=0.00 reserve_usvs=auto bias=breakthrough_eta priority=['black_usv7', 'black_usv1', 'black_usv8', 'black_usv6'] uav_mode=search_and_reacquire uav_priority=[] recon=0.7 engage=0.8 overmatch=decisive recon_mode=screen_priority standoff=medium unc_tol=0.35 reason='All 8 USVs are visible with high confidence and no high-maneuver targets. 4 top threats are uncovered; maintain decisive overmatch while ensuring no breakthrough. Keep zero reserve as all forces are n' latency_real=2.2s sim_equiv=108s
+[t=6,475s] step=290 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=8 lost=0 engaged=0 | TOP: black_usv7(x195,532) black_usv1(x196,487) black_usv8(x199,719) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.00
+  [INTENT APPLIED]
+    ThreatAllocator: focus 2 emergency 3 reserve_ratio 0.00 reserve_usvs None bias breakthrough_eta
+    UAVManager: mode search_and_reacquire uav_priority []
+[t=6,700s] step=300 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=8 lost=0 engaged=0 | TOP: black_usv7(x193,293) black_usv1(x194,280) black_usv8(x197,625) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.00
+[t=6,945s] step=310 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=8 lost=0 engaged=0 | TOP: black_usv7(x190,854) black_usv1(x191,878) black_usv8(x195,344) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.00
+[COMMANDER REQUEST] t=7170s trigger=periodic
+[t=7,195s] step=320 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=8 lost=0 engaged=0 | TOP: black_usv7(x188,366) black_usv1(x189,426) black_usv8(x193,018) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.00
+      [ASSIGN] white_usv2->black_usv5(机会锁定)
+[COMMANDER RESPONSE] posture=balanced focus=2 emergency=3 reserve_ratio=0.00 reserve_usvs=auto bias=breakthrough_eta priority=['black_usv7', 'black_usv1', 'black_usv8', 'black_usv6'] uav_mode=search_and_reacquire uav_priority=[] recon=0.7 engage=0.8 overmatch=balanced recon_mode=screen_priority standoff=medium unc_tol=0.35 reason='All 8 tracks visible with high confidence; coverage floor is low (many have 0 attackers). Need to ensure at least one attacker per track, prioritize closest/breakthrough threats, and maintain screen c' latency_real=2.5s sim_equiv=127s
+      [ASSIGN] white_usv5->black_usv5(机会锁定)
+[t=7,461s] step=330 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=1 lock=4 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=8 lost=0 engaged=1 | TOP: black_usv7(x185,720) black_usv1(x186,820) black_usv4(x187,440) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.00
+  [INTENT APPLIED]
+    ThreatAllocator: focus 2 emergency 3 reserve_ratio 0.00 reserve_usvs None bias breakthrough_eta
+    UAVManager: mode search_and_reacquire uav_priority []
+      [ASSIGN] white_usv1->black_usv5(机会锁定)
+      [ASSIGN] white_usv3->black_usv4(机会锁定)
+      [ASSIGN] white_usv5->black_usv7(机会锁定)
+      [ASSIGN] white_usv2->black_usv3(机会锁定)
+      [ASSIGN] white_usv4->black_usv3(机会锁定)
+      [ASSIGN] white_usv1->black_usv1(机会锁定)
+[t=7,701s] step=340 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=4 lock=1 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=8 lost=0 engaged=1 | TOP: black_usv7(x183,329) black_usv8(x188,308) black_usv3(x186,904) | KILL=1 | ACTIONS=10 | INTENT: focus=2 ratio=0.00
+[COMMANDER REQUEST] t=7788s trigger=periodic
+[t=7,978s] step=350 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=0 lock=5 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=8 lost=0 engaged=4 | TOP: black_usv5(x183,260) black_usv8(x185,730) black_usv6(x189,693) | KILL=1 | ACTIONS=10 | INTENT: focus=2 ratio=0.00
+      [ASSIGN] white_usv3->black_usv5(机会锁定)
+[COMMANDER RESPONSE] posture=balanced focus=2 emergency=3 reserve_ratio=0.00 reserve_usvs=auto bias=breakthrough_eta priority=['black_usv5', 'black_usv8', 'black_usv6'] uav_mode=search_and_reacquire uav_priority=[] recon=0.7 engage=0.7 overmatch=balanced recon_mode=screen_priority standoff=medium unc_tol=0.35 reason='All 5 USV committed; high-confidence tracks but 4 uncovered threats, most forward at x=182463-187499. Maintain cover floor, prioritize breakthrough threats. No reserve needed now; screen remains stron' latency_real=2.4s sim_equiv=119s
+      [ASSIGN] white_usv3->black_usv4(机会锁定)
+      [ASSIGN] white_usv5->black_usv4(机会锁定)
+      [ASSIGN] white_usv2->black_usv4(机会锁定)
+      [ASSIGN] white_usv4->black_usv4(机会锁定)
+      [ASSIGN] white_usv1->black_usv8(机会锁定)
+[t=8,237s] step=360 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=0 lock=5 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=8 lost=0 engaged=2 | TOP: black_usv7(x180,224) black_usv5(x183,260) black_usv6(x187,406) | KILL=2 | ACTIONS=10 | INTENT: focus=2 ratio=0.00
+  [INTENT APPLIED]
+    ThreatAllocator: focus 2 emergency 3 reserve_ratio 0.00 reserve_usvs None bias breakthrough_eta
+    UAVManager: mode search_and_reacquire uav_priority []
+      [KILL] black_usv5
+      [ASSIGN] white_usv3->black_usv3(机会锁定)
+      [ASSIGN] white_usv5->black_usv7(机会锁定)
+      [ASSIGN] white_usv2->black_usv3(机会锁定)
+      [ASSIGN] white_usv4->black_usv3(机会锁定)
+      [ASSIGN] white_usv3->black_usv4(机会锁定)
+      [ASSIGN] white_usv2->black_usv4(机会锁定)
+      [ASSIGN] white_usv4->black_usv4(机会锁定)
+      [ASSIGN] white_usv1->black_usv1(机会锁定)
+      [ASSIGN] white_usv3->black_usv8(机会锁定)
+      [ASSIGN] white_usv2->black_usv8(机会锁定)
+      [ASSIGN] white_usv4->black_usv8(机会锁定)
+[COMMANDER REQUEST] t=8404s trigger=periodic
+[t=8,509s] step=370 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=0 lock=5 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=6 lost=1 engaged=3 | TOP: black_usv4(x181,818) black_usv6(x185,015) black_usv3(x184,363) | KILL=3 | ACTIONS=10 | INTENT: focus=2 ratio=0.00
+      [KILL] black_usv3
+      [ASSIGN] white_usv5->black_usv4(机会锁定)
+      [ASSIGN] white_usv5->black_usv7(机会锁定)
+[COMMANDER RESPONSE] posture=balanced focus=2 emergency=3 reserve_ratio=0.20 reserve_usvs=auto bias=breakthrough_eta priority=['black_usv8', 'black_usv6', 'black_usv3'] uav_mode=search_and_reacquire uav_priority=['black_usv2'] recon=0.6 engage=0.7 overmatch=balanced recon_mode=screen_priority standoff=medium unc_tol=0.45 reason='All 7 enemy tracks visible, none lost; 3 high-threat tracks unprotected. Preserve a small reserve while ensuring coverage on all threats. black_usv2 has high maneuver and lower confidence — UAV reacqu' latency_real=2.8s sim_equiv=138s
+      [ASSIGN] white_usv5->black_usv4(机会锁定)
+      [ASSIGN] white_usv1->black_usv4(机会锁定)
+      [ASSIGN] white_usv3->black_usv1(机会锁定)
+      [ASSIGN] white_usv5->black_usv7(机会锁定)
+      [ASSIGN] white_usv2->black_usv1(机会锁定)
+      [ASSIGN] white_usv4->black_usv7(机会锁定)
+      [ASSIGN] white_usv1->black_usv1(机会锁定)
+[t=8,719s] step=380 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=6 lost=0 engaged=0 | TOP: black_usv7(x176,820) black_usv6(x183,167) black_usv1(x177,981) | KILL=6 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+  [INTENT APPLIED]
+    ThreatAllocator: focus 2 emergency 3 reserve_ratio 0.20 reserve_usvs None bias breakthrough_eta
+    UAVManager: mode search_and_reacquire uav_priority ['black_usv2']
+      [ASSIGN] white_usv3->black_usv8(机会锁定)
+      [ASSIGN] white_usv5->black_usv4(机会锁定)
+      [ASSIGN] white_usv2->black_usv8(机会锁定)
+      [ASSIGN] white_usv4->black_usv8(机会锁定)
+      [ASSIGN] white_usv1->black_usv8(机会锁定)
+      [ASSIGN] white_usv3->black_usv1(机会锁定)
+      [ASSIGN] white_usv5->black_usv7(机会锁定)
+      [ASSIGN] white_usv2->black_usv1(机会锁定)
+      [ASSIGN] white_usv4->black_usv7(机会锁定)
+      [ASSIGN] white_usv1->black_usv1(机会锁定)
+      [ASSIGN] white_usv3->black_usv8(机会锁定)
+      [ASSIGN] white_usv5->black_usv4(机会锁定)
+      [ASSIGN] white_usv2->black_usv8(机会锁定)
+      [ASSIGN] white_usv4->black_usv8(机会锁定)
+      [ASSIGN] white_usv1->black_usv8(机会锁定)
+      [ASSIGN] white_usv3->black_usv1(机会锁定)
+      [ASSIGN] white_usv5->black_usv7(机会锁定)
+      [ASSIGN] white_usv2->black_usv1(机会锁定)
+      [ASSIGN] white_usv4->black_usv7(机会锁定)
+      [ASSIGN] white_usv1->black_usv1(机会锁定)
+      [ASSIGN] white_usv3->black_usv8(机会锁定)
+      [ASSIGN] white_usv5->black_usv4(机会锁定)
+      [ASSIGN] white_usv2->black_usv8(机会锁定)
+      [ASSIGN] white_usv4->black_usv8(机会锁定)
+      [ASSIGN] white_usv1->black_usv8(机会锁定)
+      [ASSIGN] white_usv3->black_usv1(机会锁定)
+      [ASSIGN] white_usv5->black_usv7(机会锁定)
+      [ASSIGN] white_usv2->black_usv1(机会锁定)
+      [ASSIGN] white_usv4->black_usv7(机会锁定)
+      [ASSIGN] white_usv1->black_usv1(机会锁定)
+      [ASSIGN] white_usv3->black_usv8(机会锁定)
+      [ASSIGN] white_usv5->black_usv4(机会锁定)
+      [ASSIGN] white_usv2->black_usv8(机会锁定)
+      [ASSIGN] white_usv4->black_usv8(机会锁定)
+      [ASSIGN] white_usv1->black_usv8(机会锁定)
+      [ASSIGN] white_usv3->black_usv1(机会锁定)
+      [ASSIGN] white_usv5->black_usv7(机会锁定)
+      [ASSIGN] white_usv2->black_usv1(机会锁定)
+      [ASSIGN] white_usv4->black_usv7(机会锁定)
+      [ASSIGN] white_usv1->black_usv1(机会锁定)
+      [ASSIGN] white_usv3->black_usv8(机会锁定)
+      [ASSIGN] white_usv5->black_usv4(机会锁定)
+      [ASSIGN] white_usv2->black_usv8(机会锁定)
+      [ASSIGN] white_usv4->black_usv4(机会锁定)
+      [ASSIGN] white_usv1->black_usv8(机会锁定)
+      [ASSIGN] white_usv5->black_usv7(机会锁定)
+      [ASSIGN] white_usv2->black_usv4(机会锁定)
+      [ASSIGN] white_usv4->black_usv7(机会锁定)
+      [ASSIGN] white_usv1->black_usv1(机会锁定)
+[t=8,936s] step=390 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=6 lost=0 engaged=0 | TOP: black_usv7(x176,820) black_usv6(x181,253) black_usv1(x177,981) | KILL=6 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+      [KILL] black_usv4
+      [ASSIGN] white_usv5->black_usv2(机会锁定)
+      [RELEASE] white_usv2->black_usv4(目标失效)
+      [ASSIGN] white_usv2->black_usv8(机会锁定)
+      [ASSIGN] white_usv4->black_usv8(机会锁定)
+      [ASSIGN] white_usv4->black_usv7(机会锁定)
+      [ASSIGN] white_usv4->black_usv8(机会锁定)
+[COMMANDER REQUEST] t=9006s trigger=periodic
+      [ASSIGN] white_usv4->black_usv7(机会锁定)
+      [ASSIGN] white_usv3->black_usv1(机会锁定)
+[t=9,162s] step=400 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=4 lock=1 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=5 lost=0 engaged=1 | TOP: black_usv6(x179,257) black_usv7(x176,820) black_usv2(x185,346) | KILL=6 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+      [ASSIGN] white_usv3->black_usv8(机会锁定)
+      [ASSIGN] white_usv4->black_usv8(机会锁定)
+      [ASSIGN] white_usv1->black_usv8(机会锁定)
+      [ASSIGN] white_usv3->black_usv1(机会锁定)
+      [ASSIGN] white_usv2->black_usv1(机会锁定)
+      [ASSIGN] white_usv4->black_usv7(机会锁定)
+      [ASSIGN] white_usv1->black_usv1(机会锁定)
+[COMMANDER RESPONSE] posture=balanced focus=2 emergency=3 reserve_ratio=0.20 reserve_usvs=auto bias=breakthrough_eta priority=['black_usv6', 'black_usv7'] uav_mode=search_and_reacquire uav_priority=['black_usv2'] recon=0.7 engage=0.7 overmatch=balanced recon_mode=screen_priority standoff=medium unc_tol=0.40 reason='All five tracks visible and clustered. Highest threat black_usv6 has no attackers; black_usv7 is nearest breakthrough. Maintain coverage and balanced overmatch; keep UAV screen active to sustain senso' latency_real=2.1s sim_equiv=104s
+      [ASSIGN] white_usv3->black_usv8(机会锁定)
+      [ASSIGN] white_usv2->black_usv8(机会锁定)
+      [ASSIGN] white_usv4->black_usv8(机会锁定)
+      [ASSIGN] white_usv1->black_usv8(机会锁定)
+      [KILL] black_usv7
+      [ASSIGN] white_usv3->black_usv1(机会锁定)
+      [ASSIGN] white_usv2->black_usv1(机会锁定)
+      [ASSIGN] white_usv4->black_usv2(机会锁定)
+      [ASSIGN] white_usv1->black_usv1(机会锁定)
+      [ASSIGN] white_usv3->black_usv8(机会锁定)
+      [ASSIGN] white_usv5->black_usv8(机会锁定)
+      [ASSIGN] white_usv2->black_usv8(机会锁定)
+      [ASSIGN] white_usv1->black_usv8(机会锁定)
+      [KILL] black_usv1
+      [ASSIGN] white_usv3->black_usv2(机会锁定)
+      [ASSIGN] white_usv5->black_usv2(机会锁定)
+      [ASSIGN] white_usv2->black_usv2(机会锁定)
+      [KILL] black_usv8
+      [RELEASE] white_usv1->black_usv8(目标失效)
+      [ASSIGN] white_usv1->black_usv6
+      [ASSIGN] white_usv1->black_usv2(机会锁定)
+[t=9,393s] step=410 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=0 lock=5 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=2 lost=0 engaged=1 | TOP: black_usv6(x177,221) black_usv2(x183,130) | KILL=6 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+  [INTENT APPLIED]
+    ThreatAllocator: focus 2 emergency 3 reserve_ratio 0.20 reserve_usvs None bias breakthrough_eta
+    UAVManager: mode search_and_reacquire uav_priority ['black_usv2']
+[COMMANDER REQUEST] t=9606s trigger=periodic
+[t=9,606s] step=420 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=0 lock=5 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=2 lost=0 engaged=1 | TOP: black_usv6(x175,353) black_usv2(x181,420) | KILL=6 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+      [ASSIGN] white_usv1->black_usv6(机会锁定)
+[COMMANDER RESPONSE] posture=balanced focus=2 emergency=3 reserve_ratio=0.20 reserve_usvs=auto bias=breakthrough_eta priority=['black_usv6', 'black_usv2'] uav_mode=search_and_reacquire uav_priority=['black_usv2'] recon=0.7 engage=0.7 overmatch=balanced recon_mode=screen_priority standoff=medium unc_tol=0.35 reason='black_usv6 unengaged, closer breakthrough threshold; maintain coverage and balanced overmatch while keeping reserve.' latency_real=1.8s sim_equiv=91s
+[t=9,854s] step=430 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=4 lock=1 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=2 lost=0 engaged=1 | TOP: black_usv6(x173,161) black_usv2(x181,420) | KILL=7 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+  [INTENT APPLIED]
+    ThreatAllocator: focus 2 emergency 3 reserve_ratio 0.20 reserve_usvs None bias breakthrough_eta
+    UAVManager: mode search_and_reacquire uav_priority ['black_usv2']
+[t=10,102s] step=440 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=4 lock=1 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=2 lost=0 engaged=1 | TOP: black_usv6(x172,363) black_usv2(x181,420) | KILL=7 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+      [KILL] black_usv2
+      [RELEASE] white_usv3->black_usv2(目标失效)
+      [RELEASE] white_usv5->black_usv2(目标失效)
+      [RELEASE] white_usv2->black_usv2(目标失效)
+      [RELEASE] white_usv4->black_usv2(目标失效)
+      [ASSIGN] white_usv3->black_usv6
+      [ASSIGN] white_usv2->black_usv6
+[COMMANDER REQUEST] t=10224s trigger=periodic
+
+========================================================================
+对局结果: Result.Victory — 敌方所有单位被击毁
+  击杀蓝舰: 8 | 命中: 16 | 我方USV损失: 0 | UAV损失: 0 | 突破: 0
+[META] result=Result.Victory victory_time=10350 first_detection=1550 first_lock=7388 first_kill=8289 enemy_kills=8 friendly_usv_losses=0 friendly_uav_losses=0 black_breakthrough=0 reacquire_attempts=66 reacquire_success=66 sensor_assisted_locks=53 low_conf_commitments=0 global_reacquire_entries=0 global_reacquire_success=0 coverage_collapse_events=1 active_clusters_max=1 coverage_quality_final=0.16 commander_source=deepseek commander_calls=15 commander_changes=14 commander_no_change=1 commander_parse_failures=0 commander_api_failures=0 commander_policy_failures=0 commander_avg_latency=2.1
+Done

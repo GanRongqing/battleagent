@@ -1,0 +1,262 @@
+========================================================================
+HYBRID AGENT V5 — Variable-Cardinality Hierarchical Maritime Agent
+  启用UAV: True | LLM_ENABLED: False
+========================================================================
+对局 95 开始
+      [UAV RELAUNCH] white_uav3
+      [UAV RELAUNCH] white_uav4
+      [UAV RELAUNCH] white_uav5
+      [UAV RELAUNCH] white_uav2
+      [UAV RELAUNCH] white_uav1
+[t=175s] step=10 | MISSION=NORMAL_C | USV: 5/5 (avail=5 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+  [INTENT APPLIED]
+    ThreatAllocator: focus 2 emergency 3 reserve_ratio 0.20 reserve_usvs None bias breakthrough_eta
+    UAVManager: mode search_and_reacquire uav_priority []
+[t=371s] step=20 | MISSION=NORMAL_C | USV: 5/5 (avail=5 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[t=573s] step=30 | MISSION=NORMAL_C | USV: 5/5 (avail=5 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[t=782s] step=40 | MISSION=NORMAL_C | USV: 5/5 (avail=5 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[t=982s] step=50 | MISSION=NORMAL_C | USV: 5/5 (avail=5 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[t=1,194s] step=60 | MISSION=NORMAL_C | USV: 5/5 (avail=5 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[t=1,406s] step=70 | MISSION=NORMAL_C | USV: 5/5 (avail=5 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+      [DETECT] black_uav6
+      [DETECT] black_uav8
+      [DETECT] black_uav7
+      [DETECT] black_uav9
+      [DETECT] black_uav10
+      [DETECT] black_uav5
+      [DETECT] black_uav11
+      [DETECT] black_uav3
+      [DETECT] black_uav4
+      [DETECT] black_uav13
+      [DETECT] black_uav12
+      [DETECT] black_uav2
+      [DETECT] black_uav1
+      [DETECT] black_uav14
+      [DETECT] black_uav15
+[t=1,623s] step=80 | MISSION=NORMAL_C | USV: 5/5 (avail=5 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=15 lost=0 engaged=0 | TOP: black_uav6(x210,538) black_uav8(x210,538) black_uav7(x210,538) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+      [DETECT] black_usv8
+      [DETECT] black_usv9
+      [DETECT] black_usv6
+      [DETECT] black_usv11
+      [ASSIGN] white_usv1->black_usv9
+      [ASSIGN] white_usv4->black_usv11
+      [ASSIGN] white_usv3->black_usv8
+      [ASSIGN] white_usv2->black_usv6
+[t=1,841s] step=90 | MISSION=NORMAL_C | USV: 5/5 (avail=5 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=11 lost=8 engaged=0 | TOP: black_usv8(x241,573) black_usv11(x241,668) black_usv6(x241,752) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+      [DETECT] black_usv10
+      [DETECT] black_usv7
+      [DETECT] black_usv5
+      [DETECT] black_usv13
+      [DETECT] black_usv4
+      [ASSIGN] white_usv5->black_usv13
+      [DETECT] black_usv15
+      [DETECT] black_usv12
+      [DETECT] black_usv14
+      [DETECT] black_usv3
+      [DETECT] black_usv1
+      [DETECT] black_usv2
+[t=2,060s] step=100 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=26 lost=4 engaged=0 | TOP: black_usv1(x239,399) black_usv3(x239,453) black_usv12(x239,658) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[t=2,281s] step=110 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=22 lost=8 engaged=0 | TOP: black_usv1(x237,191) black_usv3(x237,251) black_usv12(x237,478) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[t=2,501s] step=120 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=15 lost=1 engaged=0 | TOP: black_usv1(x234,992) black_usv3(x235,059) black_usv12(x235,308) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+      [DETECT] black_uav6
+[t=2,721s] step=130 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=17 lost=0 engaged=0 | TOP: black_usv1(x232,794) black_usv3(x232,867) black_usv12(x233,138) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+      [DETECT] black_uav5
+      [DETECT] black_uav4
+[t=2,945s] step=140 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=18 lost=1 engaged=0 | TOP: black_usv1(x230,556) black_usv3(x230,635) black_usv12(x230,928) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+      [DETECT] black_uav3
+      [DETECT] black_uav2
+[t=3,179s] step=150 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=19 lost=1 engaged=0 | TOP: black_usv1(x228,219) black_usv3(x228,303) black_usv12(x228,619) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+      [DETECT] black_uav1
+[t=3,409s] step=160 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=19 lost=1 engaged=0 | TOP: black_usv1(x225,921) black_usv3(x226,011) black_usv12(x226,350) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[t=3,640s] step=170 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=18 lost=1 engaged=0 | TOP: black_usv1(x223,613) black_usv3(x223,710) black_usv12(x224,072) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[t=3,877s] step=180 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=16 lost=1 engaged=0 | TOP: black_usv1(x221,245) black_usv3(x221,348) black_usv12(x221,734) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[t=4,081s] step=190 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=14 lost=2 engaged=0 | TOP: black_usv1(x219,207) black_usv3(x219,315) black_usv12(x219,721) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[t=4,249s] step=200 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=14 lost=1 engaged=0 | TOP: black_usv1(x217,528) black_usv3(x217,641) black_usv12(x218,064) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[t=4,420s] step=210 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=14 lost=1 engaged=0 | TOP: black_usv1(x215,820) black_usv3(x215,937) black_usv12(x216,377) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+      [DETECT] black_uav5
+      [DETECT] black_uav11
+      [DETECT] black_uav8
+      [DETECT] black_uav3
+      [DETECT] black_uav7
+      [DETECT] black_uav13
+      [DETECT] black_uav6
+      [DETECT] black_uav10
+      [DETECT] black_uav12
+      [DETECT] black_uav2
+      [DETECT] black_uav14
+      [DETECT] black_uav4
+      [DETECT] black_uav15
+      [DETECT] black_uav9
+      [DETECT] black_uav1
+[t=4,594s] step=220 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=29 lost=1 engaged=0 | TOP: black_usv1(x214,081) black_usv3(x214,204) black_usv12(x214,660) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[t=4,763s] step=230 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=29 lost=1 engaged=0 | TOP: black_usv1(x212,393) black_usv3(x212,520) black_usv12(x212,993) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[t=4,938s] step=240 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=29 lost=1 engaged=0 | TOP: black_usv1(x210,644) black_usv3(x210,776) black_usv12(x211,267) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[t=5,119s] step=250 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=29 lost=1 engaged=0 | TOP: black_usv1(x208,836) black_usv3(x208,972) black_usv12(x209,481) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[t=5,342s] step=260 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=30 lost=0 engaged=0 | TOP: black_usv1(x206,608) black_usv3(x206,750) black_usv12(x207,281) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[t=5,586s] step=270 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=30 lost=0 engaged=0 | TOP: black_usv1(x204,170) black_usv3(x204,319) black_usv12(x204,874) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[t=5,832s] step=280 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=30 lost=0 engaged=0 | TOP: black_usv1(x201,712) black_usv3(x201,868) black_usv12(x202,447) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[t=6,064s] step=290 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=15 lost=14 engaged=0 | TOP: black_usv1(x199,394) black_usv3(x199,556) black_usv12(x200,159) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[t=6,320s] step=300 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=15 lost=0 engaged=0 | TOP: black_usv1(x196,836) black_usv3(x197,005) black_usv12(x197,633) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[t=6,570s] step=310 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=15 lost=0 engaged=0 | TOP: black_usv1(x194,339) black_usv3(x194,514) black_usv12(x195,167) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[t=6,803s] step=320 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=15 lost=0 engaged=0 | TOP: black_usv1(x192,011) black_usv3(x192,192) black_usv12(x192,868) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[t=7,047s] step=330 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=15 lost=0 engaged=0 | TOP: black_usv1(x189,573) black_usv3(x189,761) black_usv12(x190,461) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+[t=7,291s] step=340 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=5 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=15 lost=0 engaged=0 | TOP: black_usv1(x187,135) black_usv3(x187,329) black_usv12(x188,054) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+      [ASSIGN] white_usv2->black_usv8(机会锁定)
+      [ASSIGN] white_usv1->black_usv1(机会锁定)
+[t=7,539s] step=350 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=0 lock=5 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=15 lost=0 engaged=4 | TOP: black_usv3(x184,858) black_usv6(x185,242) black_usv12(x185,608) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+      [ASSIGN] white_usv3->black_usv6(机会锁定)
+      [ASSIGN] white_usv4->black_usv14(机会锁定)
+      [ASSIGN] white_usv2->black_usv11(机会锁定)
+      [ASSIGN] white_usv5->black_usv12(机会锁定)
+      [ASSIGN] white_usv1->black_usv3(机会锁定)
+[t=7,787s] step=360 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=0 lock=5 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=15 lost=0 engaged=5 | TOP: black_usv1(x182,789) black_usv13(x182,759) black_usv8(x183,487) | KILL=0 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+      [ASSIGN] white_usv3->black_usv8(机会锁定)
+      [ASSIGN] white_usv4->black_usv13(机会锁定)
+      [ASSIGN] white_usv2->black_usv6(机会锁定)
+      [ASSIGN] white_usv5->black_usv14(机会锁定)
+[t=8,038s] step=370 | MISSION=NORMAL_C | USV: 5/5 (avail=0 int=2 lock=3 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=15 lost=0 engaged=3 | TOP: black_usv6(x180,255) black_usv14(x181,266) black_usv1(x182,679) | KILL=1 | ACTIONS=10 | INTENT: focus=2 ratio=0.20
+      [ASSIGN] white_usv1->black_usv9(机会锁定)
+[t=8,299s] step=380 | MISSION=NORMAL_C | USV: 4/5 (avail=0 int=0 lock=4 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=15 lost=0 engaged=4 | TOP: black_usv3(x179,806) black_usv1(x180,072) black_usv2(x179,640) | KILL=1 | ACTIONS=9 | INTENT: focus=2 ratio=0.20
+      [ASSIGN] white_usv3->black_usv6(机会锁定)
+      [ASSIGN] white_usv4->black_usv8(机会锁定)
+      [ASSIGN] white_usv5->black_usv13(机会锁定)
+      [ASSIGN] white_usv1->black_usv1(机会锁定)
+[t=8,536s] step=390 | MISSION=NORMAL_C | USV: 4/5 (avail=0 int=0 lock=4 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=15 lost=0 engaged=4 | TOP: black_usv3(x177,923) black_usv2(x177,346) black_usv12(x178,742) | KILL=2 | ACTIONS=9 | INTENT: focus=2 ratio=0.20
+      [KILL] black_usv11
+      [ASSIGN] white_usv4->black_usv5(机会锁定)
+      [ASSIGN] white_usv3->black_usv5(机会锁定)
+      [ASSIGN] white_usv1->black_usv9(机会锁定)
+[t=8,894s] step=400 | MISSION=NORMAL_C | USV: 3/5 (avail=0 int=0 lock=3 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=11 lost=3 engaged=2 | TOP: black_usv1(x174,127) black_usv3(x174,356) black_usv2(x173,880) | KILL=5 | ACTIONS=8 | INTENT: focus=2 ratio=0.20
+      [KILL] black_usv6
+      [KILL] black_usv14
+      [ASSIGN] white_usv4->black_usv4(机会锁定)
+      [ASSIGN] white_usv3->black_usv8(机会锁定)
+      [ASSIGN] white_usv1->black_usv1(机会锁定)
+      [ASSIGN] white_usv3->black_usv5(机会锁定)
+      [ASSIGN] white_usv3->black_usv15(机会锁定)
+      [KILL] black_usv8
+      [KILL] black_usv13
+      [ASSIGN] white_usv4->black_usv5(机会锁定)
+[t=9,382s] step=410 | MISSION=NORMAL_C | USV: 3/5 (avail=0 int=1 lock=2 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=10 lost=0 engaged=2 | TOP: black_usv3(x169,493) black_usv2(x169,156) black_usv12(x170,396) | KILL=7 | ACTIONS=8 | INTENT: focus=2 ratio=0.20
+      [ASSIGN] white_usv1->black_usv3(机会锁定)
+      [ASSIGN] white_usv4->black_usv4(机会锁定)
+      [KILL] black_usv5
+      [KILL] black_usv9
+      [ASSIGN] white_usv1->black_usv1(机会锁定)
+      [ASSIGN] white_usv4->black_usv15(机会锁定)
+      [ASSIGN] white_usv1->black_usv3(机会锁定)
+      [ASSIGN] white_usv1->black_usv1(机会锁定)
+      [ASSIGN] white_usv1->black_usv3(机会锁定)
+[t=9,982s] step=420 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=1 lock=1 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=8 lost=0 engaged=1 | TOP: black_usv2(x163,348) black_usv12(x164,477) black_usv3(x165,657) | KILL=10 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+      [KILL] black_usv1
+      [ASSIGN] white_usv4->black_usv4(机会锁定)
+      [ASSIGN] white_usv1->black_usv7(机会锁定)
+      [ASSIGN] white_usv4->black_usv15(机会锁定)
+      [ASSIGN] white_usv4->black_usv4(机会锁定)
+      [KILL] black_usv4
+      [KILL] black_usv3
+      [RELEASE] white_usv4->black_usv4(目标失效)
+      [ASSIGN] white_usv4->black_usv15(机会锁定)
+      [ASSIGN] white_usv4->black_usv12(机会锁定)
+      [ASSIGN] white_usv1->black_usv15(机会锁定)
+      [ASSIGN] white_usv1->black_usv7(机会锁定)
+[t=10,686s] step=430 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=1 lock=1 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=3 lost=1 engaged=1 | TOP: black_usv10(x160,637) black_usv12(x157,532) black_usv7(x164,752) | KILL=11 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+      [KILL] black_usv15
+      [ASSIGN] white_usv4->black_usv7(机会锁定)
+      [DETECT] black_usv10
+      [KILL] black_usv12
+[t=11,490s] step=440 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=2 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=2 lost=0 engaged=0 | TOP: black_usv10(x152,981) black_usv7(x160,567) | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+      [KILL] black_usv7
+      [RELEASE] white_usv1->black_usv7(目标失效)
+      [RELEASE] white_usv4->black_usv7(目标失效)
+[t=12,099s] step=450 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=2 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=1 lost=0 engaged=0 | TOP: black_usv10(x147,182) | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+      [ASSIGN] white_usv1->black_usv10
+      [ASSIGN] white_usv4->black_usv10
+[t=12,299s] step=460 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=2 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=1 engaged=0 | TOP: black_usv10(x145,270) | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+      [RELEASE] white_usv1->black_usv10(目标失效)
+      [RELEASE] white_usv4->black_usv10(目标失效)
+[t=12,510s] step=470 | MISSION=NORMAL_C | USV: 2/5 (avail=2 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+[t=12,728s] step=480 | MISSION=GLOBAL_R | USV: 2/5 (avail=2 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+[t=12,933s] step=490 | MISSION=GLOBAL_R | USV: 2/5 (avail=2 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+      [DETECT] black_usv2
+      [ASSIGN] white_usv1->black_usv2
+      [ASSIGN] white_usv4->black_usv2
+[t=13,149s] step=500 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=2 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=1 lost=0 engaged=0 | TOP: black_usv2(x132,684) | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+[t=13,358s] step=510 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=2 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=1 engaged=0 | TOP: black_usv2(x130,665) | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+      [RELEASE] white_usv1->black_usv2(目标失效)
+      [RELEASE] white_usv4->black_usv2(目标失效)
+[t=13,570s] step=520 | MISSION=NORMAL_C | USV: 2/5 (avail=2 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+[t=13,788s] step=530 | MISSION=GLOBAL_R | USV: 2/5 (avail=2 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+[t=13,998s] step=540 | MISSION=GLOBAL_R | USV: 2/5 (avail=2 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+[t=14,214s] step=550 | MISSION=GLOBAL_R | USV: 2/5 (avail=2 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+[t=14,435s] step=560 | MISSION=GLOBAL_R | USV: 2/5 (avail=2 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+[t=14,640s] step=570 | MISSION=GLOBAL_R | USV: 2/5 (avail=2 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+[t=14,853s] step=580 | MISSION=GLOBAL_R | USV: 2/5 (avail=2 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+[t=15,065s] step=590 | MISSION=GLOBAL_R | USV: 2/5 (avail=2 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+[t=15,287s] step=600 | MISSION=GLOBAL_R | USV: 2/5 (avail=2 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+[t=15,492s] step=610 | MISSION=GLOBAL_R | USV: 2/5 (avail=2 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+[t=15,708s] step=620 | MISSION=GLOBAL_R | USV: 2/5 (avail=2 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+[t=15,924s] step=630 | MISSION=GLOBAL_R | USV: 2/5 (avail=2 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+      [DETECT] black_usv2
+      [ASSIGN] white_usv1->black_usv2
+      [ASSIGN] white_usv4->black_usv2
+[t=16,138s] step=640 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=2 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=1 engaged=0 | TOP: black_usv2(x103,745) | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+[t=16,345s] step=650 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=2 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=1 engaged=0 | TOP: black_usv2(x101,741) | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+      [RELEASE] white_usv1->black_usv2(目标失效)
+      [RELEASE] white_usv4->black_usv2(目标失效)
+      [DETECT] black_usv2
+      [ASSIGN] white_usv1->black_usv2
+      [ASSIGN] white_usv4->black_usv2
+[t=16,549s] step=660 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=2 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=1 lost=0 engaged=0 | TOP: black_usv2(x99,766) | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+[t=16,768s] step=670 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=2 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=1 engaged=0 | TOP: black_usv2(x97,649) | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+      [RELEASE] white_usv1->black_usv2(目标失效)
+      [RELEASE] white_usv4->black_usv2(目标失效)
+[t=16,974s] step=680 | MISSION=GLOBAL_R | USV: 2/5 (avail=2 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+[t=17,186s] step=690 | MISSION=GLOBAL_R | USV: 2/5 (avail=2 int=0 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+      [DETECT] black_usv2
+      [ASSIGN] white_usv1->black_usv2
+      [ASSIGN] white_usv4->black_usv2
+[t=17,387s] step=700 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=2 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=1 lost=0 engaged=0 | TOP: black_usv2(x91,658) | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+[t=17,591s] step=710 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=2 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=1 engaged=0 | TOP: black_usv2(x89,682) | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+[t=17,806s] step=720 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=2 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=1 lost=0 engaged=0 | TOP: black_usv2(x87,598) | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+[t=18,022s] step=730 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=2 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=1 engaged=0 | TOP: black_usv2(x85,505) | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+[t=18,246s] step=740 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=1 lock=1 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=1 lost=0 engaged=1 | TOP: black_usv2(x83,340) | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+[t=18,468s] step=750 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=1 lock=1 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=1 lost=0 engaged=1 | TOP: black_usv2(x81,855) | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+[t=18,688s] step=760 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=1 lock=1 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=1 lost=0 engaged=1 | TOP: black_usv2(x81,855) | KILL=13 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+[t=18,882s] step=770 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=2 lock=0 frz=0) | UAV: air=5 rtb=0 chg=0 loiter=0 | TRACKS: vis=1 lost=0 engaged=0 | TOP: black_usv2(x81,710) | KILL=14 | ACTIONS=7 | INTENT: focus=2 ratio=0.20
+[t=19,083s] step=780 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=2 lock=0 frz=0) | UAV: air=4 rtb=0 chg=0 loiter=0 | TRACKS: vis=1 lost=0 engaged=0 | TOP: black_usv2(x81,710) | KILL=14 | ACTIONS=6 | INTENT: focus=2 ratio=0.20
+[t=19,275s] step=790 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=2 lock=0 frz=0) | UAV: air=4 rtb=0 chg=0 loiter=0 | TRACKS: vis=1 lost=0 engaged=0 | TOP: black_usv2(x81,710) | KILL=14 | ACTIONS=6 | INTENT: focus=2 ratio=0.20
+      [KILL] black_usv2
+      [RELEASE] white_usv1->black_usv2(目标失效)
+      [RELEASE] white_usv4->black_usv2(目标失效)
+[t=19,456s] step=800 | MISSION=GLOBAL_R | USV: 2/5 (avail=2 int=0 lock=0 frz=0) | UAV: air=4 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=14 | ACTIONS=6 | INTENT: focus=2 ratio=0.20
+[t=19,635s] step=810 | MISSION=GLOBAL_R | USV: 2/5 (avail=2 int=0 lock=0 frz=0) | UAV: air=4 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=14 | ACTIONS=6 | INTENT: focus=2 ratio=0.20
+[t=19,823s] step=820 | MISSION=GLOBAL_R | USV: 2/5 (avail=2 int=0 lock=0 frz=0) | UAV: air=4 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=14 | ACTIONS=6 | INTENT: focus=2 ratio=0.20
+[t=20,040s] step=830 | MISSION=GLOBAL_R | USV: 2/5 (avail=2 int=0 lock=0 frz=0) | UAV: air=4 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=14 | ACTIONS=6 | INTENT: focus=2 ratio=0.20
+      [DETECT] black_usv10
+      [ASSIGN] white_usv1->black_usv10
+      [ASSIGN] white_usv4->black_usv10
+[t=20,250s] step=840 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=2 lock=0 frz=0) | UAV: air=4 rtb=0 chg=0 loiter=0 | TRACKS: vis=1 lost=0 engaged=0 | TOP: black_usv10(x73,004) | KILL=14 | ACTIONS=6 | INTENT: focus=2 ratio=0.20
+[t=20,473s] step=850 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=2 lock=0 frz=0) | UAV: air=4 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=1 engaged=0 | TOP: black_usv10(x70,828) | KILL=14 | ACTIONS=6 | INTENT: focus=2 ratio=0.20
+      [RELEASE] white_usv1->black_usv10(目标失效)
+      [RELEASE] white_usv4->black_usv10(目标失效)
+[t=20,690s] step=860 | MISSION=GLOBAL_R | USV: 2/5 (avail=2 int=0 lock=0 frz=0) | UAV: air=4 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=14 | ACTIONS=6 | INTENT: focus=2 ratio=0.20
+[t=20,913s] step=870 | MISSION=GLOBAL_R | USV: 2/5 (avail=2 int=0 lock=0 frz=0) | UAV: air=4 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=14 | ACTIONS=6 | INTENT: focus=2 ratio=0.20
+[t=21,132s] step=880 | MISSION=GLOBAL_R | USV: 2/5 (avail=2 int=0 lock=0 frz=0) | UAV: air=4 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=14 | ACTIONS=6 | INTENT: focus=2 ratio=0.20
+[t=21,347s] step=890 | MISSION=GLOBAL_R | USV: 2/5 (avail=2 int=0 lock=0 frz=0) | UAV: air=4 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=14 | ACTIONS=6 | INTENT: focus=2 ratio=0.20
+[t=21,549s] step=900 | MISSION=GLOBAL_R | USV: 2/5 (avail=2 int=0 lock=0 frz=0) | UAV: air=4 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=14 | ACTIONS=6 | INTENT: focus=2 ratio=0.20
+      [DETECT] black_usv10
+      [ASSIGN] white_usv1->black_usv10
+      [ASSIGN] white_usv4->black_usv10
+[t=21,761s] step=910 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=2 lock=0 frz=0) | UAV: air=4 rtb=0 chg=0 loiter=0 | TRACKS: vis=1 lost=0 engaged=0 | TOP: black_usv10(x58,259) | KILL=14 | ACTIONS=6 | INTENT: focus=2 ratio=0.20
+[t=21,974s] step=920 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=2 lock=0 frz=0) | UAV: air=4 rtb=0 chg=0 loiter=0 | TRACKS: vis=1 lost=0 engaged=0 | TOP: black_usv10(x56,183) | KILL=14 | ACTIONS=6 | INTENT: focus=2 ratio=0.20
+[t=22,188s] step=930 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=2 lock=0 frz=0) | UAV: air=4 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=1 engaged=0 | TOP: black_usv10(x54,093) | KILL=14 | ACTIONS=6 | INTENT: focus=2 ratio=0.20
+      [RELEASE] white_usv1->black_usv10(目标失效)
+      [RELEASE] white_usv4->black_usv10(目标失效)
+[t=22,419s] step=940 | MISSION=NORMAL_C | USV: 2/5 (avail=0 int=2 lock=0 frz=0) | UAV: air=4 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=14 | ACTIONS=6 | INTENT: focus=2 ratio=0.20
+
+========================================================================
+对局结果: Result.Victory — 敌方所有单位被击毁
+  击杀蓝舰: 15 | 命中: 28 | 我方USV损失: 3 | UAV损失: 1 | 突破: 1
+[META] result=Result.Victory victory_time=22771 first_detection=1560 first_lock=7364 first_kill=8664 enemy_kills=15 friendly_usv_losses=3 friendly_uav_losses=1 black_breakthrough=1 reacquire_attempts=95 reacquire_success=94 sensor_assisted_locks=42 low_conf_commitments=0 global_reacquire_entries=7 global_reacquire_success=6 coverage_collapse_events=1 active_clusters_max=1 coverage_quality_final=0.20 commander_source=default_intent commander_calls=0 commander_changes=0 commander_no_change=0 commander_parse_failures=0 commander_api_failures=0 commander_policy_failures=0 commander_avg_latency=0.0
+Done

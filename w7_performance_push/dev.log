@@ -1,0 +1,84 @@
+[DEV:recon_a_smoke] agent_hybrid_v5.py s4001 04:02:34
+   -> Result.Victory clean=1 dead=4.0 brk=0
+[DEV:recon_a_smoke] agent_hybrid_v5.py s4002 04:08:49
+   -> Result.Victory clean=0 dead=3.0 brk=1
+[DEV:recon_a_smoke] agent_hybrid_v5.py s4003 04:16:45
+   -> Result.Victory clean=1 dead=2.0 brk=0
+[DEV:recon_a_smoke] recon_a_entry.py s4001 04:23:38
+   -> Result.Victory clean=1 dead=4.0 brk=0
+[DEV:recon_a_smoke] recon_a_entry.py s4002 04:30:36
+   -> Result.Victory clean=0 dead=5.0 brk=1
+[DEV:recon_a_smoke] recon_a_entry.py s4003 04:37:48
+   -> Result.Victory clean=1 dead=2.0 brk=0
+[done]
+Traceback (most recent call last):
+  File "dev_runner.py", line 102, in <module>
+    sys.exit(main())
+  File "dev_runner.py", line 83, in main
+    done = {(r["candidate"], int(r["seed"])) for r in csv.DictReader(open(path))}
+  File "dev_runner.py", line 83, in <setcomp>
+    done = {(r["candidate"], int(r["seed"])) for r in csv.DictReader(open(path))}
+KeyError: 'candidate'
+[DEV:kc_a_smoke] kc_a_entry.py s4001 12:31:15
+   -> ? clean=0 dead=0.0 brk=0
+[DEV:kc_a_smoke] kc_a_entry.py s4002 12:31:21
+   -> ? clean=0 dead=0.0 brk=0
+[DEV:kc_a_smoke] kc_a_entry.py s4003 12:31:26
+   -> ? clean=0 dead=0.0 brk=0
+[done]
+[DEV:kc_a_smoke] kc_a_entry.py s4001 12:34:12
+   -> Result.Victory clean=1 dead=1.0 brk=0
+[DEV:kc_a_smoke] kc_a_entry.py s4002 12:37:32
+   -> Result.Victory clean=1 dead=6.0 brk=0
+[DEV:kc_a_smoke] kc_a_entry.py s4003 12:41:12
+   -> Result.Victory clean=0 dead=3.0 brk=1
+[done]
+[DEV:kc_a_n5] agent_hybrid_v5.py s4004 12:49:20
+   -> Result.Victory clean=1 dead=0.0 brk=0
+[DEV:kc_a_n5] agent_hybrid_v5.py s4005 12:52:40
+   -> Result.Victory clean=1 dead=4.0 brk=0
+[DEV:kc_a_n5] kc_a_entry.py s4004 12:56:48
+   -> Result.Victory clean=1 dead=1.0 brk=0
+[DEV:kc_a_n5] kc_a_entry.py s4005 13:00:26
+   -> Result.Victory clean=0 dead=5.0 brk=1
+[done]
+[DEV:recon_b1_smoke] recon_b_entry.py s4001 13:34:03
+   -> Result.Defeat clean=0 dead=5.0 brk=1
+[DEV:recon_b1_smoke] recon_b_entry.py s4002 13:38:51
+   -> Result.Victory clean=0 dead=5.0 brk=1
+[DEV:recon_b1_smoke] recon_b_entry.py s4003 13:45:24
+   -> Result.Victory clean=1 dead=0.0 brk=0
+[done]
+[DEV:gap_a_smoke] gap_a_entry.py s4001 14:02:57
+   -> Result.Victory clean=1 dead=6.0 brk=0
+[DEV:gap_a_smoke] gap_a_entry.py s4002 14:07:27
+   -> Result.Victory clean=1 dead=5.0 brk=0
+[DEV:gap_a_smoke] gap_a_entry.py s4003 14:10:45
+   -> Result.Victory clean=1 dead=4.0 brk=0
+[done]
+[DEV:gap_a_n5] gap_a_entry.py s4004 14:16:21
+   -> Result.Victory clean=1 dead=1.0 brk=0
+[DEV:gap_a_n5] gap_a_entry.py s4005 14:20:11
+   -> Result.Victory clean=1 dead=4.0 brk=0
+[done]
+[DEV:gap_a_dev10] agent_hybrid_v5.py s4006 14:26:21
+   -> Result.Victory clean=1 dead=2.0 brk=0
+[DEV:gap_a_dev10] agent_hybrid_v5.py s4007 14:30:29
+   -> Result.Victory clean=1 dead=3.0 brk=0
+[DEV:gap_a_dev10] agent_hybrid_v5.py s4008 14:33:51
+   -> Result.Victory clean=0 dead=3.0 brk=1
+[DEV:gap_a_dev10] agent_hybrid_v5.py s4009 14:40:18
+   -> Result.Victory clean=1 dead=3.0 brk=0
+[DEV:gap_a_dev10] agent_hybrid_v5.py s4010 14:43:50
+   -> Result.Victory clean=1 dead=3.0 brk=0
+[DEV:gap_a_dev10] gap_a_entry.py s4006 14:48:20
+   -> Result.Victory clean=1 dead=2.0 brk=0
+[DEV:gap_a_dev10] gap_a_entry.py s4007 14:52:16
+   -> Result.Defeat clean=0 dead=4.0 brk=1
+[DEV:gap_a_dev10] gap_a_entry.py s4008 14:57:32
+   -> Result.Victory clean=0 dead=6.0 brk=1
+[DEV:gap_a_dev10] gap_a_entry.py s4009 15:04:03
+   -> Result.Defeat clean=0 dead=7.0 brk=2
+[DEV:gap_a_dev10] gap_a_entry.py s4010 15:09:23
+   -> Result.Victory clean=0 dead=3.0 brk=1
+[done]

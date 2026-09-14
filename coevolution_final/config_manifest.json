@@ -1,0 +1,133 @@
+{
+ "experiment": "three-stage co-evolution FINAL (Stage0 W5xB0 / Stage1 W5xB3 / Stage2 W6xB3)",
+ "white": {
+  "W5_LEGACY_FROZEN_HASH": "a7842b29c81cc567ea63cae262cb6ab0b9d9bd9df90903c4115eaa6e6c6f0f66",
+  "W5_RUNTIME_FILE_HASH": "e823e7bed219f4693aa778a838df1400c161f8e7e44001502e5bceb0ae804252",
+  "W5_freezenote": "W5_RUNTIME_FILE = legacy V5 + inert W6 integration hook (_w6_intercept slot, None-default; never set under W5-only run => behaviorally identical to W5_LEGACY_FROZEN_HASH which produced all prior W5 baselines)",
+  "W6_hash": "a4ad592322f32689f0f48c89fd8678e3cdc64368dc64080a135a69a83443a0b8",
+  "anti_evasion_dir_hash": "ef2b5aaa518ad412f93562090f5871b96a6cfb0f24a1877737a658d63e6ada1f",
+  "w6_feature_gates": {
+   "predictive_intercept": true,
+   "pursuit_cost": true,
+   "handoff": true,
+   "uav_track_maintenance": true,
+   "adaptive_screen": true,
+   "breakthrough_horizon": true
+  },
+  "W6_freezenote": "dev2.1 semantics (Fix A-F: standoff aim, corridor-demand screen keyed to lateness, handoff vs committed interceptor, event metrics, agent-level screen deploy). Fix G (preserve concentration) was tested on dev seeds and reverted; this is the code that produced the FINAL holdout episodes."
+ },
+ "skill": {
+  "skill_hash": "155b02019dc92c6e6c0095949439a413cd86310ad1026cd394ad185c3d13552e",
+  "note": "skill released v1 (evo_losttrack_coverage); hash 155b0201... expected"
+ },
+ "black": {
+  "opponent_profiles_hash": "7aa12e1d8b7c588feadd5e2fa908267f1ee131a452c01b6e9a163426590dff6c",
+  "B3_LEGACY_FORMAL_EVAL_HASH": "377fcc0ef9829c7f510963ab284c84b36094a900d0d575247977e16eac1f9661",
+  "B3_freezenote": "runtime file hash 7aa12e1d = formal-eval B3 (377fcc0e) + policy-neutral event telemetry (_write_stats to /tmp/opencode/b3_events.json); decisions (b3_plan + cmd_sail_area) unchanged => behaviorally identical",
+  "B0_RANDOM": "legacy random-waypoint baseline (unchanged since formal)",
+  "B3_ADAPTIVE": "legal-observation runtime replanning profile inside opponent_profiles.py",
+  "b3_events_file": "/tmp/opencode/b3_events.json",
+  "B0_hash": "opponent_profiles.py (B0_RANDOM legacy baseline, unchanged)",
+  "B3_hash": "opponent_profiles.py sha7aa12e1d... (B3_ADAPTIVE; formal-eval B3 377fcc0e + policy-neutral event telemetry)"
+ },
+ "prompt_hash": "155b02019dc92c6e6c0095949439a413cd86310ad1026cd394ad185c3d13552e",
+ "simulator_physics": "engine.py:58aab5ad4cdb tzb_engine.py:396ba7a3e294",
+ "scenario_builder_hash": "49264f559f498882803da2c8c0b050c06e582d4d54ae4698aebe5d6ac60afcf9",
+ "scenario_composition_hash": "b57a71803114640f179c010c460f4305e0104b6fbb09da33376d145ce963407e",
+ "physics_unchanged": true,
+ "fair_play": {
+  "white_black_internal_access": false,
+  "black_observation": "get_black_targets() only (Black radar intel) + own units",
+  "enforced_by": "static audit + hidden-truth counterfactual tests (test_opponent_profiles.py, test_w6_units.py T9)"
+ },
+ "holdout_seeds": [
+  4001,
+  4002,
+  4003,
+  4004,
+  4005,
+  4006,
+  4007,
+  4008,
+  4009,
+  4010
+ ],
+ "dev_seeds_never_in_final": [
+  2001,
+  2002,
+  2003,
+  2004,
+  2005
+ ],
+ "formal_seeds_never_in_final": [
+  1001,
+  1002,
+  1003,
+  1004,
+  1005,
+  1006,
+  1007,
+  1008,
+  1009,
+  1010,
+  1011,
+  1012,
+  1013,
+  1014,
+  1015,
+  1016,
+  1017,
+  1018,
+  1019,
+  1020,
+  1021,
+  1022,
+  1023,
+  1024,
+  1025,
+  1026,
+  1027,
+  1028,
+  1029,
+  1030
+ ],
+ "N_per_setting": 10,
+ "main_episodes": 90,
+ "budget_note": "FINAL N=10 hard max; no追加 for variance.",
+ "stages": [
+  {
+   "stage": "Stage0",
+   "white": "W5",
+   "black": "B0_RANDOM",
+   "meaning": "initial baseline"
+  },
+  {
+   "stage": "Stage1",
+   "white": "W5",
+   "black": "B3_ADAPTIVE",
+   "meaning": "black evolved only"
+  },
+  {
+   "stage": "Stage2",
+   "white": "W6",
+   "black": "B3_ADAPTIVE",
+   "meaning": "white anti-evasion adaptation over frozen B3"
+  }
+ ],
+ "recorded_at": "2026-09-03 22:43:47",
+ "W6_status": "FROZEN_FOR_FINAL",
+ "reproducibility": {
+  "note": "sim combat RNG was process-global and unseeded (arsenal/locker.py uses random.random()); added per-game random.seed(rw_seed+1009)+np.random.seed(rw_seed+7) at top of scenario_builder.build_scenario (Reproducibility CONTROL only, NOT a physics/balance change; no weapon/speed/sensor/damage values touched)",
+  "scenario_builder_hash": "49264f559f498882803da2c8c0b050c06e582d4d54ae4698aebe5d6ac60afcf9",
+  "recorded": true
+ },
+ "dev_gate_notes": {
+  "B3_dev_seeded_2of3_clean": "s2002/s2003 clean; s2001 narrow defeat (1 breakthrough of 10; screen deployed 1x, late=6)",
+  "B0_s2001": "W6 fragility: 5 USV loss + 1 breakthrough (W6xBO optional regression column; documented weakness)",
+  "mechanisms_firing": "predictive intercept(standoff), handoff(evaluations>0), track maintenance, adaptive screen (deploys on late/critical), breakthrough horizon",
+  "fixg": "Fix G selected over dev2.1 collapse variant and W6_OVERLAY passthrough (dev 3/4 best); residual B3 s2003 defeat documented"
+ },
+ "freeze_status": "FROZEN_FOR_FINAL (no further W6 modification)",
+ "holdout_seeds_status": "DIAGNOSTIC / DEVELOPMENT EVIDENCE (used for W6-dev2 failure analysis and W6-dev3 design; no longer unseen FINAL holdout). Next FINAL must use fresh seeds e.g. 5001-5010.",
+ "final_seeds_policy": "5001-5010 reserved for future W6 FINAL (not yet run)"
+}

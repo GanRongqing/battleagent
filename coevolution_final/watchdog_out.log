@@ -1,0 +1,28 @@
+watchdog start
+final runner dead; relaunching
+MAIN 90 complete
+run analyze.py []
+episodes loaded: 90
+wrote /root/autodl-tmp/hsystem/coevolution_final/stage_aggregate.csv
+wrote /root/autodl-tmp/hsystem/coevolution_final/stage_paired_deltas.csv
+wrote /root/autodl-tmp/hsystem/coevolution_final/w6_mechanism_stats.csv
+wrote /root/autodl-tmp/hsystem/coevolution_final/tables/table1_three_stage.csv
+wrote /root/autodl-tmp/hsystem/coevolution_final/tables/table2_w6_mechanisms.csv
+figures written to /root/autodl-tmp/hsystem/coevolution_final/figures
+[done] analyze complete
+done analyze.py rc=0
+run generate_reports.py []
+Traceback (most recent call last):
+  File "/root/autodl-tmp/hsystem/coevolution_final/generate_reports.py", line 180, in <module>
+    sys.exit(main())
+  File "/root/autodl-tmp/hsystem/coevolution_final/generate_reports.py", line 79, in main
+    rows2.append([sc, mech_name.get(c, c)] + v[0]["Stage2"] if v else [sc, c, "0"])
+TypeError: can only concatenate list (not "str") to list
+done generate_reports.py rc=1
+Traceback (most recent call last):
+  File "/root/autodl-tmp/hsystem/coevolution_final/print_terminal.py", line 91, in <module>
+    raise SystemExit(main())
+  File "/root/autodl-tmp/hsystem/coevolution_final/print_terminal.py", line 33, in main
+    print(f"{sc} — White {r['friendly_usv_initial']}+{r['friendly_uav_initial']} vs Black {r['enemy_combat_usv_initial']}")
+KeyError: 'friendly_usv_initial'
+main deliverables generated

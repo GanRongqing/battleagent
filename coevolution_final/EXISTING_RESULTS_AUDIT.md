@@ -1,0 +1,96 @@
+# EXISTING RESULTS AUDIT — Three-Stage Co-Evolution
+
+Audit date: 2026-09-04. Frozen code base at `/root/autodl-tmp/hsystem`.
+Audit is READ-ONLY; nothing below re-runs a completed, matching episode.
+
+## 1. Frozen versions (actual, code on disk)
+
+| Artifact | Identifier |
+|---|---|
+| W5 agent (frozen) | `agent_hybrid_v5.py`; legacy policy hash `a7842b29…` (runtime file = legacy + inert `_w6_intercept` hook, None-default => behaviourally identical W5) |
+| W6 agent (FROZEN_FOR_FINAL) | `agent_hybrid_w6.py` sha `a4ad5923…` |
+| W6 anti_evasion modules | `anti_evasion/` dir sha `ef2b5aaa…` (dev2.1 semantics: Fix A–F) |
+| Skill | `skills/maritime_commander/SKILL.md` sha `155b0201…` (released v1) |
+| Opponent profiles | `opponent_profiles.py` sha `7aa12e1d…`; B3_ADAPTIVE formal-era `377fcc0e…` + policy-neutral event telemetry |
+| Simulator physics | `engine.py:58aab5ad…`, `tzb_engine.py:396ba7a3…` (unchanged) |
+| Scenario builder | `scenario_builder.py` incl. per-game RNG reseed (reproducibility control, not physics) |
+| Source of truth | `white_harness_versions.jsonl`, `coevolution_final/config_manifest.json` |
+
+W6 freeze note: Fix G (preserve-concentration allocation) was built and empirically rejected on
+DEV seeds (holdout Stage2 S1 defeats under Fix G); code was restored to dev2.1 semantics, which is
+what produced all FINAL Stage-2 episodes below. `W6-dev2.1-RESTORED` status = `FROZEN_FOR_FINAL`.
+
+## 2. Known environment caveat (must appear in any final report)
+
+The simulator shows run-level nondeterminism beyond the scenario RNG seed. Verified by a 2-run
+probe (same seed 4001, same code): run1 Victory clean/usv_dead=1/13984s, run2 Defeat/
+usv_dead=5/28713s. Every episode below is therefore a **noisy draw**; N=10 per setting is
+reported as descriptive means + bootstrap 95% CIs (offline), NOT as tight paired effects.
+See `coevolution_final/RNG_NONDETERMINISM.md`.
+
+## 3. FINAL main experiment (holdout 4001–4010)
+
+### 3.1 Coverage
+File: `coevolution_final/final_episode_results.csv` — 71 lines (header + 70 episodes).
+
+| Scale | Stage0 W5×B0 | Stage1 W5×B3 | Stage2 W6×B3 | sub-total |
+|---|---|---|---|---|
+| S1 (5+5v10) | 10 done | 10 done | 10 done | 30 |
+| S2 (10+10v20) | 10 done | 10 done | 10 done | 30 |
+| S3 (15+15v30) | 10 done | **0 done** | **0 done** | 10 |
+| Total | | | | **70 / 90** |
+
+Missing (currently being executed by the background watchdog runner): S3 Stage1 ×10,
+S3 Stage2 ×10 = **20 episodes**.
+
+Error check on the 70 done: engine_error = 0, api_error = 0, invalid_action = 0 across all rows.
+Seeds used: 4001–4010 (dedicated FINAL holdout; never used in W6 DEV tuning).
+`N per setting = 10`, main experiment cap = 90 — respected.
+
+### 3.2 Reusability decision
+- All Stage0 / Stage1 episodes (W5 × B0 / W5 × B3, 40 done) run `agent_hybrid_v5.py` (unchanged)
+  → valid regardless of W6 code history → **reuse**.
+- All Stage2 episodes (W6 × B3, 20 done) run the current frozen W6 code (dev2.1 semantics,
+  hash `a4ad5923/ef2b5aaa`) → **reuse** (the code has not been modified since these ran).
+- The 20 missing S3 Stage1/Stage2 episodes will complete under the same frozen config.
+
+## 4. W6 DEV sanity (seeds 2001–2003, S1, W5 vs W6, B0+B3)
+
+Records:
+- `w6_anti_evasion/W6_DEV_HISTORY.md` — DEV revision 1 component sanity (12 episodes).
+- `w6_anti_evasion/eval/component_sanity_dev1.csv` (round-1, 12 rows) and
+  `w6_anti_evasion/eval/component_sanity.csv` (round-2 / dev2, 12 rows) — completed.
+- Round-2 evidence: `w6_anti_evasion/round2/` traces, `diagnostic_ablation.csv` (42 episodes),
+  `ROUND2_ABLATION_DIAGNOSIS.md`.
+- Gate status: engine/API/invalid errors = 0; fair-play = 0 (static audit + counterfactual
+  tests `test_w6_units.py` T9, `test_opponent_profiles.py`). Mechanisms fire (prediction /
+  standoff aim, screen on late/critical, handoff evaluations > 0, UAV track maintenance).
+  `unsafe_close_entries` ~ 0 after standoff Fix A (vs W6-dev1 knife-fight losses). No
+  catastrophic mechanism regression requiring a STOP was confirmed on the dev gate; the
+  residual dev-seed losses are within "normal seed loss" tolerance (§5 of the brief).
+- Conclusion: **reuse** the DEV sanity/ablation as mechanism evidence; do NOT re-run.
+
+## 5. Opponent ladder + historical formal eval (context, not part of the 3-stage main table)
+
+- `opponent_eval/` (B1/B2/B3 ladder smoke + manifest), `opponent_formal_eval/`
+  (B0 vs B3, 3 scales × N=30, paired 1001–1030) — completed, frozen White. Reusable as the
+  historical "adversarial evaluation" evidence and seed registry. Not mixed into the main table.
+
+## 6. What is still MISSING / must still be produced
+
+| Item | Status |
+|---|---|
+| S3 Stage1 + Stage2 episodes (20) | Running in background (watchdog) |
+| Optional W6 × B0 regression (30) | Pending (auto-run after main completes; can skip if time-bound) |
+| `stage_aggregate.csv`, `stage_paired_deltas.csv`, `w6_mechanism_stats.csv` | Auto-generated by `analyze.py` when main reaches 90 |
+| `tables/table1..3`, `figures/*`, `reports/*` | Auto-generated (`generate_reports.py`, `make_framework_figures.py`, `print_terminal.py`) |
+| `EXISTING_RESULTS_AUDIT.md` | THIS file |
+| Framework figures (coevolution / current instance) | Already generated earlier; will regenerate to be safe |
+| W6_ROUND2_REPORT.md | Not present as a standalone doc; round-2 evidence lives in `round2/` + `W6_DEV_HISTORY.md` (acceptable — not required by final deliverable list) |
+
+## 7. Budget bookkeeping
+
+- Main three-stage FINAL: 90 episodes hard cap (70 done + 20 to run).
+- Optional W6×B0: 30 hard cap (0 run).
+- DEV: not re-run (12+42 episodes already archived).
+- No auto-sampling increase for variance, per brief §1.

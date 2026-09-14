@@ -1,0 +1,242 @@
+""" Message definition.
+"""
+import sys
+import time
+
+from collections import namedtuple as ntp
+
+
+FMT = lambda fmt: (lambda self: fmt.format(message=self))
+
+# define messages generated and processed by core.engine and core.entity
+"""消息的命名习惯
+message表示最底层的消息
+head代表其消息头
+body代表其消息体
+msg/cmd/event分别表示body的三种类型,有时也用msg代表三者
+content表示更具体的内容
+"""
+
+def ctx(formatter):
+    """ Format message context. """
+    def inner(message):
+        content = formatter.format(message=message)
+        if isinstance(message, MESSAGE):
+            content = "[{}]".format(id(message)) + content
+        return content
+    return inner
+
+MESSAGE = ntp("MESSAGE", ["head", "body"])
+MESSAGE.__str__ = ctx("[|head> {message.head} |body> {message.body}]")
+MESSAGE.__doc__ = """ Packaged message structure.
+
+A packaged message is comprised of a head part and a body part.
+Head is generated and added by the engine and body is the message or command
+itself.
+
+Attributes
+----------
+message.head.send : core.arch.Entity.ZIP
+    Zipcode of the unit that will send the message.
+message.head.recv : core.arch.Entity.ZIP
+    Zipcode of the unit that will receive the message.
+message.head.when : int (millisecond)
+    Timestamp when the message is sent (millisecond).
+message.body : message or command
+    Message and command content that will be sent.
+"""
+
+HEAD = ntp("HEAD", ["send", "recv", "when"])
+HEAD.__str__ = ctx("from {message.send} to {message.recv} at {message.when}")
+HEAD.__doc__ = """ Header for message transimtting.
+
+Attributes
+----------
+send : core.arch.Entity.ZIP
+    Zipcode of the unit that will send the message.
+recv : core.arch.Entity.ZIP
+    Zipcode of the unit that will receive the message.
+when : int (millisecond)
+    Timestamp when the message is sent (millisecond).
+"""
+
+
+#状态消息
+STATE = ntp("STATE", ["state"])
+STATE.__str__ = ctx("STATE: {message.state}")
+STATE.__doc__ = """状态消息,支撑转态转移机制的实现"""
+
+
+#函数消息
+FUNC = ntp("FUNC", ["func", "args"])
+FUNC.__str__ = ctx("func: {message.func}, args: {message.args}")
+FUNC.__doc__ = """函数消息,通过消息机制支撑函数的延时执行"""
+
+
+#一般消息
+class Msg(object):
+    '''一般消息
+
+        该类的对象通过Component对象的send_message发送，通过通信设备发送的
+        Args:
+        src: 发送该消息的真实发送者，可能与msg.head.send不一致，因为存在通信设备转发
+        dst:发送该消息的真实接收者，可能与msg.head.recv不一致，因为存在通信设备转发
+        send_time:发送该消息的真实时间，可能与msg.head.when不一致，因为存在通信排队时延，且单位为s
+        isignored:如果通信条件不满足，是否直接忽略
+        content:消息内容,为类或命名元组的对象，其类名为分发给不同函数处理的依据，类名均以Msg开头
+    '''
+    def __init__(self, src, dst, send_time, isignored, content):
+        self.src = src
+        self.dst = dst
+        self.send_time = send_time
+        self.isignored = isignored
+        self.content = content
+
+    def __getattr__(self, attr):
+        return getattr(self.content, attr)
+
+
+#命令
+class Cmd(object):
+    '''命令
+
+        该类的对象通过Component对象的send_command发送，不通过通信设备发送，仅能在Unit内部传递，且是瞬时传递
+        Args:
+        src: 发送该命令的真实发送者，与msg.head.send一致
+        dst:发送该命令的真实接收者，与msg.head.recv一致
+        send_time:发送该命令的真实时间，与msg.head.when一致，但单位为s
+        isignored:如果通信条件不满足，是否直接忽略
+        content:命令内容,为类或命名元组的对象，其类名为分发给不同函数处理的依据，类名均以Cmd开头
+    '''
+    def __init__(self, src, dst, send_time, isignored, content):
+        self.src = src
+        self.dst = dst
+        self.send_time = send_time
+        self.isignored = isignored
+        self.content = content
+
+    def __getattr__(self, attr):
+        return getattr(self.content, attr)
+
+
+#事件（借鉴Xsim中的概念，为不需要探知的真实事件）
+class Event(object):
+    '''事件
+
+        该类的对象通过Component对象的send_event发送，不通过通信设备发送，可在Unit内或Unit间传递，可以瞬时也可以延时
+        Args:
+        src: 发送该事件的真实发送者，与msg.head.send一致
+        dst:发送该事件的真实接收者，与msg.head.recv一致
+        send_time:发送该事件的真实时间，与msg.head.when一致，但单位为s
+        content:事件内容,为类或命名元组的对象，其类名为分发给不同函数处理的依据，类名均以Event开头
+    '''
+    def __init__(self, src, dst, send_time, content):
+        self.src = src
+        self.dst = dst
+        self.send_time = send_time
+        self.content = content
+
+    def __getattr__(self, attr):
+        return getattr(self.content, attr)
+
+
+#任务
+class Task(object):
+    '''任务
+
+        该类的对象通过组件Commander对象的send_task发送，通过通信设备发送的
+        Args:
+        src: 发送该消息的真实发送者，可能与msg.head.send不一致，因为存在通信设备转发
+        dst:发送该消息的真实接收者，可能与msg.head.recv不一致，因为存在通信设备转发
+        send_time:发送该消息的真实时间，可能与msg.head.when不一致，因为存在通信排队时延，且单位为s
+        isignored:如果通信条件不满足，是否直接忽略
+        content:任务内容,为类或命名元组的对象，其类名为分发给不同函数处理的依据，类名均以Task开头
+    '''
+    def __init__(self, src, dst, send_time, isignored, content):
+        self.src = src
+        self.dst = dst
+        self.send_time = send_time
+        self.isignored = isignored
+        self.content = content
+
+    def __getattr__(self, attr):
+        return getattr(self.content, attr)
+
+
+# 内容基类
+class Content(object):
+    def __init__(self, text=""):
+        self.text = text
+
+
+#--------一般消息-----------------------
+class MsgContent(Content):
+    """ 以消息的形式发送内容 """
+
+
+class MsgTrack(Content):
+    """ 情报信息 """
+    def __init__(self, track):
+        self.track = track
+
+
+#--------命令---------------------------
+class CmdSensorTurnOn(Content):
+    "传感器开机指令"
+    def __init__(self):
+        super().__init__("")
+
+
+class CmdSensorTurnOff(Content):
+    "传感器关机指令"
+    def __init__(self):
+        super().__init__("")  
+
+
+class CmdMotorChangeSpeed(Content):
+    "机动组件改变速度指令"
+    def __init__(self, speed):
+        super().__init__("") 
+        self.speed = speed
+
+
+class CmdMotorChangeVelocity(Content):
+    "机动组件改变速度（三维）指令"
+    def __init__(self, velocity):
+        super().__init__("") 
+        self.velocity = velocity
+
+
+class CmdMotorChangeCourse(Content):
+    "机动组件改变航向指令"
+    def __init__(self, az):
+        super().__init__("") 
+        self.az = az
+
+
+class CmdMotorChangeHeight(Content):
+    "机动组件改变高度指令"
+    def __init__(self, height):
+        super().__init__("") 
+        self.height = height
+
+
+#--------事件---------------------------
+class EventHit(Content):
+    "被击中事件"
+    def __init__(self, text=""):
+        super().__init__(text) 
+
+
+class EventCollided(Content):
+    "发生碰撞事件"
+    def __init__(self, foe):
+        self.foe = foe
+
+
+class EventNextFun(Content):
+    def __init__(self, name, func, args):
+        self.name = name
+        self.func = func
+        self.args = args
+        

@@ -1,0 +1,733 @@
+========================================================================
+HYBRID AGENT V5 — Variable-Cardinality Hierarchical Maritime Agent
+  启用UAV: True | LLM_ENABLED: False
+========================================================================
+对局 13 开始
+      [UAV RELAUNCH] white_uav5
+      [UAV RELAUNCH] white_uav4
+      [UAV RELAUNCH] white_uav6
+      [UAV RELAUNCH] white_uav11
+      [UAV RELAUNCH] white_uav15
+      [UAV RELAUNCH] white_uav3
+      [UAV RELAUNCH] white_uav2
+      [UAV RELAUNCH] white_uav7
+      [UAV RELAUNCH] white_uav8
+      [UAV RELAUNCH] white_uav13
+      [UAV RELAUNCH] white_uav1
+      [UAV RELAUNCH] white_uav9
+      [UAV RELAUNCH] white_uav10
+      [UAV RELAUNCH] white_uav12
+      [UAV RELAUNCH] white_uav14
+[t=271s] step=10 | MISSION=NORMAL_C | USV: 15/15 (avail=15 int=0 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=0 | ACTIONS=30 | INTENT: focus=2 ratio=0.20
+  [INTENT APPLIED]
+    ThreatAllocator: focus 2 emergency 3 reserve_ratio 0.20 reserve_usvs None bias breakthrough_eta
+    UAVManager: mode search_and_reacquire uav_priority []
+[t=576s] step=20 | MISSION=NORMAL_C | USV: 15/15 (avail=15 int=0 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=0 | ACTIONS=30 | INTENT: focus=2 ratio=0.20
+[t=906s] step=30 | MISSION=NORMAL_C | USV: 15/15 (avail=15 int=0 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=0 | ACTIONS=30 | INTENT: focus=2 ratio=0.20
+[t=1,227s] step=40 | MISSION=NORMAL_C | USV: 15/15 (avail=15 int=0 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=0 | ACTIONS=30 | INTENT: focus=2 ratio=0.20
+[t=1,553s] step=50 | MISSION=NORMAL_C | USV: 15/15 (avail=15 int=0 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=0 | ACTIONS=30 | INTENT: focus=2 ratio=0.20
+      [DETECT] black_usv17
+      [DETECT] black_usv16
+      [DETECT] black_usv15
+      [DETECT] black_usv18
+      [ASSIGN] white_usv13->black_usv17
+      [ASSIGN] white_usv11->black_usv18
+      [ASSIGN] white_usv1->black_usv17
+      [ASSIGN] white_usv2->black_usv15
+      [ASSIGN] white_usv6->black_usv16
+      [ASSIGN] white_usv10->black_usv17
+      [ASSIGN] white_usv15->black_usv18
+      [ASSIGN] white_usv4->black_usv15
+      [ASSIGN] white_usv7->black_usv15
+      [ASSIGN] white_usv8->black_usv16
+      [ASSIGN] white_usv9->black_usv18
+      [ASSIGN] white_usv14->black_usv16
+      [DETECT] black_usv10
+      [DETECT] black_usv12
+      [DETECT] black_usv22
+      [DETECT] black_usv14
+      [DETECT] black_usv24
+      [DETECT] black_usv8
+      [DETECT] black_usv25
+      [DETECT] black_usv23
+      [DETECT] black_usv20
+      [DETECT] black_usv11
+      [DETECT] black_usv21
+      [DETECT] black_usv13
+      [DETECT] black_usv19
+      [ASSIGN] white_usv3->black_usv19
+      [ASSIGN] white_usv5->black_usv21
+[t=1,873s] step=60 | MISSION=NORMAL_C | USV: 15/15 (avail=3 int=12 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=17 lost=0 engaged=0 | TOP: black_usv22(x241,544) black_usv20(x241,610) black_usv12(x241,714) | KILL=0 | ACTIONS=30 | INTENT: focus=2 ratio=0.20
+      [DETECT] black_usv4
+      [DETECT] black_usv28
+      [DETECT] black_usv29
+      [DETECT] black_usv6
+      [DETECT] black_usv9
+      [DETECT] black_usv26
+      [DETECT] black_usv27
+      [DETECT] black_usv7
+      [ASSIGN] white_usv12->black_usv22
+      [DETECT] black_usv2
+      [DETECT] black_usv5
+      [DETECT] black_usv3
+      [DETECT] black_usv30
+      [DETECT] black_usv1
+[t=2,184s] step=70 | MISSION=NORMAL_C | USV: 15/15 (avail=0 int=15 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=30 lost=0 engaged=0 | TOP: black_usv20(x238,567) black_usv12(x238,691) black_usv14(x238,787) | KILL=0 | ACTIONS=30 | INTENT: focus=2 ratio=0.20
+[t=2,514s] step=80 | MISSION=NORMAL_C | USV: 15/15 (avail=0 int=15 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=30 lost=0 engaged=0 | TOP: black_usv20(x235,338) black_usv12(x235,482) black_usv14(x235,594) | KILL=0 | ACTIONS=30 | INTENT: focus=2 ratio=0.20
+[t=2,830s] step=90 | MISSION=NORMAL_C | USV: 15/15 (avail=0 int=15 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=30 lost=0 engaged=0 | TOP: black_usv20(x232,246) black_usv12(x232,410) black_usv14(x232,537) | KILL=0 | ACTIONS=30 | INTENT: focus=2 ratio=0.20
+[t=3,144s] step=100 | MISSION=NORMAL_C | USV: 15/15 (avail=0 int=15 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=30 lost=0 engaged=0 | TOP: black_usv20(x229,174) black_usv12(x229,357) black_usv14(x229,499) | KILL=0 | ACTIONS=30 | INTENT: focus=2 ratio=0.20
+[t=3,452s] step=110 | MISSION=NORMAL_C | USV: 15/15 (avail=0 int=15 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=29 lost=1 engaged=0 | TOP: black_usv20(x226,160) black_usv12(x226,362) black_usv14(x226,520) | KILL=0 | ACTIONS=30 | INTENT: focus=2 ratio=0.20
+[t=3,760s] step=120 | MISSION=NORMAL_C | USV: 15/15 (avail=0 int=15 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=30 lost=0 engaged=0 | TOP: black_usv20(x223,146) black_usv12(x223,368) black_usv14(x223,540) | KILL=0 | ACTIONS=30 | INTENT: focus=2 ratio=0.20
+[t=4,051s] step=130 | MISSION=NORMAL_C | USV: 15/15 (avail=0 int=15 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=29 lost=1 engaged=0 | TOP: black_usv20(x220,299) black_usv12(x220,538) black_usv14(x220,725) | KILL=0 | ACTIONS=30 | INTENT: focus=2 ratio=0.20
+[t=4,368s] step=140 | MISSION=NORMAL_C | USV: 15/15 (avail=0 int=15 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=30 lost=0 engaged=0 | TOP: black_usv20(x217,197) black_usv12(x217,456) black_usv14(x217,658) | KILL=0 | ACTIONS=30 | INTENT: focus=2 ratio=0.20
+[t=4,666s] step=150 | MISSION=NORMAL_C | USV: 15/15 (avail=0 int=15 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=28 lost=2 engaged=0 | TOP: black_usv20(x214,274) black_usv25(x215,097) black_usv23(x215,346) | KILL=0 | ACTIONS=30 | INTENT: focus=2 ratio=0.20
+[t=4,934s] step=160 | MISSION=NORMAL_C | USV: 15/15 (avail=0 int=15 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=29 lost=1 engaged=0 | TOP: black_usv20(x211,594) black_usv25(x212,417) black_usv23(x212,666) | KILL=0 | ACTIONS=30 | INTENT: focus=2 ratio=0.20
+[t=5,195s] step=170 | MISSION=NORMAL_C | USV: 15/15 (avail=0 int=15 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=26 lost=3 engaged=0 | TOP: black_usv20(x208,975) black_usv25(x209,798) black_usv23(x210,047) | KILL=0 | ACTIONS=30 | INTENT: focus=2 ratio=0.20
+[t=5,496s] step=180 | MISSION=NORMAL_C | USV: 15/15 (avail=0 int=15 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=27 lost=2 engaged=0 | TOP: black_usv12(x206,489) black_usv14(x206,745) black_usv11(x208,213) | KILL=0 | ACTIONS=30 | INTENT: focus=2 ratio=0.20
+[t=5,811s] step=190 | MISSION=NORMAL_C | USV: 15/15 (avail=0 int=15 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=28 lost=1 engaged=0 | TOP: black_usv12(x203,426) black_usv14(x203,697) black_usv11(x205,253) | KILL=0 | ACTIONS=30 | INTENT: focus=2 ratio=0.20
+      [DETECT] black_usv1
+[t=6,132s] step=200 | MISSION=NORMAL_C | USV: 15/15 (avail=0 int=15 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=28 lost=2 engaged=0 | TOP: black_usv12(x200,280) black_usv14(x200,592) black_usv11(x202,237) | KILL=0 | ACTIONS=30 | INTENT: focus=2 ratio=0.20
+[t=6,469s] step=210 | MISSION=NORMAL_C | USV: 15/15 (avail=0 int=15 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=26 lost=2 engaged=0 | TOP: black_usv14(x197,332) black_usv11(x199,070) black_usv13(x199,477) | KILL=0 | ACTIONS=30 | INTENT: focus=2 ratio=0.20
+[t=6,804s] step=220 | MISSION=NORMAL_C | USV: 15/15 (avail=0 int=15 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=27 lost=1 engaged=0 | TOP: black_usv14(x194,091) black_usv11(x195,922) black_usv8(x198,125) | KILL=0 | ACTIONS=30 | INTENT: focus=2 ratio=0.20
+[t=7,137s] step=230 | MISSION=NORMAL_C | USV: 15/15 (avail=0 int=15 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=26 lost=2 engaged=0 | TOP: black_usv14(x190,797) black_usv7(x198,216) black_usv9(x198,770) | KILL=0 | ACTIONS=30 | INTENT: focus=2 ratio=0.20
+      [ASSIGN] white_usv6->black_usv18(机会锁定)
+      [ASSIGN] white_usv10->black_usv18(机会锁定)
+      [ASSIGN] white_usv8->black_usv18(机会锁定)
+      [ASSIGN] white_usv13->black_usv16(机会锁定)
+      [ASSIGN] white_usv15->black_usv19(机会锁定)
+      [ASSIGN] white_usv14->black_usv19(机会锁定)
+      [ASSIGN] white_usv5->black_usv18(机会锁定)
+      [ASSIGN] white_usv12->black_usv21(机会锁定)
+      [ASSIGN] white_usv1->black_usv16(机会锁定)
+      [ASSIGN] white_usv3->black_usv16(机会锁定)
+[t=7,490s] step=240 | MISSION=NORMAL_C | USV: 15/15 (avail=0 int=0 lock=15 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=27 lost=1 engaged=5 | TOP: black_usv7(x195,182) black_usv9(x195,765) black_usv29(x196,902) | KILL=0 | ACTIONS=30 | INTENT: focus=2 ratio=0.20
+      [ASSIGN] white_usv9->black_usv17(机会锁定)
+      [ASSIGN] white_usv11->black_usv21(机会锁定)
+      [ASSIGN] white_usv6->black_usv14(机会锁定)
+      [ASSIGN] white_usv10->black_usv17(机会锁定)
+      [ASSIGN] white_usv4->black_usv14(机会锁定)
+      [ASSIGN] white_usv7->black_usv14(机会锁定)
+      [ASSIGN] white_usv8->black_usv17(机会锁定)
+      [ASSIGN] white_usv5->black_usv21(机会锁定)
+      [ASSIGN] white_usv13->black_usv18(机会锁定)
+      [ASSIGN] white_usv2->black_usv12(机会锁定)
+      [ASSIGN] white_usv15->black_usv18(机会锁定)
+      [ASSIGN] white_usv14->black_usv18(机会锁定)
+      [ASSIGN] white_usv12->black_usv20(机会锁定)
+      [ASSIGN] white_usv13->black_usv19(机会锁定)
+      [ASSIGN] white_usv1->black_usv15(机会锁定)
+      [ASSIGN] white_usv15->black_usv19(机会锁定)
+      [ASSIGN] white_usv14->black_usv19(机会锁定)
+      [ASSIGN] white_usv3->black_usv19(机会锁定)
+      [ASSIGN] white_usv1->black_usv16(机会锁定)
+      [ASSIGN] white_usv1->black_usv15(机会锁定)
+[t=7,864s] step=250 | MISSION=NORMAL_C | USV: 15/15 (avail=0 int=1 lock=14 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=26 lost=1 engaged=6 | TOP: black_usv18(x183,496) black_usv7(x191,961) black_usv4(x194,954) | KILL=3 | ACTIONS=30 | INTENT: focus=2 ratio=0.20
+      [ASSIGN] white_usv1->black_usv16(机会锁定)
+      [ASSIGN] white_usv1->black_usv15(机会锁定)
+      [ASSIGN] white_usv1->black_usv16(机会锁定)
+      [ASSIGN] white_usv1->black_usv15(机会锁定)
+      [ASSIGN] white_usv9->black_usv18(机会锁定)
+      [ASSIGN] white_usv11->black_usv16(机会锁定)
+      [ASSIGN] white_usv1->black_usv16(机会锁定)
+      [ASSIGN] white_usv6->black_usv16(机会锁定)
+      [ASSIGN] white_usv10->black_usv16(机会锁定)
+      [ASSIGN] white_usv4->black_usv16(机会锁定)
+      [ASSIGN] white_usv7->black_usv16(机会锁定)
+      [ASSIGN] white_usv8->black_usv16(机会锁定)
+      [ASSIGN] white_usv9->black_usv16(机会锁定)
+      [ASSIGN] white_usv5->black_usv16(机会锁定)
+      [ASSIGN] white_usv11->black_usv17(机会锁定)
+      [ASSIGN] white_usv1->black_usv14(机会锁定)
+      [ASSIGN] white_usv2->black_usv14(机会锁定)
+      [ASSIGN] white_usv6->black_usv17(机会锁定)
+      [ASSIGN] white_usv10->black_usv17(机会锁定)
+      [ASSIGN] white_usv4->black_usv17(机会锁定)
+      [ASSIGN] white_usv7->black_usv17(机会锁定)
+      [ASSIGN] white_usv8->black_usv17(机会锁定)
+      [ASSIGN] white_usv9->black_usv17(机会锁定)
+      [ASSIGN] white_usv5->black_usv17(机会锁定)
+      [ASSIGN] white_usv12->black_usv21(机会锁定)
+      [ASSIGN] white_usv13->black_usv18(机会锁定)
+      [ASSIGN] white_usv11->black_usv18(机会锁定)
+      [ASSIGN] white_usv1->black_usv12(机会锁定)
+      [ASSIGN] white_usv2->black_usv12(机会锁定)
+      [ASSIGN] white_usv6->black_usv16(机会锁定)
+      [ASSIGN] white_usv10->black_usv16(机会锁定)
+      [ASSIGN] white_usv15->black_usv18(机会锁定)
+      [ASSIGN] white_usv4->black_usv12(机会锁定)
+      [ASSIGN] white_usv7->black_usv16(机会锁定)
+      [ASSIGN] white_usv8->black_usv16(机会锁定)
+      [ASSIGN] white_usv9->black_usv16(机会锁定)
+      [ASSIGN] white_usv14->black_usv18(机会锁定)
+      [ASSIGN] white_usv3->black_usv16(机会锁定)
+      [ASSIGN] white_usv5->black_usv18(机会锁定)
+      [ASSIGN] white_usv12->black_usv20(机会锁定)
+      [ASSIGN] white_usv13->black_usv17(机会锁定)
+      [ASSIGN] white_usv11->black_usv17(机会锁定)
+      [ASSIGN] white_usv6->black_usv17(机会锁定)
+      [ASSIGN] white_usv10->black_usv17(机会锁定)
+      [ASSIGN] white_usv15->black_usv19(机会锁定)
+      [ASSIGN] white_usv7->black_usv17(机会锁定)
+      [ASSIGN] white_usv8->black_usv17(机会锁定)
+      [ASSIGN] white_usv9->black_usv17(机会锁定)
+      [ASSIGN] white_usv14->black_usv19(机会锁定)
+      [ASSIGN] white_usv3->black_usv17(机会锁定)
+      [ASSIGN] white_usv5->black_usv17(机会锁定)
+      [ASSIGN] white_usv13->black_usv16(机会锁定)
+      [ASSIGN] white_usv11->black_usv18(机会锁定)
+      [ASSIGN] white_usv1->black_usv14(机会锁定)
+      [ASSIGN] white_usv6->black_usv16(机会锁定)
+      [ASSIGN] white_usv10->black_usv16(机会锁定)
+      [ASSIGN] white_usv15->black_usv21(机会锁定)
+      [ASSIGN] white_usv7->black_usv16(机会锁定)
+      [ASSIGN] white_usv8->black_usv16(机会锁定)
+      [ASSIGN] white_usv9->black_usv16(机会锁定)
+      [ASSIGN] white_usv14->black_usv18(机会锁定)
+      [ASSIGN] white_usv3->black_usv16(机会锁定)
+      [ASSIGN] white_usv5->black_usv18(机会锁定)
+      [ASSIGN] white_usv13->black_usv17(机会锁定)
+      [ASSIGN] white_usv11->black_usv17(机会锁定)
+      [ASSIGN] white_usv1->black_usv17(机会锁定)
+      [ASSIGN] white_usv10->black_usv17(机会锁定)
+      [ASSIGN] white_usv15->black_usv19(机会锁定)
+      [ASSIGN] white_usv7->black_usv17(机会锁定)
+      [ASSIGN] white_usv8->black_usv17(机会锁定)
+      [ASSIGN] white_usv9->black_usv17(机会锁定)
+      [ASSIGN] white_usv14->black_usv19(机会锁定)
+      [ASSIGN] white_usv3->black_usv17(机会锁定)
+      [ASSIGN] white_usv5->black_usv17(机会锁定)
+[t=8,250s] step=260 | MISSION=NORMAL_C | USV: 14/15 (avail=0 int=11 lock=3 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=26 lost=0 engaged=2 | TOP: black_usv19(x182,258) black_usv4(x191,780) black_usv6(x192,434) | KILL=7 | ACTIONS=29 | INTENT: focus=2 ratio=0.20
+      [KILL] black_usv18
+      [ASSIGN] white_usv13->black_usv16(机会锁定)
+      [ASSIGN] white_usv11->black_usv16(机会锁定)
+      [ASSIGN] white_usv1->black_usv14(机会锁定)
+      [ASSIGN] white_usv10->black_usv16(机会锁定)
+      [ASSIGN] white_usv15->black_usv21(机会锁定)
+      [ASSIGN] white_usv7->black_usv14(机会锁定)
+      [ASSIGN] white_usv8->black_usv16(机会锁定)
+      [ASSIGN] white_usv14->black_usv21(机会锁定)
+      [ASSIGN] white_usv3->black_usv16(机会锁定)
+      [ASSIGN] white_usv5->black_usv16(机会锁定)
+      [KILL] black_usv15
+      [ASSIGN] white_usv13->black_usv19(机会锁定)
+      [ASSIGN] white_usv11->black_usv19(机会锁定)
+      [ASSIGN] white_usv1->black_usv13(机会锁定)
+      [ASSIGN] white_usv10->black_usv19(机会锁定)
+      [ASSIGN] white_usv15->black_usv19(机会锁定)
+      [ASSIGN] white_usv7->black_usv13(机会锁定)
+      [ASSIGN] white_usv8->black_usv19(机会锁定)
+      [ASSIGN] white_usv14->black_usv19(机会锁定)
+      [ASSIGN] white_usv3->black_usv19(机会锁定)
+      [ASSIGN] white_usv5->black_usv19(机会锁定)
+      [KILL] black_usv16
+      [KILL] black_usv21
+      [ASSIGN] white_usv13->black_usv17(机会锁定)
+      [ASSIGN] white_usv11->black_usv17(机会锁定)
+      [ASSIGN] white_usv10->black_usv14(机会锁定)
+      [ASSIGN] white_usv15->black_usv17(机会锁定)
+      [ASSIGN] white_usv8->black_usv14(机会锁定)
+      [ASSIGN] white_usv14->black_usv17(机会锁定)
+      [ASSIGN] white_usv3->black_usv17(机会锁定)
+      [ASSIGN] white_usv5->black_usv22(机会锁定)
+      [ASSIGN] white_usv13->black_usv19(机会锁定)
+      [ASSIGN] white_usv11->black_usv19(机会锁定)
+      [ASSIGN] white_usv10->black_usv19(机会锁定)
+      [ASSIGN] white_usv15->black_usv19(机会锁定)
+      [ASSIGN] white_usv8->black_usv19(机会锁定)
+      [ASSIGN] white_usv14->black_usv19(机会锁定)
+      [ASSIGN] white_usv3->black_usv19(机会锁定)
+      [ASSIGN] white_usv13->black_usv17(机会锁定)
+      [ASSIGN] white_usv11->black_usv17(机会锁定)
+      [ASSIGN] white_usv2->black_usv14(机会锁定)
+      [ASSIGN] white_usv10->black_usv14(机会锁定)
+      [ASSIGN] white_usv8->black_usv14(机会锁定)
+      [ASSIGN] white_usv14->black_usv17(机会锁定)
+      [ASSIGN] white_usv3->black_usv17(机会锁定)
+      [ASSIGN] white_usv2->black_usv11(机会锁定)
+      [ASSIGN] white_usv10->black_usv11(机会锁定)
+      [ASSIGN] white_usv4->black_usv11(机会锁定)
+      [ASSIGN] white_usv8->black_usv11(机会锁定)
+      [ASSIGN] white_usv9->black_usv19(机会锁定)
+      [ASSIGN] white_usv14->black_usv19(机会锁定)
+      [ASSIGN] white_usv12->black_usv23(机会锁定)
+      [ASSIGN] white_usv9->black_usv17(机会锁定)
+      [ASSIGN] white_usv12->black_usv20(机会锁定)
+      [ASSIGN] white_usv9->black_usv19(机会锁定)
+      [ASSIGN] white_usv14->black_usv17(机会锁定)
+      [ASSIGN] white_usv15->black_usv20(机会锁定)
+      [ASSIGN] white_usv14->black_usv19(机会锁定)
+      [ASSIGN] white_usv13->black_usv19(机会锁定)
+      [ASSIGN] white_usv11->black_usv19(机会锁定)
+      [ASSIGN] white_usv1->black_usv12(机会锁定)
+[t=8,628s] step=270 | MISSION=NORMAL_C | USV: 14/15 (avail=0 int=6 lock=8 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=21 lost=1 engaged=4 | TOP: black_usv7(x184,573) black_usv9(x184,880) black_usv4(x188,050) | KILL=8 | ACTIONS=29 | INTENT: focus=2 ratio=0.20
+      [KILL] black_usv17
+      [KILL] black_usv14
+      [ASSIGN] white_usv1->black_usv10(机会锁定)
+      [ASSIGN] white_usv9->black_usv20(机会锁定)
+      [ASSIGN] white_usv14->black_usv20(机会锁定)
+      [RELEASE] white_usv3->black_usv17(目标失效)
+      [ASSIGN] white_usv3->black_usv4
+      [ASSIGN] white_usv5->black_usv13(机会锁定)
+      [KILL] black_usv19
+      [RELEASE] white_usv13->black_usv19(目标失效)
+      [RELEASE] white_usv11->black_usv19(目标失效)
+      [ASSIGN] white_usv5->black_usv22(机会锁定)
+      [ASSIGN] white_usv13->black_usv7
+      [ASSIGN] white_usv11->black_usv20(机会锁定)
+      [ASSIGN] white_usv13->black_usv20(机会锁定)
+      [ASSIGN] white_usv2->black_usv13(机会锁定)
+      [ASSIGN] white_usv10->black_usv13(机会锁定)
+      [ASSIGN] white_usv4->black_usv13(机会锁定)
+      [ASSIGN] white_usv8->black_usv13(机会锁定)
+      [ASSIGN] white_usv2->black_usv11(机会锁定)
+      [ASSIGN] white_usv10->black_usv12(机会锁定)
+      [ASSIGN] white_usv4->black_usv11(机会锁定)
+      [ASSIGN] white_usv8->black_usv12(机会锁定)
+      [ASSIGN] white_usv12->black_usv22(机会锁定)
+      [ASSIGN] white_usv2->black_usv13(机会锁定)
+      [ASSIGN] white_usv10->black_usv13(机会锁定)
+      [ASSIGN] white_usv4->black_usv13(机会锁定)
+      [ASSIGN] white_usv8->black_usv13(机会锁定)
+      [ASSIGN] white_usv2->black_usv11(机会锁定)
+      [ASSIGN] white_usv10->black_usv12(机会锁定)
+      [ASSIGN] white_usv15->black_usv22(机会锁定)
+      [ASSIGN] white_usv4->black_usv11(机会锁定)
+      [ASSIGN] white_usv8->black_usv12(机会锁定)
+      [ASSIGN] white_usv3->black_usv11(机会锁定)
+      [ASSIGN] white_usv2->black_usv13(机会锁定)
+      [ASSIGN] white_usv10->black_usv13(机会锁定)
+      [ASSIGN] white_usv4->black_usv13(机会锁定)
+      [ASSIGN] white_usv8->black_usv13(机会锁定)
+      [ASSIGN] white_usv3->black_usv13(机会锁定)
+      [ASSIGN] white_usv13->black_usv22(机会锁定)
+      [ASSIGN] white_usv11->black_usv22(机会锁定)
+      [ASSIGN] white_usv1->black_usv11(机会锁定)
+      [ASSIGN] white_usv2->black_usv11(机会锁定)
+      [ASSIGN] white_usv10->black_usv12(机会锁定)
+      [ASSIGN] white_usv4->black_usv11(机会锁定)
+      [ASSIGN] white_usv8->black_usv12(机会锁定)
+      [ASSIGN] white_usv9->black_usv22(机会锁定)
+      [ASSIGN] white_usv14->black_usv22(机会锁定)
+      [ASSIGN] white_usv3->black_usv11(机会锁定)
+[t=8,995s] step=280 | MISSION=NORMAL_C | USV: 12/15 (avail=0 int=10 lock=2 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=19 lost=0 engaged=1 | TOP: black_usv4(x184,444) black_usv8(x177,312) black_usv23(x178,755) | KILL=11 | ACTIONS=27 | INTENT: focus=2 ratio=0.20
+      [ASSIGN] white_usv1->black_usv13(机会锁定)
+      [ASSIGN] white_usv2->black_usv13(机会锁定)
+      [ASSIGN] white_usv10->black_usv20(机会锁定)
+      [ASSIGN] white_usv4->black_usv13(机会锁定)
+      [ASSIGN] white_usv8->black_usv20(机会锁定)
+      [ASSIGN] white_usv3->black_usv13(机会锁定)
+      [ASSIGN] white_usv1->black_usv11(机会锁定)
+      [ASSIGN] white_usv2->black_usv11(机会锁定)
+      [ASSIGN] white_usv10->black_usv12(机会锁定)
+      [ASSIGN] white_usv4->black_usv11(机会锁定)
+      [ASSIGN] white_usv8->black_usv12(机会锁定)
+      [ASSIGN] white_usv3->black_usv11(机会锁定)
+      [KILL] black_usv12
+      [RELEASE] white_usv10->black_usv12(目标失效)
+      [ASSIGN] white_usv10->black_usv20(机会锁定)
+      [ASSIGN] white_usv4->black_usv13(机会锁定)
+      [RELEASE] white_usv8->black_usv12(目标失效)
+      [ASSIGN] white_usv8->black_usv20(机会锁定)
+      [ASSIGN] white_usv3->black_usv13(机会锁定)
+      [ASSIGN] white_usv4->black_usv11(机会锁定)
+      [ASSIGN] white_usv3->black_usv11(机会锁定)
+      [ASSIGN] white_usv3->black_usv13(机会锁定)
+      [ASSIGN] white_usv13->black_usv20(机会锁定)
+      [ASSIGN] white_usv11->black_usv20(机会锁定)
+      [ASSIGN] white_usv2->black_usv13(机会锁定)
+      [ASSIGN] white_usv15->black_usv23(机会锁定)
+      [ASSIGN] white_usv9->black_usv20(机会锁定)
+      [ASSIGN] white_usv14->black_usv23(机会锁定)
+      [ASSIGN] white_usv12->black_usv23(机会锁定)
+      [ASSIGN] white_usv13->black_usv22(机会锁定)
+      [ASSIGN] white_usv11->black_usv22(机会锁定)
+      [ASSIGN] white_usv2->black_usv11(机会锁定)
+      [ASSIGN] white_usv10->black_usv22(机会锁定)
+      [ASSIGN] white_usv15->black_usv22(机会锁定)
+      [ASSIGN] white_usv8->black_usv22(机会锁定)
+      [ASSIGN] white_usv9->black_usv22(机会锁定)
+      [ASSIGN] white_usv14->black_usv22(机会锁定)
+      [ASSIGN] white_usv3->black_usv11(机会锁定)
+      [ASSIGN] white_usv12->black_usv22(机会锁定)
+      [KILL] black_usv13
+      [ASSIGN] white_usv13->black_usv20(机会锁定)
+      [ASSIGN] white_usv11->black_usv20(机会锁定)
+      [ASSIGN] white_usv10->black_usv20(机会锁定)
+      [ASSIGN] white_usv15->black_usv20(机会锁定)
+      [ASSIGN] white_usv8->black_usv20(机会锁定)
+      [ASSIGN] white_usv9->black_usv20(机会锁定)
+      [ASSIGN] white_usv14->black_usv20(机会锁定)
+      [ASSIGN] white_usv3->black_usv10(机会锁定)
+      [ASSIGN] white_usv12->black_usv20(机会锁定)
+      [ASSIGN] white_usv13->black_usv22(机会锁定)
+      [ASSIGN] white_usv11->black_usv22(机会锁定)
+      [ASSIGN] white_usv10->black_usv22(机会锁定)
+      [ASSIGN] white_usv15->black_usv22(机会锁定)
+      [ASSIGN] white_usv8->black_usv22(机会锁定)
+      [ASSIGN] white_usv9->black_usv22(机会锁定)
+      [ASSIGN] white_usv14->black_usv22(机会锁定)
+      [ASSIGN] white_usv12->black_usv22(机会锁定)
+      [ASSIGN] white_usv13->black_usv20(机会锁定)
+      [ASSIGN] white_usv11->black_usv20(机会锁定)
+      [ASSIGN] white_usv10->black_usv20(机会锁定)
+      [ASSIGN] white_usv15->black_usv20(机会锁定)
+      [ASSIGN] white_usv8->black_usv20(机会锁定)
+      [ASSIGN] white_usv9->black_usv20(机会锁定)
+      [ASSIGN] white_usv14->black_usv20(机会锁定)
+      [ASSIGN] white_usv12->black_usv20(机会锁定)
+[t=9,331s] step=290 | MISSION=NORMAL_C | USV: 11/15 (avail=0 int=10 lock=1 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=16 lost=1 engaged=1 | TOP: black_usv4(x181,084) black_usv23(x175,395) black_usv25(x175,434) | KILL=12 | ACTIONS=26 | INTENT: focus=2 ratio=0.20
+      [ASSIGN] white_usv13->black_usv22(机会锁定)
+      [ASSIGN] white_usv11->black_usv22(机会锁定)
+      [ASSIGN] white_usv2->black_usv10(机会锁定)
+      [ASSIGN] white_usv10->black_usv22(机会锁定)
+      [ASSIGN] white_usv15->black_usv22(机会锁定)
+      [ASSIGN] white_usv8->black_usv22(机会锁定)
+      [ASSIGN] white_usv9->black_usv22(机会锁定)
+      [ASSIGN] white_usv14->black_usv22(机会锁定)
+      [ASSIGN] white_usv12->black_usv22(机会锁定)
+      [KILL] black_usv11
+      [ASSIGN] white_usv13->black_usv20(机会锁定)
+      [ASSIGN] white_usv11->black_usv20(机会锁定)
+      [ASSIGN] white_usv10->black_usv20(机会锁定)
+      [ASSIGN] white_usv15->black_usv20(机会锁定)
+      [RELEASE] white_usv4->black_usv11(目标失效)
+      [ASSIGN] white_usv8->black_usv20(机会锁定)
+      [ASSIGN] white_usv9->black_usv20(机会锁定)
+      [ASSIGN] white_usv14->black_usv20(机会锁定)
+      [ASSIGN] white_usv12->black_usv20(机会锁定)
+      [ASSIGN] white_usv13->black_usv22(机会锁定)
+      [ASSIGN] white_usv10->black_usv22(机会锁定)
+      [ASSIGN] white_usv4->black_usv10(机会锁定)
+      [ASSIGN] white_usv8->black_usv22(机会锁定)
+      [ASSIGN] white_usv9->black_usv22(机会锁定)
+      [ASSIGN] white_usv14->black_usv22(机会锁定)
+      [ASSIGN] white_usv12->black_usv22(机会锁定)
+      [ASSIGN] white_usv13->black_usv23(机会锁定)
+      [ASSIGN] white_usv10->black_usv23(机会锁定)
+      [ASSIGN] white_usv8->black_usv23(机会锁定)
+      [ASSIGN] white_usv9->black_usv20(机会锁定)
+      [ASSIGN] white_usv14->black_usv20(机会锁定)
+      [ASSIGN] white_usv12->black_usv23(机会锁定)
+      [KILL] black_usv20
+      [RELEASE] white_usv11->black_usv20(目标失效)
+      [RELEASE] white_usv15->black_usv20(目标失效)
+      [ASSIGN] white_usv8->black_usv22(机会锁定)
+      [RELEASE] white_usv9->black_usv20(目标失效)
+      [RELEASE] white_usv14->black_usv20(目标失效)
+      [ASSIGN] white_usv14->black_usv22(机会锁定)
+      [ASSIGN] white_usv12->black_usv22(机会锁定)
+      [ASSIGN] white_usv11->black_usv7
+      [ASSIGN] white_usv15->black_usv9
+      [ASSIGN] white_usv8->black_usv23(机会锁定)
+      [ASSIGN] white_usv9->black_usv4
+      [ASSIGN] white_usv12->black_usv25(机会锁定)
+      [ASSIGN] white_usv2->black_usv8(机会锁定)
+      [ASSIGN] white_usv4->black_usv8(机会锁定)
+      [ASSIGN] white_usv3->black_usv8(机会锁定)
+      [KILL] black_usv22
+      [RELEASE] white_usv14->black_usv22(目标失效)
+      [ASSIGN] white_usv14->black_usv23(机会锁定)
+[t=9,678s] step=300 | MISSION=NORMAL_C | USV: 11/15 (avail=0 int=4 lock=7 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=11 lost=3 engaged=3 | TOP: black_usv24(x172,170) black_usv26(x172,663) black_usv27(x175,514) | KILL=13 | ACTIONS=26 | INTENT: focus=2 ratio=0.20
+      [DETECT] black_usv5
+      [DETECT] black_usv3
+      [ASSIGN] white_usv13->black_usv25(机会锁定)
+      [ASSIGN] white_usv10->black_usv25(机会锁定)
+      [ASSIGN] white_usv8->black_usv25(机会锁定)
+      [ASSIGN] white_usv14->black_usv25(机会锁定)
+      [ASSIGN] white_usv2->black_usv10(机会锁定)
+      [ASSIGN] white_usv4->black_usv10(机会锁定)
+      [ASSIGN] white_usv3->black_usv10(机会锁定)
+      [ASSIGN] white_usv2->black_usv8(机会锁定)
+      [ASSIGN] white_usv4->black_usv8(机会锁定)
+      [ASSIGN] white_usv3->black_usv8(机会锁定)
+      [ASSIGN] white_usv11->black_usv10(机会锁定)
+      [ASSIGN] white_usv9->black_usv10(机会锁定)
+[t=10,034s] step=310 | MISSION=NORMAL_C | USV: 10/15 (avail=0 int=3 lock=7 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=13 lost=3 engaged=2 | TOP: black_usv5(x178,865) black_usv3(x180,822) black_usv7(x171,063) | KILL=14 | ACTIONS=25 | INTENT: focus=2 ratio=0.20
+      [KILL] black_usv10
+      [ASSIGN] white_usv13->black_usv23(机会锁定)
+      [RELEASE] white_usv11->black_usv10(目标失效)
+      [ASSIGN] white_usv11->black_usv8(机会锁定)
+      [ASSIGN] white_usv10->black_usv23(机会锁定)
+      [ASSIGN] white_usv8->black_usv23(机会锁定)
+      [RELEASE] white_usv9->black_usv10(目标失效)
+      [ASSIGN] white_usv9->black_usv8(机会锁定)
+      [ASSIGN] white_usv14->black_usv23(机会锁定)
+      [ASSIGN] white_usv13->black_usv25(机会锁定)
+      [ASSIGN] white_usv10->black_usv25(机会锁定)
+      [ASSIGN] white_usv8->black_usv25(机会锁定)
+      [ASSIGN] white_usv14->black_usv25(机会锁定)
+      [ASSIGN] white_usv13->black_usv23(机会锁定)
+      [ASSIGN] white_usv10->black_usv23(机会锁定)
+      [ASSIGN] white_usv8->black_usv23(机会锁定)
+      [ASSIGN] white_usv14->black_usv23(机会锁定)
+      [ASSIGN] white_usv13->black_usv25(机会锁定)
+      [ASSIGN] white_usv10->black_usv25(机会锁定)
+      [ASSIGN] white_usv8->black_usv25(机会锁定)
+      [ASSIGN] white_usv14->black_usv25(机会锁定)
+      [ASSIGN] white_usv13->black_usv23(机会锁定)
+      [ASSIGN] white_usv10->black_usv23(机会锁定)
+      [ASSIGN] white_usv8->black_usv23(机会锁定)
+      [ASSIGN] white_usv14->black_usv23(机会锁定)
+      [ASSIGN] white_usv3->black_usv9(机会锁定)
+      [ASSIGN] white_usv13->black_usv25(机会锁定)
+      [ASSIGN] white_usv11->black_usv9(机会锁定)
+      [ASSIGN] white_usv10->black_usv25(机会锁定)
+      [ASSIGN] white_usv8->black_usv25(机会锁定)
+      [ASSIGN] white_usv9->black_usv9(机会锁定)
+      [ASSIGN] white_usv14->black_usv25(机会锁定)
+      [KILL] black_usv23
+      [ASSIGN] white_usv10->black_usv24(机会锁定)
+      [ASSIGN] white_usv8->black_usv24(机会锁定)
+      [ASSIGN] white_usv14->black_usv24(机会锁定)
+[t=10,448s] step=320 | MISSION=NORMAL_C | USV: 10/15 (avail=0 int=7 lock=3 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=11 lost=3 engaged=1 | TOP: black_usv5(x174,770) black_usv3(x177,420) black_usv26(x165,229) | KILL=16 | ACTIONS=25 | INTENT: focus=2 ratio=0.20
+      [KILL] black_usv25
+      [RELEASE] white_usv13->black_usv25(目标失效)
+      [ASSIGN] white_usv13->black_usv5
+      [ASSIGN] white_usv15->black_usv8(机会锁定)
+      [ASSIGN] white_usv11->black_usv7(机会锁定)
+      [ASSIGN] white_usv3->black_usv7(机会锁定)
+      [ASSIGN] white_usv15->black_usv9(机会锁定)
+      [ASSIGN] white_usv15->black_usv8(机会锁定)
+      [ASSIGN] white_usv9->black_usv8(机会锁定)
+[t=10,829s] step=330 | MISSION=NORMAL_C | USV: 9/15 (avail=0 int=5 lock=4 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=13 lost=0 engaged=2 | TOP: black_usv3(x174,289) black_usv26(x161,855) black_usv27(x164,771) | KILL=17 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+      [KILL] black_usv8
+      [RELEASE] white_usv2->black_usv8(目标失效)
+      [ASSIGN] white_usv2->black_usv9(机会锁定)
+      [RELEASE] white_usv15->black_usv8(目标失效)
+      [ASSIGN] white_usv15->black_usv9(机会锁定)
+      [RELEASE] white_usv4->black_usv8(目标失效)
+      [ASSIGN] white_usv4->black_usv9(机会锁定)
+      [RELEASE] white_usv9->black_usv8(目标失效)
+      [ASSIGN] white_usv9->black_usv9(机会锁定)
+      [ASSIGN] white_usv2->black_usv7(机会锁定)
+      [ASSIGN] white_usv10->black_usv26(机会锁定)
+      [ASSIGN] white_usv15->black_usv7(机会锁定)
+      [ASSIGN] white_usv8->black_usv26(机会锁定)
+      [ASSIGN] white_usv9->black_usv7(机会锁定)
+      [ASSIGN] white_usv11->black_usv9(机会锁定)
+      [ASSIGN] white_usv2->black_usv9(机会锁定)
+      [ASSIGN] white_usv15->black_usv9(机会锁定)
+      [ASSIGN] white_usv9->black_usv9(机会锁定)
+      [ASSIGN] white_usv3->black_usv9(机会锁定)
+      [ASSIGN] white_usv11->black_usv7(机会锁定)
+      [ASSIGN] white_usv2->black_usv7(机会锁定)
+      [ASSIGN] white_usv15->black_usv7(机会锁定)
+      [ASSIGN] white_usv4->black_usv7(机会锁定)
+      [ASSIGN] white_usv9->black_usv7(机会锁定)
+      [ASSIGN] white_usv3->black_usv7(机会锁定)
+      [ASSIGN] white_usv11->black_usv9(机会锁定)
+      [ASSIGN] white_usv2->black_usv9(机会锁定)
+      [ASSIGN] white_usv15->black_usv9(机会锁定)
+      [ASSIGN] white_usv4->black_usv9(机会锁定)
+      [ASSIGN] white_usv9->black_usv9(机会锁定)
+      [ASSIGN] white_usv3->black_usv9(机会锁定)
+      [ASSIGN] white_usv11->black_usv7(机会锁定)
+      [ASSIGN] white_usv2->black_usv7(机会锁定)
+      [ASSIGN] white_usv15->black_usv7(机会锁定)
+      [ASSIGN] white_usv4->black_usv7(机会锁定)
+      [ASSIGN] white_usv9->black_usv7(机会锁定)
+      [ASSIGN] white_usv3->black_usv7(机会锁定)
+      [ASSIGN] white_usv11->black_usv9(机会锁定)
+      [ASSIGN] white_usv2->black_usv9(机会锁定)
+      [ASSIGN] white_usv10->black_usv24(机会锁定)
+      [ASSIGN] white_usv15->black_usv9(机会锁定)
+      [ASSIGN] white_usv4->black_usv9(机会锁定)
+      [ASSIGN] white_usv8->black_usv24(机会锁定)
+      [ASSIGN] white_usv9->black_usv9(机会锁定)
+      [ASSIGN] white_usv3->black_usv9(机会锁定)
+[t=11,255s] step=340 | MISSION=NORMAL_C | USV: 9/15 (avail=0 int=9 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=10 lost=2 engaged=0 | TOP: black_usv3(x170,054) black_usv27(x160,511) black_usv29(x162,078) | KILL=19 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+      [ASSIGN] white_usv11->black_usv7(机会锁定)
+      [ASSIGN] white_usv2->black_usv7(机会锁定)
+      [ASSIGN] white_usv10->black_usv26(机会锁定)
+      [ASSIGN] white_usv15->black_usv7(机会锁定)
+      [ASSIGN] white_usv4->black_usv7(机会锁定)
+      [ASSIGN] white_usv8->black_usv26(机会锁定)
+      [ASSIGN] white_usv9->black_usv7(机会锁定)
+      [ASSIGN] white_usv3->black_usv7(机会锁定)
+      [KILL] black_usv9
+      [ASSIGN] white_usv2->black_usv6(机会锁定)
+      [ASSIGN] white_usv15->black_usv6(机会锁定)
+      [ASSIGN] white_usv13->black_usv7(机会锁定)
+      [ASSIGN] white_usv4->black_usv6(机会锁定)
+      [KILL] black_usv24
+      [ASSIGN] white_usv9->black_usv6(机会锁定)
+      [KILL] black_usv7
+      [RELEASE] white_usv13->black_usv7(目标失效)
+      [RELEASE] white_usv11->black_usv7(目标失效)
+      [RELEASE] white_usv3->black_usv7(目标失效)
+      [ASSIGN] white_usv13->black_usv5
+      [ASSIGN] white_usv11->black_usv3
+      [ASSIGN] white_usv2->black_usv4(机会锁定)
+      [ASSIGN] white_usv15->black_usv4(机会锁定)
+      [ASSIGN] white_usv3->black_usv27
+[t=11,694s] step=350 | MISSION=NORMAL_C | USV: 9/15 (avail=3 int=4 lock=2 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=8 lost=0 engaged=1 | TOP: black_usv4(x158,353) black_usv28(x159,181) black_usv29(x159,164) | KILL=20 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+      [ASSIGN] white_usv2->black_usv6(机会锁定)
+      [ASSIGN] white_usv10->black_usv27(机会锁定)
+      [ASSIGN] white_usv2->black_usv4(机会锁定)
+      [ASSIGN] white_usv13->black_usv6(机会锁定)
+      [ASSIGN] white_usv11->black_usv6(机会锁定)
+      [ASSIGN] white_usv10->black_usv26(机会锁定)
+      [ASSIGN] white_usv10->black_usv27(机会锁定)
+[t=12,159s] step=360 | MISSION=NORMAL_C | USV: 9/15 (avail=0 int=9 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=8 lost=0 engaged=0 | TOP: black_usv5(x157,872) black_usv3(x161,196) black_usv29(x154,867) | KILL=22 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+      [ASSIGN] white_usv13->black_usv4(机会锁定)
+      [ASSIGN] white_usv11->black_usv4(机会锁定)
+      [KILL] black_usv26
+      [ASSIGN] white_usv13->black_usv6(机会锁定)
+      [ASSIGN] white_usv11->black_usv6(机会锁定)
+      [ASSIGN] white_usv2->black_usv6(机会锁定)
+      [ASSIGN] white_usv15->black_usv6(机会锁定)
+      [RELEASE] white_usv8->black_usv26(目标失效)
+      [KILL] black_usv6
+      [RELEASE] white_usv13->black_usv6(目标失效)
+      [ASSIGN] white_usv13->black_usv4(机会锁定)
+      [RELEASE] white_usv11->black_usv6(目标失效)
+      [ASSIGN] white_usv11->black_usv4(机会锁定)
+      [RELEASE] white_usv2->black_usv6(目标失效)
+      [ASSIGN] white_usv2->black_usv4(机会锁定)
+      [RELEASE] white_usv15->black_usv6(目标失效)
+      [ASSIGN] white_usv15->black_usv4(机会锁定)
+      [RELEASE] white_usv4->black_usv6(目标失效)
+      [ASSIGN] white_usv8->black_usv5
+      [RELEASE] white_usv9->black_usv6(目标失效)
+      [ASSIGN] white_usv4->black_usv3
+      [ASSIGN] white_usv9->black_usv29
+      [DETECT] black_usv30
+      [ASSIGN] white_usv4->black_usv4(机会锁定)
+      [ASSIGN] white_usv13->black_usv5(机会锁定)
+      [ASSIGN] white_usv11->black_usv5(机会锁定)
+      [KILL] black_usv4
+      [RELEASE] white_usv2->black_usv4(目标失效)
+      [RELEASE] white_usv15->black_usv4(目标失效)
+      [RELEASE] white_usv4->black_usv4(目标失效)
+[t=12,623s] step=370 | MISSION=NORMAL_C | USV: 9/15 (avail=0 int=7 lock=2 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=6 lost=0 engaged=1 | TOP: black_usv3(x156,638) black_usv30(x159,034) black_usv28(x151,515) | KILL=23 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+      [ASSIGN] white_usv2->black_usv28
+      [ASSIGN] white_usv15->black_usv30
+      [ASSIGN] white_usv4->black_usv3
+      [DETECT] black_usv2
+      [ASSIGN] white_usv4->black_usv5(机会锁定)
+[t=13,047s] step=380 | MISSION=NORMAL_C | USV: 9/15 (avail=0 int=6 lock=3 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=7 lost=0 engaged=1 | TOP: black_usv3(x152,461) black_usv2(x162,549) black_usv28(x147,356) | KILL=23 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+      [KILL] black_usv27
+      [RELEASE] white_usv10->black_usv27(目标失效)
+      [RELEASE] white_usv3->black_usv27(目标失效)
+      [ASSIGN] white_usv10->black_usv2
+      [ASSIGN] white_usv3->black_usv3
+[t=13,512s] step=390 | MISSION=NORMAL_C | USV: 9/15 (avail=0 int=9 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=5 lost=1 engaged=0 | TOP: black_usv3(x147,868) black_usv28(x142,814) black_usv2(x158,159) | KILL=24 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+      [ASSIGN] white_usv13->black_usv3(机会锁定)
+      [KILL] black_usv5
+      [RELEASE] white_usv11->black_usv5(目标失效)
+      [RELEASE] white_usv4->black_usv5(目标失效)
+      [ASSIGN] white_usv4->black_usv3(机会锁定)
+      [RELEASE] white_usv8->black_usv5(目标失效)
+      [ASSIGN] white_usv11->black_usv2
+      [ASSIGN] white_usv8->black_usv28
+[t=13,987s] step=400 | MISSION=NORMAL_C | USV: 9/15 (avail=0 int=7 lock=2 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=3 lost=2 engaged=1 | TOP: black_usv3(x143,275) black_usv29(x140,325) black_usv30(x149,983) | KILL=24 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+      [RELEASE] white_usv11->black_usv2(目标失效)
+      [RELEASE] white_usv10->black_usv2(目标失效)
+      [ASSIGN] white_usv11->black_usv30
+      [ASSIGN] white_usv10->black_usv29
+      [DETECT] black_usv2
+      [DETECT] black_usv1
+[t=14,442s] step=410 | MISSION=NORMAL_C | USV: 9/15 (avail=0 int=8 lock=1 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=6 lost=0 engaged=1 | TOP: black_usv1(x161,911) black_usv2(x150,568) black_usv3(x138,786) | KILL=24 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+      [DETECT] black_usv1
+      [RELEASE] white_usv11->black_usv30(目标失效)
+      [RELEASE] white_usv15->black_usv30(目标失效)
+      [ASSIGN] white_usv11->black_usv1
+      [ASSIGN] white_usv15->black_usv2
+[t=14,948s] step=420 | MISSION=NORMAL_C | USV: 9/15 (avail=2 int=7 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=3 lost=2 engaged=0 | TOP: black_usv1(x157,313) black_usv2(x145,765) black_usv3(x138,786) | KILL=25 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+      [KILL] black_usv3
+      [RELEASE] white_usv13->black_usv3(目标失效)
+      [RELEASE] white_usv4->black_usv3(目标失效)
+      [RELEASE] white_usv3->black_usv3(目标失效)
+      [ASSIGN] white_usv13->black_usv2
+      [ASSIGN] white_usv4->black_usv1
+      [ASSIGN] white_usv3->black_usv1
+      [RELEASE] white_usv11->black_usv1(目标失效)
+      [RELEASE] white_usv4->black_usv1(目标失效)
+      [RELEASE] white_usv3->black_usv1(目标失效)
+      [DETECT] black_usv1
+      [ASSIGN] white_usv11->black_usv1
+      [RELEASE] white_usv10->black_usv29(目标失效)
+      [ASSIGN] white_usv4->black_usv1
+      [RELEASE] white_usv9->black_usv29(目标失效)
+      [ASSIGN] white_usv3->black_usv1
+      [ASSIGN] white_usv10->black_usv2
+      [ASSIGN] white_usv9->black_usv28
+      [RELEASE] white_usv2->black_usv28(目标失效)
+      [RELEASE] white_usv8->black_usv28(目标失效)
+      [RELEASE] white_usv9->black_usv28(目标失效)
+[t=15,431s] step=430 | MISSION=NORMAL_C | USV: 9/15 (avail=3 int=6 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=2 lost=0 engaged=0 | TOP: black_usv2(x140,935) black_usv1(x153,042) | KILL=25 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+      [RELEASE] white_usv13->black_usv2(目标失效)
+      [RELEASE] white_usv10->black_usv2(目标失效)
+      [RELEASE] white_usv15->black_usv2(目标失效)
+      [RELEASE] white_usv11->black_usv1(目标失效)
+      [RELEASE] white_usv4->black_usv1(目标失效)
+      [RELEASE] white_usv3->black_usv1(目标失效)
+[t=15,916s] step=440 | MISSION=NORMAL_C | USV: 9/15 (avail=6 int=3 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=25 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+[t=16,402s] step=450 | MISSION=GLOBAL_R | USV: 9/15 (avail=9 int=0 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=25 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+[t=16,880s] step=460 | MISSION=GLOBAL_R | USV: 9/15 (avail=9 int=0 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=25 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+      [DETECT] black_usv28
+      [ASSIGN] white_usv2->black_usv28(机会锁定)
+      [ASSIGN] white_usv10->black_usv28
+      [ASSIGN] white_usv9->black_usv28(机会锁定)
+[t=17,381s] step=470 | MISSION=NORMAL_C | USV: 9/15 (avail=6 int=3 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=1 lost=0 engaged=0 | TOP: black_usv28(x116,734) | KILL=26 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+      [KILL] black_usv28
+      [RELEASE] white_usv2->black_usv28(目标失效)
+      [RELEASE] white_usv10->black_usv28(目标失效)
+      [RELEASE] white_usv9->black_usv28(目标失效)
+[t=17,926s] step=480 | MISSION=NORMAL_C | USV: 9/15 (avail=6 int=3 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=26 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+[t=18,430s] step=490 | MISSION=GLOBAL_R | USV: 9/15 (avail=9 int=0 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=26 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+[t=18,944s] step=500 | MISSION=GLOBAL_R | USV: 9/15 (avail=9 int=0 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=26 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+      [DETECT] black_usv2
+      [ASSIGN] white_usv13->black_usv2
+      [ASSIGN] white_usv11->black_usv2
+      [ASSIGN] white_usv4->black_usv2
+[t=19,444s] step=510 | MISSION=NORMAL_C | USV: 9/15 (avail=6 int=3 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=1 lost=0 engaged=0 | TOP: black_usv2(x104,004) | KILL=26 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+      [RELEASE] white_usv13->black_usv2(目标失效)
+      [RELEASE] white_usv11->black_usv2(目标失效)
+      [RELEASE] white_usv4->black_usv2(目标失效)
+[t=19,944s] step=520 | MISSION=NORMAL_C | USV: 9/15 (avail=9 int=0 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=26 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+      [DETECT] black_usv2
+      [ASSIGN] white_usv13->black_usv2
+      [ASSIGN] white_usv11->black_usv2
+      [ASSIGN] white_usv4->black_usv2
+[t=20,458s] step=530 | MISSION=NORMAL_C | USV: 9/15 (avail=9 int=0 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=1 lost=0 engaged=0 | TOP: black_usv2(x93,891) | KILL=26 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+      [RELEASE] white_usv13->black_usv2(目标失效)
+      [RELEASE] white_usv11->black_usv2(目标失效)
+      [RELEASE] white_usv4->black_usv2(目标失效)
+[t=20,962s] step=540 | MISSION=GLOBAL_R | USV: 9/15 (avail=9 int=0 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=0 lost=0 engaged=0 | TOP:  | KILL=26 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+      [DETECT] black_usv2
+      [ASSIGN] white_usv13->black_usv2
+      [ASSIGN] white_usv11->black_usv2
+      [ASSIGN] white_usv4->black_usv2
+[t=21,466s] step=550 | MISSION=NORMAL_C | USV: 9/15 (avail=6 int=3 lock=0 frz=0) | UAV: air=15 rtb=0 chg=0 loiter=0 | TRACKS: vis=1 lost=0 engaged=0 | TOP: black_usv2(x83,838) | KILL=26 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+      [UAV RTB] white_uav15(电量3195<2950+300)
+[t=21,966s] step=560 | MISSION=NORMAL_C | USV: 9/15 (avail=6 int=3 lock=0 frz=0) | UAV: air=14 rtb=1 chg=0 loiter=0 | TRACKS: vis=0 lost=1 engaged=0 | TOP: black_usv2(x78,852) | KILL=26 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+      [RELEASE] white_usv13->black_usv2(目标失效)
+      [RELEASE] white_usv11->black_usv2(目标失效)
+      [RELEASE] white_usv4->black_usv2(目标失效)
+      [UAV RTB] white_uav13(电量3003<2717+300)
+      [UAV RTB] white_uav14(电量2850<2612+300)
+      [DETECT] black_usv2
+      [ASSIGN] white_usv13->black_usv2
+      [ASSIGN] white_usv11->black_usv2
+      [ASSIGN] white_usv4->black_usv2
+[t=22,483s] step=570 | MISSION=NORMAL_C | USV: 9/15 (avail=9 int=0 lock=0 frz=0) | UAV: air=12 rtb=3 chg=0 loiter=0 | TRACKS: vis=1 lost=0 engaged=0 | TOP: black_usv2(x73,696) | KILL=26 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+[t=22,996s] step=580 | MISSION=NORMAL_C | USV: 9/15 (avail=6 int=3 lock=0 frz=0) | UAV: air=12 rtb=3 chg=0 loiter=0 | TRACKS: vis=0 lost=1 engaged=0 | TOP: black_usv2(x68,579) | KILL=26 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+      [RELEASE] white_usv13->black_usv2(目标失效)
+      [RELEASE] white_usv11->black_usv2(目标失效)
+      [RELEASE] white_usv4->black_usv2(目标失效)
+      [DETECT] black_usv1
+      [ASSIGN] white_usv13->black_usv1
+      [ASSIGN] white_usv11->black_usv1
+      [ASSIGN] white_usv4->black_usv1
+[t=23,515s] step=590 | MISSION=NORMAL_C | USV: 9/15 (avail=6 int=3 lock=0 frz=0) | UAV: air=12 rtb=3 chg=0 loiter=0 | TRACKS: vis=1 lost=0 engaged=0 | TOP: black_usv1(x118,355) | KILL=26 | ACTIONS=24 | INTENT: focus=2 ratio=0.20
+      [RELEASE] white_usv13->black_usv1(目标失效)
+      [RELEASE] white_usv11->black_usv1(目标失效)
+      [RELEASE] white_usv4->black_usv1(目标失效)
+      [UAV RTB] white_uav5(电量972<693+300)
+
+========================================================================
+对局结果: Result.Defeat — 敌方1艘艇突破防线
+  击杀蓝舰: 27 | 命中: 52 | 我方USV损失: 6 | UAV损失: 0 | 突破: 1
+[META] result=Result.Defeat victory_time=24043 first_detection=1842 first_lock=7371 first_kill=8297 enemy_kills=27 friendly_usv_losses=6 friendly_uav_losses=0 black_breakthrough=1 reacquire_attempts=199 reacquire_success=195 sensor_assisted_locks=114 low_conf_commitments=0 global_reacquire_entries=5 global_reacquire_success=5 coverage_collapse_events=1 active_clusters_max=1 coverage_quality_final=0.30 commander_source=default_intent commander_calls=0 commander_changes=0 commander_no_change=0 commander_parse_failures=0 commander_api_failures=0 commander_policy_failures=0 commander_avg_latency=0.0
+Done

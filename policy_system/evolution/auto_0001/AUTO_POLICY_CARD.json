@@ -1,0 +1,45 @@
+{
+  "policy_id": "black-auto-0001-v1",
+  "version": "1.0.0",
+  "side": "black",
+  "strategy_family": "feint_and_switch",
+  "declared_intent": {
+    "goal": "manufacture incorrect White resource response",
+    "mechanism": "phased feint -> legal-response observation -> main-axis switch",
+    "commitment": "delayed main force + reserve"
+  },
+  "trigger_and_switch": [
+    "FEINT: small feint group advances on axis A; main+reserve hold east",
+    "OBSERVE_RESPONSE: legal get_black_targets() White near axis A (>=2 within 60km)",
+    "TIMEOUT_SWITCH: no response by 7000 sim-s -> bounded fallback push",
+    "SWITCH/MAIN_PUSH: commit main force to axis B (opposite lateral lane)",
+    "RESERVE_COMMIT: one-time when main centroid x<=180km",
+    "FEINT_ATTRITION/DEGRADED: early push / keep last orders"
+  ],
+  "known_strengths": [
+    "new phased role-asymmetric signature",
+    "low continuous replanning vs B3",
+    "reserve usage and axis shift absent in B0-B3"
+  ],
+  "known_weaknesses": [
+    "feint wastes time if White does not over-commit",
+    "discrete switch may raise resolution time",
+    "delayed main commitment may lower early pressure"
+  ],
+  "declared_traits": {
+    "adaptivity": "medium",
+    "continuous_replanning": "low",
+    "phase_structure": "high",
+    "role_asymmetry": "high",
+    "reserve_usage": "high",
+    "dispersion": "medium",
+    "main_push_concentration": "high",
+    "deception": "high"
+  },
+  "status": "active",
+  "evaluation_role": "stress_test",
+  "parent_policy_id": null,
+  "description": "AUTO_FEINT_SWITCH phased role-asymmetric decoy->switch->main-push",
+  "created_at": "2026-09-11T01:22:01",
+  "updated_at": "2026-09-11T01:22:01"
+}

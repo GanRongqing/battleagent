@@ -1,0 +1,8 @@
+candidate,module,status,n,clean,brk_rate,loss,res,note
+W5,baseline,BASELINE,10,0.8,0.2,2.7,0,
+recon-a,recon-a,DROP,3,0.667,0.333,3.67,0,
+kc-a,kc-a,DROP,5,0.6,0.4,3.2,0,
+recon-b1,recon-b1,DROP,3,0.333,0.667,3.33,0,collapse
+fastpath,fastpath,DROP,0,-,-,-,0,profile: latency not bottleneck
+gap-a,gap-a,DROP,10,0.6,0.5,4.2,0,N10 worse than W5
+W7-final,none (W5-equiv),completed_no_robust_improvement,0,-,-,-,0,points to W5 runtime

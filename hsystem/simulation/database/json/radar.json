@@ -1,0 +1,193 @@
+{    
+    "Radar": {
+        "name": "雷达示例",
+        "class":{
+            "name": "初始化类名",
+            "value":"Radar"
+        },
+        "mode": {
+            "name": "(),()",
+            "value": "active"
+        },
+        "period": {
+            "name": "(s)",
+            "value": 2
+        },
+        "yield_time":{
+            "name": "(s)",
+            "value": 2
+        },
+        "update_time":{
+            "name": "(s)",
+            "comment": "如果超过该时间未更新，认为是目标丢失",
+            "value": 2
+        },
+        "sector": {
+            "name": "（度）",
+            "value": [-30, 30]
+        },
+        "up_angle": {
+            "name": "(度)",
+            "value": 40
+        },
+        "low_angle": {
+            "name": "(度)",
+            "comment": "向下为负",
+            "value": -40
+        },
+        "antenna_height": {
+            "name": "(m)",
+            "value": 20
+        },
+        "max_distance": {
+            "name": "(m)",
+            "value": 300000
+        },
+        "max_height": {
+            "name": "(m)",
+            "value": 10000
+        },
+        "detected_method": {
+            "name": "",
+            "comment": "",
+            "range": "formula, prob, fixed",
+            "type": "str",
+            "value": "fixed"
+        },
+        "fixed_dis":{
+            "name": "fixed探测模式下指定model的探测距离(m)",
+            "type": "dict",
+            "value": {}
+        },
+        "base_foe2": {
+            "name": "对典型rcs的探测距离(不考虑地形遮蔽)",
+            "rcs":{
+                "name":"目标RCS",
+                "value":0.1
+            },
+            "distance":{
+                "name":"发现距离(m)",
+                "value":100000
+            }
+        },
+        "prob":{
+            "name": "",
+            "value": 0.8
+        },
+        "base_foe": {
+            "name": "",
+            "rcs":{
+                "name":"",
+                "value":0.1
+            },
+            "find_pro":{
+                "name":"",
+                "value":0.5
+            },
+            "fake_find_pro":{
+                "name":"",
+                "value":0.000001
+            },
+            "distance":{
+                "name":"(m)",
+                "value":100000
+            }
+        }
+    },
+    "RadarWithGuider": {
+        "name": "具有照射制导功能的雷达示例",
+        "class":{
+            "name": "初始化类名",
+            "value":"RadarWithGuider"
+        },
+        "nwell": {
+            "name": "",
+            "comment":"",
+            "value": 1
+        },
+        "period": {
+            "name": "(s)",
+            "value": 2
+        },
+        "yield_time":{
+            "name": "(s)",
+            "value": 2
+        },
+        "update_time":{
+            "name": "(s)",
+            "comment": "，认为是目标丢失",
+            "value": 2
+        },
+        "sector": {
+            "name": "（度）",
+            "value": [0, 360]
+        },
+        "up_angle": {
+            "name": "(度)",
+            "value": 40
+        },
+        "low_angle": {
+            "name": "(度)",
+            "comment": "向下为负",
+            "value": -40
+        },
+        "antenna_height": {
+            "name": "(m)",
+            "value": 20
+        },
+        "max_distance": {
+            "name": "(m)",
+            "value": 300000
+        },
+        "max_height": {
+            "name": "(m)",
+            "value": 10000
+        },
+        "detected_method": {
+            "name": "",
+            "comment": "",
+            "range": "formula, prob, fixed",
+            "type": "str",
+            "value": "fixed"
+        },
+        "fixed_dis":{
+            "name": "(m)",
+            "type": "dict",
+            "value": {}
+        },
+        "base_foe2": {
+            "name": "(不考虑地形遮蔽)",
+            "rcs":{
+                "name":"",
+                "value":0.1
+            },
+            "distance":{
+                "name":"(m)",
+                "value":100000
+            }
+        },
+        "prob":{
+            "name": "",
+            "value": 0.8
+        },
+        "base_foe": {
+            "name": "",
+            "rcs":{
+                "name":"",
+                "value":0.1
+            },
+            "find_pro":{
+                "name":"",
+                "value":0.5
+            },
+            "fake_find_pro":{
+                "name":"",
+                "value":0.000001
+            },
+            "distance":{
+                "name":"(m)",
+                "value":100000
+            }
+        }
+    }
+}

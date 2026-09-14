@@ -1,0 +1,44 @@
+{
+ "policy_id": "black-b1-v1",
+ "version": "1.0.0",
+ "side": "black",
+ "strategy_family": "multi_axis_penetration",
+ "declared_intent": {
+  "pressure_objectives": [
+   "lateral multi-axis penetration"
+  ],
+  "target_priority": "break-line corridors",
+  "operational_goal": "spatial groups approach from several lateral lanes",
+  "key_assumptions": [],
+  "intended_failure_modes": [
+   "group cohesion loss"
+  ]
+ },
+ "trigger_and_switch": [],
+ "known_strengths": [
+  "explicit multi-axis spatial structure"
+ ],
+ "known_weaknesses": [
+  [
+   "no runtime adaptivity",
+   "declared"
+  ],
+  [
+   "static group plans",
+   "inferred"
+  ]
+ ],
+ "declared_traits": {
+  "aggression": "high",
+  "dispersion": "grouped-multi-axis",
+  "coordination": "spatial",
+  "adaptivity": "none",
+  "recon_dependency": "none"
+ },
+ "status": "active",
+ "evaluation_role": "general_opponent",
+ "parent_policy_id": null,
+ "description": "B1_MULTI_AXIS: dynamic spatial groups, multi-lateral approach",
+ "created_at": "2026-09-10T00:10:08",
+ "updated_at": "2026-09-10T00:10:08"
+}

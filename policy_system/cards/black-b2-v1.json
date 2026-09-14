@@ -1,0 +1,40 @@
+{
+ "policy_id": "black-b2-v1",
+ "version": "1.0.0",
+ "side": "black",
+ "strategy_family": "coordinated_pressure",
+ "declared_intent": {
+  "pressure_objectives": [
+   "synchronized coordinated pressure"
+  ],
+  "target_priority": "break-line",
+  "operational_goal": "group-synchronized lanes with staggered arrival",
+  "key_assumptions": [],
+  "intended_failure_modes": [
+   "over-commit to fixed lanes"
+  ]
+ },
+ "trigger_and_switch": [],
+ "known_strengths": [
+  "coordination + timing stagger"
+ ],
+ "known_weaknesses": [
+  [
+   "static once generated (no runtime replan)",
+   "declared"
+  ]
+ ],
+ "declared_traits": {
+  "aggression": "high",
+  "dispersion": "coordinated-lanes",
+  "coordination": "high (static timetable)",
+  "adaptivity": "none",
+  "recon_dependency": "none"
+ },
+ "status": "active",
+ "evaluation_role": "general_opponent",
+ "parent_policy_id": "black-b1-v1",
+ "description": "B2_COORDINATED_PRESSURE",
+ "created_at": "2026-09-10T00:10:08",
+ "updated_at": "2026-09-10T00:10:08"
+}

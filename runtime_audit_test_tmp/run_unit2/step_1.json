@@ -1,0 +1,100 @@
+{
+ "run_id": "unit2",
+ "audit_step_id": 1,
+ "prev_audit_step_id": 0,
+ "sim_time": 600.0,
+ "wall_time": 2000.0,
+ "A_raw_observation": {
+  "status": {
+   "局内时间": "00:05:00",
+   "已结束": false,
+   "对局结果": null,
+   "资源快照": {
+    "统计": {
+     "usv_total": 1,
+     "usv_alive": 1,
+     "uav_total": 0,
+     "uav_alive": 0,
+     "uav_flying": 0,
+     "enemy_visible": 0
+    },
+    "单位状态": {
+     "white_usv_states": [
+      {
+       "name": "white_usv1",
+       "position": [
+        100000,
+        300000
+       ],
+       "is_alive": true,
+       "is_frozen": false,
+       "is_locking": false,
+       "locking_unit": null,
+       "battery_pct": 100
+      }
+     ],
+     "white_uav_states": []
+    },
+    "观察信息": {
+     "white_observation": {
+      "雷达捕获": [],
+      "被动告警": []
+     }
+    }
+   },
+   "奖励信号": {
+    "black_killed": 0,
+    "black_hit": 0,
+    "white_ship_killed": 0,
+    "white_uav_killed": 0,
+    "black_breakthrough": 0
+   }
+  },
+  "obs": null,
+  "legal_actions": {},
+  "truncated": []
+ },
+ "B_fused_state": {},
+ "E_intermediate": {
+  "intent": null,
+  "allocator": null,
+  "controller": null
+ },
+ "F_execution_feedback": {
+  "requested_actions": null,
+  "filtered_actions": null,
+  "apply_payload": null,
+  "apply_response": null,
+  "feedback_link": null
+ },
+ "C_llm_request": {
+  "request_id": 1,
+  "generation": 1,
+  "source_step_id": 1,
+  "source_state_signature": [
+   [
+    5
+   ],
+   [
+    1
+   ],
+   [
+    0
+   ]
+  ],
+  "model": "deepseek-v4-flash",
+  "system": "ROLE",
+  "user": "CURRENT TACTICAL STATE:\n\nsummary"
+ },
+ "D_llm_response": {
+  "request_id": 1,
+  "source_step_id": 1,
+  "stale": false,
+  "applied": true,
+  "raw_text": "{\"posture\":\"aggressive\"}",
+  "parsed": "posture=aggressive",
+  "latency": 2.1,
+  "error": null,
+  "source": "deepseek"
+ }
+}

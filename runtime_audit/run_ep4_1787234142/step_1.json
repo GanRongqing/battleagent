@@ -1,0 +1,693 @@
+{
+ "C_llm_request": {
+  "request_id": 1,
+  "generation": 1,
+  "source_step_id": 1,
+  "source_state_signature": [
+   5,
+   0,
+   0,
+   0,
+   0,
+   0,
+   1.0,
+   0,
+   false,
+   0,
+   0
+  ],
+  "model": "deepseek-v4-flash",
+  "max_tokens": 2000,
+  "thinking_disabled": true,
+  "system": "你是 Maritime Fleet Commander。\n你不直接控制舰艇。\n你的任务是根据当前有限观测的战术摘要，给底层 deterministic controllers 提供战略级资源配置建议。\n你必须遵守 Maritime Commander Skill。\n你不知道敌方当前使用哪个 script，不能假设固定敌人数量、位置、航向或策略。\n敌方的运动可能不确定或正在机动。预测航迹只是信念，不是真值。\n不要输出 move / lock / fly 等具体动作。\n只输出符合 schema 的 JSON StrategicIntent。\n你的建议会被 deterministic controller 和 safety layer 校验。\n\n目标优先级：\n1. 防止突破\n2. 降低高威胁目标\n3. 建立局部兵力优势\n4. 保留必要侦察与预备力量\n5. 避免无意义地把全部兵力同时 commit\n\n在不确定敌情下：不要把预测当成真值。\n当信息质量下降（低置信/高不确定 lost track）：优先考虑 UAV reacquire，而不是直接大量投入 USV；\n但若突破风险极高，必须立即拦截。\n对已经稳定 engagement 的目标：不要无意义重新分配已锁 USV。\n\n只输出 JSON，不要 markdown。\n\n=== Maritime Commander Skill ===\n\n# Maritime Commander Skill\n\n> 面向 Maritime Fleet Commander 的长期作战知识库。\n> 内容只保存\"长期稳定、与敌方具体 script / 兵力规模 / 随机路径无关\"的作战原则。\n> 禁止把某一局的实时状态、敌脚本名称、固定敌方数量/坐标/航向、某个种子或\n> 某条随机路径写入本文件。\n\n---\n\n## Mission\n\n核心任务（按优先级）：\n\n1. **防止突破**：任何敌方 USV 越过突破线即失败 —— 这是最高优先级。\n2. **保留我方足够作战能力**：不要为了单点优势把兵力全部押上而失去全局覆盖。\n3. **维持信息质量**：侦察/重搜是决策的基础；信息损失会放大不确定性与误判。\n4. **高效摧毁敌方 USV**：以合理的局部数量优势尽快减少敌方火力源。\n5. **避免无谓的 UAV 损失**：UAV 是感知资产，其存活本身就是信息价值。\n\nCommander 必须基于有限观测工作，不允许依赖敌方运行时真值。\n\n---\n\n## Fair-play doctrine\n\nCommander 只允许使用以下信息做决策：\n\n- 当前 friendly state（`/status` 白方单位状态）\n- 当前 radar observation（`/status` 观察信息.white_observation 雷达捕获/被动告警）\n- TrackManager 维护的历史航迹（含预测位置 / 置信度 / 不确定半径）\n- 已公开的平台规则与战斗机制\n- 当前 engagement state（谁在锁定谁、谁被冻结、谁在返航）\n\n禁止依赖：\n\n- 敌方 true position / true velocity（未经观测推断的）\n- 敌方 internal state（locked_times、策略内部变量等）\n- 敌方 script 名称、初始布局、固定初始坐标\n- 固定敌方数量 / 固定敌方轨迹 / 固定敌方速度 / 随机路径的生成规律\n\n敌方的一切运动学（数量、位置、速度、航向）都必须从观测在线推断，不做先验假设。\n\n---\n\n## Uncertainty semantics\n\n**最后已知点 ≠ 当前真实位置。** 尤其对机动目标。\n\n摘要中给出的每个航迹是\"信念\"，不是真值。注意以下特征：\n\n- `maneuver_score`：近期转向/速度变化越大，点预测越不可信。\n- `point_confidence`：点预测置信（机动/预测不一致会压低它）。\n- `uncertainty_radius`：目标可能所在区域的半径（随时间与机动增长）。\n- `predicted_region`：信念中心 + 不确定半径。\n- `contact age`（丢失多久）：越久越不确定。\n\n分级响应（不要二值化）：\n\n- **低不确定**：预测可信，可正常交战。\n- **中不确定**：可交战，但注意保持信息更新（UAV 重搜/贴近到自身雷达确认）。\n- **高不确定**：优先改善信息（UAV reacquire），避免对陈旧点估计做昂贵且不可逆的集中。\n  除非突破风险即刻存在，必须立即拦截。\n\n不要因为\"存在不确定\"就从不交战。不确定是程度问题，不是是非问题。\n\n---\n\n## UAV doctrine\n\nUAV 是 reconnaissance / sensing asset，不是 combat platform。它不击杀、不锁定。\n\n三个动态感知角色（由 deterministic harness 分配，数量随可用 UAV 与态势动态变化）：\n\n- **SEARCH**：建立大范围初始信息 —— 当未知区域/未知敌情占比高时最有价值。\n- **SCREEN**：在交战几何前方维持覆盖/预警 —— 为 USV 的 sensor-assisted first-lock\n  提供共享感知；已稳定锁定的目标不再需要持续跟随。\n- **REACQUIRE**：找回机动丢失、其不确定性开始威胁决策质量的敌 USV。\n\nUAV 的雷达是 60km ±30° 前向扇区，必须朝目标方向飞行才能扫描；悬停扇区会冻结。\n\nUAV 存活有信息价值，但不要把它变成绝对目标 —— 该返航就返航，该冒险前置就前置\n（只要确定性电量/安全逻辑允许）。\n\n---\n\n## Enemy UAV semantics\n\n**敌 UAV ≠ 敌 USV。**\n\n敌方 USV：能突破（到达突破线即失败）、能锁定我方、是击杀目标。\n敌方 UAV：侦察/信息威胁，不突破、不锁定、不可被我方 USV 击杀。\n\n- 不要让敌方 UAV 占用 USV 分配（它们不是水面作战舰艇）。\n- 敌 UAV 的高速度会制造\"看似威胁\"的观测 —— 不要因此 divert USV。\n- 敌 UAV 只作为信息/感知层面的关注对象。\n\n---\n\n## USV doctrine / engagement geometry\n\nUSV 是主要 combat platform。稳定机制：\n\n- USV 雷达 ~35km 全向；锁距 <40km；单舰单锁不可切换；多舰可同锁一目标。\n- 锁链在目标侧自主计时：300s 窗口 80% 命中，第一发命中冻结 300s，累计 2 发击沉。\n- 已锁目标不无故切换（切换 = 放弃 300s 计时）。\n\n**保持 sensor-assisted engagement geometry**：交战保持距离应让 USV 尽量停留在\n\"自身传感器可确认目标\"的几何内（避免仅靠预测在外围盲带交火）。确定性代码负责\n强制执行实际 band（约 34km，位于自身 35km 雷达内），Commander 只需表达偏好\n（standoff_preference：low/medium/high）。\n\n不要写死某个精确距离；写死是代码的事，Commander 只表达几何偏好。\n\n---\n\n## Local force concentration\n\n区分 **coverage**（覆盖）与 **overmatch**（局部数量优势）：\n\n- **坏策略**：几乎把所有兵力压到一个目标 → 让另一艘敌舰无人对抗而突破。\n- **好策略**：先确保对每个相关敌方水面威胁都有可信覆盖（每艘 ≥1 攻击者），\n  再在边际价值最高的地方追加攻击者。\n\n确定性 allocator 有 coverage floor 保证\"没有敌舰完全无人覆盖\"（除了极少数\n故意保留）。Commander 的表达是 **overmatch_policy**：\n\n- `economical`：谨慎，尽量少投入，优先覆盖。\n- `balanced`：默认，覆盖优先 + 适度集中。\n- `decisive`：更愿意集中力量尽快减少敌方火力源（仍受 coverage floor 约束）。\n\n---\n\n## Marginal overmatch\n\n额外攻击者的边际价值递减（基于 300s/80%/2 命中的击杀时间模型）：\n\n- 1 攻击者：单窗口击杀概率 ~0（需要多窗口）。\n- 2 攻击者：单窗口击杀概率 ~64% —— 边际价值最高。\n- 3 攻击者：~90% —— 对高威胁/紧急目标值得。\n- 5v1 而另一艘敌舰无人覆盖：通常很差。\n\n让 allocator 做精确分配；Commander 只选择集中力度（overmatch_policy）。\n\n---\n\n## Low-confidence commitment\n\n低置信接触 + 大不确定区域 → 避免昂贵且不可逆的集中。\n\n除非：\n\n- 突破风险即刻存在（必须拦截）；或\n- 等待其它信息源的危险更大。\n\n这通过 `uncertainty_tolerance` 表达（低 = 更谨慎提交 USV，高 = 更愿意冒信息\n不确定的风险）。不确定性是提交决策的输入，不是直接命令。\n\n---\n\n## Maneuver detection\n\n`heading change / turn detection / maneuver_score` 表明敌方在机动。\n\n机动目标应促使 Commander 重新评估：\n\n- 重搜需求（reacquire 优先级）\n- 交战保持距离偏好（standoff）\n- 提交置信（commitment）\n- 火力集中程度\n\n而不是假设之前的几何仍然有效。\n\n---\n\n## Endgame\n\n当敌方剩余数量变少时，覆盖要求改变：\n\n- 剩余 1 艘敌舰：必须保证它绝无无人覆盖 —— 每艘相关 USV 都应能对其形成压力。\n- 剩余少量：更大的局部集中可能变得高效（没有其它未解决威胁需要覆盖了）。\n\n**永远不要让\"最后一艘敌舰\"处于无人覆盖**。确定性 harness 会强制这一点；\nCommander 在战略层面也应表达：敌舰少时集中力度可以更积极。\n\n---\n\n## Avoid overreaction\n\n不要对每次不确定上升都做：全面后撤 / 全部 UAV 去重搜 / 全部 USV 集中。\n\n战略改变应对应**实质性变化**：\n\n- 威胁几何（航迹/聚类变化）\n- 信息质量（点置信/不确定分布）\n- 兵力对比（USV 存活、覆盖比例）\n- 突破风险（最前敌舰位置）\n\n用比例化、分级的方式响应。Commander 的输出是紧凑的战略决策，不是长解释。\n\n---\n\n## Commander role\n\nCommander 只输出战略级 intent（compact JSON）。\n\n必须避免：\n\n- 输出具体坐标级 move / 具体动作字符串\n- 为单艇规划航路\n- 管理 UAV battery / 降落 / 锁定\n- 重复 simulator 已自动维护的 lock timing\n\n战略意图只改变\"资源配置与交战姿态\"（威胁优先、火力集中度、预备比例、侦察重点、\nstandoff 偏好、不确定容忍、激进度），具体执行交给 deterministic harness。\n确定性 harness 强制所有 safety invariant（覆盖下限、安全盘旋、合法动作、目标资格、\n传感器几何、低置信 guard）。**模型可以建议，harness 必须约束。**\n\n\n=== Output Schema ===\n\n输出 JSON StrategicIntent，字段与约束：\n{\n  \"posture\": \"balanced\",                 // cautious | balanced | aggressive\n  \"focus_level\": 2,                      // int 1~3（常规交战每目标攻击者数）\n  \"emergency_focus_level\": 3,            // int 2~4（临近突破高威胁的攻击者数）\n  \"reserve_ratio\": 0.20,                 // float 0~0.5（预备比例 = 预备USV/当前可用USV；\n                                         //   规模无关：敌情不明时高，临近突破时可降到 0）\n  \"overmatch_policy\": \"balanced\",        // economical | balanced | decisive（局部数量优势力度）\n  \"recon_mode\": \"balanced\",              // broad_search | balanced | screen_priority | reacquire_priority\n  \"standoff_preference\": \"medium\",       // low | medium | high（交战保持距离偏好）\n  \"uncertainty_tolerance\": 0.35,         // float 0~1（对不确定的容忍度；低=更谨慎提交 USV）\n  \"threat_bias\": \"breakthrough_eta\",     // breakthrough_eta | nearest | highest_confidence | balanced\n  \"priority_tracks\": [\"E3\",\"E7\"],        // 只能是 CURRENT TACTICAL STATE 中当前存在的 track id（小规模兼容）\n  \"uav_mode\": \"search_and_reacquire\",    // broad_search | search_and_reacquire | focused_reacquire\n  \"uav_priority_tracks\": [\"E7\"],         // 只能是当前存在的 track id\n  \"recon_aggressiveness\": 0.7,           // 0~1（侦察投入程度）\n  \"engagement_aggressiveness\": 0.7,      // 0~1（交战积极程度）\n  \"coverage_priority\": 0.6,              // 0~1（全局覆盖/重搜投入偏好；mission-unresolved 时高）\n  \"priority_clusters\": [\"cluster_1\"],    // 只能是 THREAT CLUSTERS 中出现的 cluster id（首选）\n  \"reason\": \"短文本，仅日志用\"\n}\n注意：\n- priority_clusters 只能选战术摘要中 THREAT CLUSTERS 出现的 id；无重点给空数组。\n- priority_tracks / uav_priority_tracks 只能选当前存在的 track id（小规模兼容，非主接口）。\n- 输出必须是合法 JSON 对象，不要 markdown 围栏，不要解释。",
+  "user": "CURRENT TACTICAL STATE:\n\nTIME:\nsim_time=2  mission=NORMAL_COMBAT\n\nMISSION:\nprevent breakthrough\n\nFRIENDLY RESOURCE SUMMARY:\nusv_alive=5 avail=1.00 engaged=0.00 frozen=0.00 | uav_alive=5 airborne=5 search=5 screen=0 reacq=0 | tracks=0 lost_ht=0 cov=0.06\nusv_total=5 uav_total=5\n\nCOVERAGE:\ncoverage_quality=0.06 airborne_recon=5/5\n\nTHREAT CLUSTERS: (none)\n\nKNOWN ENEMY TRACKS:\n(none detected)\n\nTOP THREATS:\n\nMANEUVER:\nhigh_maneuver_tracks=[]\nhigh_uncertainty_tracks=[]\n\nRECON:\nlost_high_threat_tracks=0 screen_demand=0 reacquire_demand=0 search_needed=1\n\nCURRENT COMMANDER INTENT:\nposture=balanced focus=2 emergency=3 reserve_ratio=0.20 reserve_usvs=auto bias=breakthrough_eta priority=[] uav_mode=search_and_reacquire uav_priority=[] recon=0.6 engage=0.7 overmatch=balanced recon_mode=balanced standoff=medium unc_tol=0.35\n\nReturn the next StrategicIntent."
+ },
+ "run_id": "ep4_1787234142",
+ "audit_step_id": 1,
+ "prev_audit_step_id": 0,
+ "sim_time": 2.0,
+ "wall_time": 1787234142.4852216,
+ "A_raw_observation": {
+  "status": {
+   "对局编号": 4,
+   "已启动": true,
+   "已结束": false,
+   "对局结果": null,
+   "真实时间": "2026-08-20 21:55:42",
+   "局内时间": "00:00:02",
+   "等待指令": true,
+   "资源快照": {
+    "统计": {
+     "usv_total": 5,
+     "usv_alive": 5,
+     "uav_total": 5,
+     "uav_alive": 5,
+     "uav_flying": 0,
+     "enemy_visible": 0
+    },
+    "单位状态": {
+     "white_usv_states": [
+      {
+       "name": "white_usv1",
+       "is_alive": true,
+       "position": [
+        40.0,
+        375000.0,
+        0.0
+       ],
+       "velocity": [
+        10.0,
+        6.123233995736766e-16,
+        0.0
+       ],
+       "course": 90.0,
+       "speed": 10.0,
+       "is_locked": false,
+       "is_locking": false,
+       "is_frozen": false,
+       "locked_attacker": [],
+       "relative_orientation": [],
+       "locking_unit": null,
+       "locked_times": 0,
+       "uav": [
+        "white_uav1"
+       ]
+      },
+      {
+       "name": "white_usv2",
+       "is_alive": true,
+       "position": [
+        40.0,
+        390000.0,
+        0.0
+       ],
+       "velocity": [
+        10.0,
+        6.123233995736766e-16,
+        0.0
+       ],
+       "course": 90.0,
+       "speed": 10.0,
+       "is_locked": false,
+       "is_locking": false,
+       "is_frozen": false,
+       "locked_attacker": [],
+       "relative_orientation": [],
+       "locking_unit": null,
+       "locked_times": 0,
+       "uav": [
+        "white_uav2"
+       ]
+      },
+      {
+       "name": "white_usv5",
+       "is_alive": true,
+       "position": [
+        40.0,
+        435000.0,
+        0.0
+       ],
+       "velocity": [
+        10.0,
+        6.123233995736766e-16,
+        0.0
+       ],
+       "course": 90.0,
+       "speed": 10.0,
+       "is_locked": false,
+       "is_locking": false,
+       "is_frozen": false,
+       "locked_attacker": [],
+       "relative_orientation": [],
+       "locking_unit": null,
+       "locked_times": 0,
+       "uav": [
+        "white_uav5"
+       ]
+      },
+      {
+       "name": "white_usv3",
+       "is_alive": true,
+       "position": [
+        40.0,
+        405000.0,
+        0.0
+       ],
+       "velocity": [
+        10.0,
+        6.123233995736766e-16,
+        0.0
+       ],
+       "course": 90.0,
+       "speed": 10.0,
+       "is_locked": false,
+       "is_locking": false,
+       "is_frozen": false,
+       "locked_attacker": [],
+       "relative_orientation": [],
+       "locking_unit": null,
+       "locked_times": 0,
+       "uav": [
+        "white_uav3"
+       ]
+      },
+      {
+       "name": "white_usv4",
+       "is_alive": true,
+       "position": [
+        40.0,
+        420000.0,
+        0.0
+       ],
+       "velocity": [
+        10.0,
+        6.123233995736766e-16,
+        0.0
+       ],
+       "course": 90.0,
+       "speed": 10.0,
+       "is_locked": false,
+       "is_locking": false,
+       "is_frozen": false,
+       "locked_attacker": [],
+       "relative_orientation": [],
+       "locking_unit": null,
+       "locked_times": 0,
+       "uav": [
+        "white_uav4"
+       ]
+      }
+     ],
+     "white_uav_states": [
+      {
+       "name": "white_uav1",
+       "is_alive": true,
+       "position": [
+        40.0,
+        375000.0,
+        0.0
+       ],
+       "velocity": [
+        10.0,
+        6.123233995736766e-16,
+        0.0
+       ],
+       "course": 90.0,
+       "speed": 10.0,
+       "battery": 25000,
+       "battery_format": 100.0,
+       "is_charging": false,
+       "is_at_usv": true,
+       "home_name": "white_usv1"
+      },
+      {
+       "name": "white_uav5",
+       "is_alive": true,
+       "position": [
+        40.0,
+        435000.0,
+        0.0
+       ],
+       "velocity": [
+        10.0,
+        6.123233995736766e-16,
+        0.0
+       ],
+       "course": 90.0,
+       "speed": 10.0,
+       "battery": 25000,
+       "battery_format": 100.0,
+       "is_charging": false,
+       "is_at_usv": true,
+       "home_name": "white_usv5"
+      },
+      {
+       "name": "white_uav3",
+       "is_alive": true,
+       "position": [
+        40.0,
+        405000.0,
+        0.0
+       ],
+       "velocity": [
+        10.0,
+        6.123233995736766e-16,
+        0.0
+       ],
+       "course": 90.0,
+       "speed": 10.0,
+       "battery": 25000,
+       "battery_format": 100.0,
+       "is_charging": false,
+       "is_at_usv": true,
+       "home_name": "white_usv3"
+      },
+      {
+       "name": "white_uav4",
+       "is_alive": true,
+       "position": [
+        40.0,
+        420000.0,
+        0.0
+       ],
+       "velocity": [
+        10.0,
+        6.123233995736766e-16,
+        0.0
+       ],
+       "course": 90.0,
+       "speed": 10.0,
+       "battery": 25000,
+       "battery_format": 100.0,
+       "is_charging": false,
+       "is_at_usv": true,
+       "home_name": "white_usv4"
+      },
+      {
+       "name": "white_uav2",
+       "is_alive": true,
+       "position": [
+        40.0,
+        390000.0,
+        0.0
+       ],
+       "velocity": [
+        10.0,
+        6.123233995736766e-16,
+        0.0
+       ],
+       "course": 90.0,
+       "speed": 10.0,
+       "battery": 25000,
+       "battery_format": 100.0,
+       "is_charging": false,
+       "is_at_usv": true,
+       "home_name": "white_usv2"
+      }
+     ]
+    },
+    "观察信息": {
+     "white_observation": {
+      "雷达捕获": [],
+      "被动告警": []
+     }
+    }
+   },
+   "奖励信号": {
+    "black_killed": 0,
+    "black_hit": 0,
+    "white_ship_killed": 0,
+    "white_uav_killed": 0,
+    "black_breakthrough": 0,
+    "white_hit": 0,
+    "collision": 0
+   },
+   "行动历史": []
+  },
+  "obs": null,
+  "legal_actions": {
+   "参数": {
+    "target_speed": "float, 0-100 m/s",
+    "target_course": "float, 0-360°, 正北0°顺时针"
+   },
+   "noop": "空操作，等待一个宏观步 [noop]",
+   "动作": {
+    "[move]": [
+     "white_usv1 移动 target_speed=<值> target_course=<值>",
+     "white_usv2 移动 target_speed=<值> target_course=<值>",
+     "white_usv5 移动 target_speed=<值> target_course=<值>",
+     "white_usv3 移动 target_speed=<值> target_course=<值>",
+     "white_usv4 移动 target_speed=<值> target_course=<值>"
+    ],
+    "[launch_uav]": [
+     "white_uav1 从 white_usv1 起飞 target_speed=<值> target_course=<值>",
+     "white_uav5 从 white_usv5 起飞 target_speed=<值> target_course=<值>",
+     "white_uav3 从 white_usv3 起飞 target_speed=<值> target_course=<值>",
+     "white_uav4 从 white_usv4 起飞 target_speed=<值> target_course=<值>",
+     "white_uav2 从 white_usv2 起飞 target_speed=<值> target_course=<值>"
+    ]
+   },
+   "备注": [
+    "暂无雷达捕获目标，[lock] 为空"
+   ]
+  },
+  "truncated": []
+ },
+ "B_fused_state": {
+  "tracks": {},
+  "resource": {
+   "usv_total": 5,
+   "usv_alive": 5,
+   "usv_available": 5,
+   "usv_engaged": 0,
+   "usv_frozen": 0,
+   "available_ratio": 1.0,
+   "engaged_ratio": 0.0,
+   "frozen_ratio": 0.0,
+   "uav_alive": 5,
+   "uav_airborne": 5,
+   "uav_searching": 5,
+   "uav_screening": 0,
+   "uav_reacquiring": 0,
+   "uav_returning": 0,
+   "uav_charging": 0,
+   "available_sensing_ratio": 1.0,
+   "active_combat_tracks": 0,
+   "lost_high_threat_tracks": 0,
+   "threat_cluster_count": 0,
+   "coverage_quality": 0.056,
+   "describe": "usv_alive=5 avail=1.00 engaged=0.00 frozen=0.00 | uav_alive=5 airborne=5 search=5 screen=0 reacq=0 | tracks=0 lost_ht=0 cov=0.06"
+  },
+  "mission": "NORMAL_COMBAT",
+  "clusters": [],
+  "coverage": {
+   "quality": 0.056,
+   "cells_covered": 10,
+   "cells_total": 10
+  },
+  "state_signature": [
+   5,
+   0,
+   0,
+   0,
+   0,
+   0,
+   1.0,
+   0,
+   false,
+   0,
+   0
+  ],
+  "commander_ctx": {
+   "n_usv_alive": 5,
+   "n_ships": 0,
+   "n_uncovered": 0,
+   "n_lost_ht": 0,
+   "breakthrough_imminent": false,
+   "blind": false,
+   "mission": "NORMAL_COMBAT",
+   "coverage_quality": 0.05555555555555555
+  },
+  "trigger": "periodic",
+  "summary_hash": -7083840127734001365
+ },
+ "E_intermediate": {
+  "intent": {
+   "source": "default_intent",
+   "describe": "posture=balanced focus=2 emergency=3 reserve_ratio=0.20 reserve_usvs=auto bias=breakthrough_eta priority=[] uav_mode=search_and_reacquire uav_priority=[] recon=0.6 engage=0.7 overmatch=balanced recon_mode=balanced standoff=medium unc_tol=0.35",
+   "reason": ""
+  },
+  "allocator": {
+   "result": {},
+   "margin": null,
+   "candidates": []
+  },
+  "controller": {
+   "usv_actions": [
+    [
+     "white_usv1 移动 target_speed=20.0 target_course=90.0",
+     "move"
+    ],
+    [
+     "white_usv2 移动 target_speed=20.0 target_course=90.0",
+     "move"
+    ],
+    [
+     "white_usv5 移动 target_speed=20.0 target_course=90.0",
+     "move"
+    ],
+    [
+     "white_usv3 移动 target_speed=20.0 target_course=90.0",
+     "move"
+    ],
+    [
+     "white_usv4 移动 target_speed=20.0 target_course=90.0",
+     "move"
+    ]
+   ],
+   "uav_actions": [
+    [
+     "white_uav1 从 white_usv1 起飞 target_speed=100.0 target_course=90.0",
+     "launch_uav"
+    ],
+    [
+     "white_uav5 从 white_usv5 起飞 target_speed=100.0 target_course=90.0",
+     "launch_uav"
+    ],
+    [
+     "white_uav3 从 white_usv3 起飞 target_speed=100.0 target_course=90.0",
+     "launch_uav"
+    ],
+    [
+     "white_uav4 从 white_usv4 起飞 target_speed=100.0 target_course=90.0",
+     "launch_uav"
+    ],
+    [
+     "white_uav2 从 white_usv2 起飞 target_speed=100.0 target_course=90.0",
+     "launch_uav"
+    ]
+   ],
+   "usv_fsm": {
+    "white_usv1": "AVAILABLE",
+    "white_usv2": "AVAILABLE",
+    "white_usv5": "AVAILABLE",
+    "white_usv3": "AVAILABLE",
+    "white_usv4": "AVAILABLE"
+   },
+   "uav_fsm": {
+    "white_uav1": "SEARCH",
+    "white_uav5": "SEARCH",
+    "white_uav3": "SEARCH",
+    "white_uav4": "SEARCH",
+    "white_uav2": "SEARCH"
+   }
+  }
+ },
+ "F_execution_feedback": {
+  "requested_actions": [
+   [
+    "white_usv1 移动 target_speed=20.0 target_course=90.0",
+    "move"
+   ],
+   [
+    "white_usv2 移动 target_speed=20.0 target_course=90.0",
+    "move"
+   ],
+   [
+    "white_usv5 移动 target_speed=20.0 target_course=90.0",
+    "move"
+   ],
+   [
+    "white_usv3 移动 target_speed=20.0 target_course=90.0",
+    "move"
+   ],
+   [
+    "white_usv4 移动 target_speed=20.0 target_course=90.0",
+    "move"
+   ],
+   [
+    "white_uav1 从 white_usv1 起飞 target_speed=100.0 target_course=90.0",
+    "launch_uav"
+   ],
+   [
+    "white_uav5 从 white_usv5 起飞 target_speed=100.0 target_course=90.0",
+    "launch_uav"
+   ],
+   [
+    "white_uav3 从 white_usv3 起飞 target_speed=100.0 target_course=90.0",
+    "launch_uav"
+   ],
+   [
+    "white_uav4 从 white_usv4 起飞 target_speed=100.0 target_course=90.0",
+    "launch_uav"
+   ],
+   [
+    "white_uav2 从 white_usv2 起飞 target_speed=100.0 target_course=90.0",
+    "launch_uav"
+   ]
+  ],
+  "filtered_actions": [
+   {
+    "action_text": "white_usv1 移动 target_speed=20.0 target_course=90.0",
+    "action_type": "move"
+   },
+   {
+    "action_text": "white_usv2 移动 target_speed=20.0 target_course=90.0",
+    "action_type": "move"
+   },
+   {
+    "action_text": "white_usv5 移动 target_speed=20.0 target_course=90.0",
+    "action_type": "move"
+   },
+   {
+    "action_text": "white_usv3 移动 target_speed=20.0 target_course=90.0",
+    "action_type": "move"
+   },
+   {
+    "action_text": "white_usv4 移动 target_speed=20.0 target_course=90.0",
+    "action_type": "move"
+   },
+   {
+    "action_text": "white_uav1 从 white_usv1 起飞 target_speed=100.0 target_course=90.0",
+    "action_type": "launch_uav"
+   },
+   {
+    "action_text": "white_uav5 从 white_usv5 起飞 target_speed=100.0 target_course=90.0",
+    "action_type": "launch_uav"
+   },
+   {
+    "action_text": "white_uav3 从 white_usv3 起飞 target_speed=100.0 target_course=90.0",
+    "action_type": "launch_uav"
+   },
+   {
+    "action_text": "white_uav4 从 white_usv4 起飞 target_speed=100.0 target_course=90.0",
+    "action_type": "launch_uav"
+   },
+   {
+    "action_text": "white_uav2 从 white_usv2 起飞 target_speed=100.0 target_course=90.0",
+    "action_type": "launch_uav"
+   }
+  ],
+  "apply_payload": {
+   "actions": [
+    {
+     "action_text": "white_usv1 移动 target_speed=20.0 target_course=90.0",
+     "action_type": "move"
+    },
+    {
+     "action_text": "white_usv2 移动 target_speed=20.0 target_course=90.0",
+     "action_type": "move"
+    },
+    {
+     "action_text": "white_usv5 移动 target_speed=20.0 target_course=90.0",
+     "action_type": "move"
+    },
+    {
+     "action_text": "white_usv3 移动 target_speed=20.0 target_course=90.0",
+     "action_type": "move"
+    },
+    {
+     "action_text": "white_usv4 移动 target_speed=20.0 target_course=90.0",
+     "action_type": "move"
+    },
+    {
+     "action_text": "white_uav1 从 white_usv1 起飞 target_speed=100.0 target_course=90.0",
+     "action_type": "launch_uav"
+    },
+    {
+     "action_text": "white_uav5 从 white_usv5 起飞 target_speed=100.0 target_course=90.0",
+     "action_type": "launch_uav"
+    },
+    {
+     "action_text": "white_uav3 从 white_usv3 起飞 target_speed=100.0 target_course=90.0",
+     "action_type": "launch_uav"
+    },
+    {
+     "action_text": "white_uav4 从 white_usv4 起飞 target_speed=100.0 target_course=90.0",
+     "action_type": "launch_uav"
+    },
+    {
+     "action_text": "white_uav2 从 white_usv2 起飞 target_speed=100.0 target_course=90.0",
+     "action_type": "launch_uav"
+    }
+   ]
+  },
+  "apply_response": {
+   "成功": true,
+   "已队列": true,
+   "执行结果": [
+    {
+     "序号": 1,
+     "动作": "white_usv1 移动 target_speed=20.0 target_course=90.0",
+     "成功": true,
+     "跳过": false,
+     "详情": "white_usv1 移动 speed=20.0 course=90.0"
+    },
+    {
+     "序号": 2,
+     "动作": "white_usv2 移动 target_speed=20.0 target_course=90.0",
+     "成功": true,
+     "跳过": false,
+     "详情": "white_usv2 移动 speed=20.0 course=90.0"
+    },
+    {
+     "序号": 3,
+     "动作": "white_usv5 移动 target_speed=20.0 target_course=90.0",
+     "成功": true,
+     "跳过": false,
+     "详情": "white_usv5 移动 speed=20.0 course=90.0"
+    },
+    {
+     "序号": 4,
+     "动作": "white_usv3 移动 target_speed=20.0 target_course=90.0",
+     "成功": true,
+     "跳过": false,
+     "详情": "white_usv3 移动 speed=20.0 course=90.0"
+    },
+    {
+     "序号": 5,
+     "动作": "white_usv4 移动 target_speed=20.0 target_course=90.0",
+     "成功": true,
+     "跳过": false,
+     "详情": "white_usv4 移动 speed=20.0 course=90.0"
+    },
+    {
+     "序号": 6,
+     "动作": "white_uav1 从 white_usv1 起飞 target_speed=100.0 target_course=90.0",
+     "成功": true,
+     "跳过": false,
+     "详情": "white_uav1 从 white_usv1 起飞 speed=100.0 course=90.0"
+    },
+    {
+     "序号": 7,
+     "动作": "white_uav5 从 white_usv5 起飞 target_speed=100.0 target_course=90.0",
+     "成功": true,
+     "跳过": false,
+     "详情": "white_uav5 从 white_usv5 起飞 speed=100.0 course=90.0"
+    },
+    {
+     "序号": 8,
+     "动作": "white_uav3 从 white_usv3 起飞 target_speed=100.0 target_course=90.0",
+     "成功": true,
+     "跳过": false,
+     "详情": "white_uav3 从 white_usv3 起飞 speed=100.0 course=90.0"
+    },
+    {
+     "序号": 9,
+     "动作": "white_uav4 从 white_usv4 起飞 target_speed=100.0 target_course=90.0",
+     "成功": true,
+     "跳过": false,
+     "详情": "white_uav4 从 white_usv4 起飞 speed=100.0 course=90.0"
+    },
+    {
+     "序号": 10,
+     "动作": "white_uav2 从 white_usv2 起飞 target_speed=100.0 target_course=90.0",
+     "成功": true,
+     "跳过": false,
+     "详情": "white_uav2 从 white_usv2 起飞 speed=100.0 course=90.0"
+    }
+   ],
+   "执行统计": "10 个动作: 10 成功, 0 跳过"
+  },
+  "feedback_link": {
+   "link_type": "audit_step_id",
+   "requested_step_id": 1,
+   "next_audit_step_id": 2,
+   "response_sim_time": 2,
+   "response_wall_time": 1787234142.609248
+  }
+ },
+ "D_llm_response": {
+  "request_id": 1,
+  "source_step_id": 1,
+  "stale": false,
+  "applied": true,
+  "rejected_reason": null,
+  "raw_text": "{\n  \"posture\": \"balanced\",\n  \"focus_level\": 2,\n  \"emergency_focus_level\": 3,\n  \"reserve_ratio\": 0.25,\n  \"overmatch_policy\": \"balanced\",\n  \"recon_mode\": \"broad_search\",\n  \"standoff_preference\": \"medium\",\n  \"uncertainty_tolerance\": 0.4,\n  \"threat_bias\": \"breakthrough_eta\",\n  \"priority_tracks\": [],\n  \"uav_mode\": \"broad_search\",\n  \"uav_priority_tracks\": [],\n  \"recon_aggressiveness\": 0.8,\n  \"engagement_aggressiveness\": 0.5,\n  \"coverage_priority\": 0.8,\n  \"priority_clusters\": [],\n  \"reason\": \"No tracks yet; maintain broad search with all UAVs and keep USV reserve while building initial picture.\"\n}",
+  "parsed": "posture=balanced focus=2 emergency=3 reserve_ratio=0.25 reserve_usvs=auto bias=breakthrough_eta priority=[] uav_mode=broad_search uav_priority=[] recon=0.8 engage=0.5 overmatch=balanced recon_mode=broad_search standoff=medium unc_tol=0.40",
+  "latency": 7.27,
+  "error": null,
+  "source": "deepseek",
+  "sim_time": 2
+ }
+}

@@ -1,0 +1,29 @@
+# TABLE 1 — Three-Stage Co-Evolution Evaluation
+
+N = 10 per (scale × stage), paired holdout seeds 4001–4010.
+
+| Scale | Metric | Stage 0
+Initial W5×B0 | Stage 1
+Black Evolved W5×B3 | Stage 2
+White Adapted W6×B3 | Δ Black Evolution
+(S1 − S0) | Δ White Adaptation
+(S2 − S1) |
+| --- | --- | --- | --- | --- | --- | --- |
+| S1 | Clean Win Rate | 1.00 | 0.80 | 0.40 | -0.20 | -0.40 |
+| S1 | Enemy Combat Kills | 10.0 | 10.0 | 9.4 | +0.0 | -0.6 |
+| S1 | Friendly USV Loss | 1.6 | 0.8 | 3.0 | -0.8 | +2.2 |
+| S1 | Breakthrough Rate | 0.00 | 0.20 | 0.30 | +0.20 | +0.10 |
+| S1 | Explored Area (km2) | 58867.5 | 89340.0 | 57930.0 | +30472.5 | -31410.0 |
+| S1 | Resolution Time (s) | 12526.4 | 23744.9 | 21122.2 | +11218.5 | -2622.7 |
+| S2 | Clean Win Rate | 0.90 | 0.60 | 0.00 | -0.30 | -0.60 |
+| S2 | Enemy Combat Kills | 20.0 | 19.9 | 18.3 | -0.1 | -1.6 |
+| S2 | Friendly USV Loss | 5.0 | 3.2 | 9.5 | -1.8 | +6.3 |
+| S2 | Breakthrough Rate | 0.10 | 0.40 | 0.20 | +0.30 | -0.20 |
+| S2 | Explored Area (km2) | 64702.5 | 86430.0 | 81420.0 | +21727.5 | -5010.0 |
+| S2 | Resolution Time (s) | 14503.6 | 24469.0 | 27383.4 | +9965.4 | +2914.4 |
+| S3 | Clean Win Rate | 0.90 | 0.70 | 0.40 | -0.20 | -0.30 |
+| S3 | Enemy Combat Kills | 29.9 | 29.6 | 29.4 | -0.3 | -0.2 |
+| S3 | Friendly USV Loss | 7.2 | 6.7 | 11.0 | -0.5 | +4.3 |
+| S3 | Breakthrough Rate | 0.10 | 0.30 | 0.30 | +0.20 | +0.00 |
+| S3 | Explored Area (km2) | 69237.5 | 100370.0 | 93895.0 | +31132.5 | -6475.0 |
+| S3 | Resolution Time (s) | 13848.2 | 22638.8 | 25766.2 | +8790.6 | +3127.4 |

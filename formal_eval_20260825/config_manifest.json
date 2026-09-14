@@ -1,0 +1,69 @@
+{
+ "agent_hash": "a7842b29c81cc567ea63cae262cb6ab0b9d9bd9df90903c4115eaa6e6c6f0f66",
+ "skill_hash": "155b02019dc92c6e6c0095949439a413cd86310ad1026cd394ad185c3d13552e",
+ "prompt_hash": "fb4c5641b4ea55c7c38fc2d36894e3a9765fffd346e10c5bbdd9036a303fce54",
+ "simulator_version": "tzb_engine.py:396ba7a3e294 engine.py:58aab5ad4cdb judge_system.py:e91c4b91e9d8",
+ "evaluator_version": "maritime_metrics.py:27eed0649648",
+ "scenario_generator_hash": "23ef0df9cb652eaa54ae7a37b02c44b1d8c3b6824c9975c92815bd930006003e",
+ "experiment_time": "2026-08-25 21:47:49",
+ "python_version": "3.8.x (hsystem_env)",
+ "git_commit": "4c7594ff16edcda4bda62a9da7f75f1b7b3ce1b6",
+ "git_dirty": true,
+ "seeds": [
+  1001,
+  1002,
+  1003,
+  1004,
+  1005,
+  1006,
+  1007,
+  1008,
+  1009,
+  1010,
+  1011,
+  1012,
+  1013,
+  1014,
+  1015,
+  1016,
+  1017,
+  1018,
+  1019,
+  1020,
+  1021,
+  1022,
+  1023,
+  1024,
+  1025,
+  1026,
+  1027,
+  1028,
+  1029,
+  1030
+ ],
+ "scenarios": {
+  "S1": {
+   "friendly_usv": 5,
+   "friendly_uav": 5,
+   "enemy_combat_usv": 10,
+   "enemy_uav": 0
+  },
+  "S2": {
+   "friendly_usv": 10,
+   "friendly_uav": 10,
+   "enemy_combat_usv": 20,
+   "enemy_uav": 0
+  },
+  "S3": {
+   "friendly_usv": 15,
+   "friendly_uav": 15,
+   "enemy_combat_usv": 30,
+   "enemy_uav": 0
+  }
+ },
+ "frontage_mode": "fixed_frontage",
+ "black_movement": "random_waypoint",
+ "clean_win_definition": "engine Victory (black_ship_alive==0) AND black_breakthrough==0 (run_priority_eval clean_victory)",
+ "exploration_definition": "maritime_metrics ExplorationCoverageTracker: fixed 5km grid [0,300km]x[80,620km], dedup union, ratio denom = 任务区域.json polygon area (193301.27 km^2)",
+ "notes": "same seed identifiers 1001-1030 across scales; scenario realization differs by cardinality"
+}
