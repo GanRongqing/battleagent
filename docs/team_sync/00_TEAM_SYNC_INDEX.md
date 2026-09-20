@@ -46,3 +46,17 @@ Policy/Fingerprint registry + failure-driven Auto Harness evolution pipeline.
 
 > Provenance rule: every number in this pack is extracted from files listed per row. Where a
 > value is absent it is marked `NOT_FOUND` / `NOT_RECORDED`; conflicts are marked `SOURCE CONFLICT`.
+
+---
+## GATE UPDATE — Phase1 DEV complete (S2×B3, 8001–8030, paired N=30)
+- W5: clean 0.500 / breakthrough 0.467 / defeat 0.133 / loss 3.20 / res 27736
+- candidate white-auto-0001-v1: clean 0.733 / breakthrough 0.200 / defeat 0.200 / loss 3.37 / res 26594
+- paired breakthrough 11:3 (McNemar p=0.057); paired defeat 3:5 (p=0.727)
+- **DEV verdict = SUPPORTED (provisional)**; promotion gated on fresh 8101–8130 (IN PROGRESS).
+
+---
+## GATE UPDATE — Phase1 FRESH complete (8101–8130, paired N=30)
+- W5: clean 0.733 / breakthrough 0.233 / defeat 0.067
+- candidate: clean 0.633 / breakthrough 0.367 / defeat 0.033
+- **FRESH VERDICT = FAIL**: DEV breakthrough improvement did not reproduce (direction reversed).
+- Decision: NO promotion; W5 remains frozen current; Phase2 stacking NOT entered.

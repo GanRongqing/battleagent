@@ -5,11 +5,11 @@ Status legend: OPEN / IN PROGRESS / PAUSED / BLOCKED / DONE.
 ## A. White anti-leak candidate (white-auto-0001-v1)
 | # | item | status | detail | source |
 |---|---|---|---|---|
-| A1 | DEV paired performance (8001–8030) | PAUSED | W5 30/30; candidate 18/30; needs 12 more then `analyze_phase1.py` | `auto_harness/phase1/dev_cand/EPISODES.csv` |
+| A1 | DEV paired performance (8001–8030) | DONE | W5 30/30, candidate 30/30; verdict SUPPORTED (provisional); brk 0.467→0.200 (11:3), defeat 0.133→0.200 (n.s.) | `auto_harness/phase1/WHITE_PHASE1_FINAL_REPORT.md` |
 | A2 | Mechanism KPIs (unblocked HIGH/CRITICAL duration, triggers, preemptions) | IN PROGRESS | only available after full DEV; runtime audit now env-gated via `W8_AUDIT_LOG` | `run_white_phase1.py`, `agent_hybrid_w8_containment.py` |
-| A3 | Fresh validation 8101–8130 | OPEN (gated) | run only if DEV verdict = SUPPORTED | `auto_harness/phase1/WHITE_HARNESS_PHASE1_FINAL_REPORT.md` |
+| A3 | Fresh validation 8101–8130 | DONE (FAIL) | DEV improvement did not reproduce; breakthrough direction reversed (0.233→0.367); no promotion | `auto_harness/phase1/WHITE_HARNESS_PHASE1_FINAL_REPORT.md` |
 | A4 | Cross-opponent 8201–8210 (E0/E1/E2/E3) | OPEN (gated) | representative E1 to be chosen (B1 or B2) | this pack |
-| A5 | Candidate promotion (`active`) | OPEN | requires DEV + fresh + generalization | strategy_library.db |
+| A5 | Candidate promotion (`active`) | CLOSED (NOT promoted) | Fresh FAIL; white-auto-0001-v1 remains candidate/validation; W5 frozen current |
 | A6 | ARTIFACT re-registration | DONE | artifact updated after adding runtime audit; bundle `2fcde232ba81…` | `auto_harness/phase1/ANTI_LEAK_ARTIFACT.json` |
 
 ## B. Black taxonomy / B0-v2

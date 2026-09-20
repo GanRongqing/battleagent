@@ -1,0 +1,99 @@
+{
+  "tag": "DEV",
+  "seeds": [
+    8001,
+    8002,
+    8003,
+    8004,
+    8005,
+    8006,
+    8007,
+    8008,
+    8009,
+    8010,
+    8011,
+    8012,
+    8013,
+    8014,
+    8015,
+    8016,
+    8017,
+    8018,
+    8019,
+    8020,
+    8021,
+    8022,
+    8023,
+    8024,
+    8025,
+    8026,
+    8027,
+    8028,
+    8029,
+    8030
+  ],
+  "n_paired": 30,
+  "w5": {
+    "n": 30,
+    "clean": 15,
+    "clean_rate": 0.5,
+    "clean_ci": [
+      0.332,
+      0.668
+    ],
+    "breakthrough": 14,
+    "breakthrough_rate": 0.467,
+    "breakthrough_ci": [
+      0.302,
+      0.639
+    ],
+    "defeat": 4,
+    "defeat_rate": 0.133,
+    "defeat_ci": [
+      0.053,
+      0.297
+    ],
+    "friendly_loss_mean": 3.2,
+    "resolution_mean": 27736.1
+  },
+  "candidate": {
+    "n": 30,
+    "clean": 22,
+    "clean_rate": 0.733,
+    "clean_ci": [
+      0.556,
+      0.858
+    ],
+    "breakthrough": 6,
+    "breakthrough_rate": 0.2,
+    "breakthrough_ci": [
+      0.095,
+      0.373
+    ],
+    "defeat": 6,
+    "defeat_rate": 0.2,
+    "defeat_ci": [
+      0.095,
+      0.373
+    ],
+    "friendly_loss_mean": 3.37,
+    "resolution_mean": 26593.6
+  },
+  "breakthrough_delta": -0.267,
+  "transitions": {
+    "w5_fail_cand_clean": 11,
+    "w5_clean_cand_fail": 3,
+    "both_clean": 13,
+    "both_fail": 3
+  },
+  "mechanism": {
+    "episodes_with_events": 30,
+    "containment_triggers_mean": 0.63,
+    "containment_triggers_total": 19,
+    "preemptions_total": 5,
+    "episodes_with_trigger": 11,
+    "unblocked_high_evals_total": 258,
+    "unblocked_critical_evals_total": 89
+  },
+  "causal_verdict": "BAD_TRADEOFF"
+}

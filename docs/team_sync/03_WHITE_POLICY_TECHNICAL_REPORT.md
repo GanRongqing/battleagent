@@ -49,3 +49,21 @@ Source: `W7_FINAL_REPORT.md`.
   | W5 | 30 | 0.500 | 0.467 | 0.133 | 3.2 | 27736 | `auto_harness/phase1/dev_w5/EPISODES.csv` |
   | candidate | 18 (paused) | 0.722 | 0.278 | 0.167 | 3.06 | 25420 | `auto_harness/phase1/dev_cand/EPISODES.csv` |
 - Verdict: mechanism VALIDATED; performance **NOT YET VALIDATED** (N=18 < 30, paired analysis pending).
+
+---
+## GATE UPDATE — anti-leak DEV paired (8001–8030, N=30)
+| metric | W5 | candidate |
+|---|---|---|
+| clean | 0.500 | 0.733 |
+| breakthrough | 0.467 | 0.200 |
+| defeat | 0.133 | 0.200 |
+| loss (mean/median) | 3.20 / 3 | 3.37 / 3 |
+| resolution | 27736 | 26594 |
+Paired: breakthrough 11:3 (p=0.057), defeat 3:5 (p=0.727). Mechanism triggers 19 across 11/30 episodes.
+Verdict **SUPPORTED (provisional)**. Source: `auto_harness/phase1/WHITE_PHASE1_FINAL_REPORT.md`.
+
+---
+## GATE UPDATE — anti-leak FRESH (8101–8130, N=30) = FAIL
+DEV breakthrough 0.467→0.200 did not reproduce: FRESH W5 0.233 → candidate 0.367 (reversed).
+Clean 0.733→0.633 (reversed). Mechanism fired less (6/30 vs 11/30 episodes).
+Decision: white-auto-0001-v1 NOT promoted; W5 remains frozen current. Source: `auto_harness/phase1/ANTI_LEAK_FRESH_REPORT.md`.
