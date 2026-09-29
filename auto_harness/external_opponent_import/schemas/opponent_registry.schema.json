@@ -1,0 +1,11 @@
+{
+ "$schema": "http://json-schema.org/draft-07/schema#",
+ "title": "ExternalWaveRegistry",
+ "type": "object",
+ "required": ["wave1","wave2"],
+ "properties": {
+   "wave1": {"type": "array", "maxItems": 5, "items": {"$ref": "opponent_artifact.schema.json"}},
+   "wave2": {"type": "array", "maxItems": 6, "items": {"$ref": "opponent_artifact.schema.json"}},
+   "gate": {"enum": ["WAITING_FOR_EXTERNAL_ARTIFACTS","INCOMPLETE_EXTERNAL_DELIVERY","READY_FOR_SMOKE","FROZEN"]}
+ }
+}

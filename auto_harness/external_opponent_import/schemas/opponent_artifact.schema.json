@@ -1,0 +1,23 @@
+{
+ "$schema": "http://json-schema.org/draft-07/schema#",
+ "title": "ExternalOpponentArtifact",
+ "type": "object",
+ "required": ["wave","short_id","original_name","source_files","entrypoint","artifact_sha256",
+              "black_side_verified","hidden_truth_access","import_status"],
+ "properties": {
+   "wave": {"enum": ["WAVE1","WAVE2"]},
+   "short_id": {"type": "string", "pattern": "^W[12]-[1-6]$"},
+   "original_name": {"type": "string"},
+   "source_files": {"type": "array", "items": {"type": "string"}},
+   "entrypoint": {"type": "string"},
+   "scenario_id": {"type": ["string","null"]},
+   "route_id": {"type": ["string","null"]},
+   "config": {"type": "object"},
+   "artifact_sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+   "adapter_sha256": {"type": ["string","null"]},
+   "dependencies": {"type": "array", "items": {"type": "string"}},
+   "black_side_verified": {"type": "boolean"},
+   "hidden_truth_access": {"type": "boolean"},
+   "import_status": {"enum": ["RAW","STATIC_VALIDATED","SMOKE_PASS","FROZEN_FOR_EVAL","QUARANTINED"]}
+ }
+}
