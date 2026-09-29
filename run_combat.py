@@ -48,7 +48,7 @@ def parse_meta(text):
 
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--agent", required=True, choices=["w5", "c1", "expand", "lock", "prelock"])
+    ap.add_argument("--agent", required=True, choices=["w5", "c1", "expand", "lock", "prelock", "reach"])
     ap.add_argument("--strategy", type=int, required=True, choices=range(1, 7))
     ap.add_argument("--seed", type=int, required=True)
     ap.add_argument("--port", type=int, required=True)
