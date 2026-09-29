@@ -44,7 +44,10 @@ class JudgeSystem(core.entity.FSM):
 
     def set_units(self, units):
         self.units = set(units)
-        self.units_all = self.units.copy()
+        # Deterministic iteration order: `set` order depends on object memory addresses (varies
+        # across processes), which leaks into get_state()/legal_actions ordering and breaks
+        # same-seed reproducibility. Sort by a stable key (entity name) instead.
+        self.units_all = sorted(self.units, key=lambda u: getattr(u, "name", ""))
         for unit in self.units:
             if isinstance(unit, Ship) and unit.group == "BLUE":
                 self.black_ships.add(unit)
