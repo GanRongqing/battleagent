@@ -1,0 +1,161 @@
+diff --git a/agent_hybrid_allocator_expand.py b/agent_hybrid_lock_geometry.py
+index e4cba47..fcfec25 100644
+--- a/agent_hybrid_allocator_expand.py
++++ b/agent_hybrid_lock_geometry.py
+@@ -1,92 +1,82 @@
+ #!/usr/bin/env python
+ # -*- coding: utf-8 -*-
+-"""white-combat-0002-v1 — ALLOCATOR_COMMITMENT_EXPANSION (breadth-first).
++"""white-combat-0003-v1 — LOCK-FIRST APPROACH (C2).
+ 
+-Parent: Frozen W5 (agent_hybrid_v5.py).
++Parent: ACE (agent_hybrid_allocator_expand.py, white-combat-0002-v1).
+ 
+-Primary hypothesis (from f1_root_cause_audit): W5 under-commits — it leaves FREE combat USVs
+-idle while VISIBLE, actionable, zero-owner hostile targets exist. Root cause: the frozen default
+-StrategicIntent (LLM off) reserves 20% of free USVs (reserve_ratio=0.20) and commits only a subset.
++Root cause (lock_acquisition_c2, 0 new episodes): per-assignment lock rate is 71.6%, but the no-lock
++failures are dominated by LA-F1 NEVER_CLOSED_TO_LOCK_RANGE (70.7%, all 6 strategies). W5's USVController
++already moves toward the target when dist >= LOCK_RANGE, so the closure failure happens for stale/lost
++targets: `if not t.is_visible(): standoff(34km)` — the USV converges to its own radar instead of
++continuing to close, and the assignment ends without ever reaching LOCK_RANGE.
+ 
+-Mechanism (ONE mechanism): BREADTH-FIRST COMMITMENT EXPANSION with DYNAMIC RESERVE RELEASE.
+-  - When under-commitment is detected (a visible actionable ship has zero owners AND a free combat
+-    USV exists), release the static reserve (reserve_usvs -> 0) so the allocator's existing
+-    "coverage floor" pass can assign the free USV to the 0-owner target.
+-  - The allocator's own PASS1 (zero-owner coverage) / PASS2 (marginal concentration) order is kept
+-    (W5 already does 0->1 before 2->3). We do NOT add a new 3rd-attacker policy.
+-  - When no under-commitment exists, the reserve semantics are preserved unchanged.
++Mechanism (ONE): before the FIRST lock of the current target, prioritise entering the lock envelope
++(close toward the tracked/predicted position) instead of holding the standoff band. After the first lock
++(POST_LOCK), the original W5/ACE standoff behaviour is fully restored.
+ 
+-Does NOT modify: TrackManager, Detection, UAV radar, CoverageMap, sensor/lock/weapon ranges, speed,
+-Black route/speed, scenario, simulator, judge, terminal condition.
+-Does NOT read hidden truth / future waypoints / strategy name / fixed counts.
+-
+-Fair-play: uses only legal observation + TrackManager belief (t.is_visible, t.is_ship, t.assigned_usvs).
++Does NOT modify: allocator/ACE reserve logic, TrackManager, detection, radar, lock range, weapon,
++Black, scenario, judge. Uses only legal observation + TrackManager belief + own USV state + legal actions.
+ """
+ import os
+ import sys
+ 
+ from agent_hybrid_v5 import (
+-    ThreatAllocator, StrategicIntent, AgentMain, _KILLED,
++    USVController, AgentMain, USV_SPEED, LOCK_RANGE, MISSION_NORMAL, bearing_to,
+ )
+ 
+-POLICY_ID = "white-combat-0002-v1"
+-PARENT = "W5"
+-MECHANISM = "ALLOCATOR_COMMITMENT_EXPANSION"
+-
+-
+-class ExpandingAllocator(ThreatAllocator):
+-    """ThreatAllocator + dynamic reserve release under under-commitment."""
+-
+-    def _under_commitment(self, tracks, usvs, usv_map, now):
+-        # free combat USV exists (usv_map owner is None, alive, has position)
+-        alive_pos = {u["name"] for u in usvs if u.get("is_alive") and u.get("position")}
+-        if not any(trg is None and name in alive_pos for name, trg in usv_map.items()):
+-            return False
+-        # visible actionable ship with zero owners
+-        for name, t in tracks.items():
+-            if name in _KILLED or not t.is_ship or not t.has_position:
++POLICY_ID = "white-combat-0003-v1"
++PARENT = "ACE"
++MECHANISM = "LOCK_FIRST_APPROACH"
++
++
++class LockFirstUSVController(USVController):
++    """USVController + LOCK-FIRST APPROACH (pre-lock closure, post-lock unchanged)."""
++
++    def __init__(self):
++        super().__init__()
++        self._locked = {}   # usv_name -> set(target names it has ever locked)
++
++    def step(self, obs, tracks, legal, alloc_result, events, intent=None, mission=MISSION_NORMAL):
++        actions = super().step(obs, tracks, legal, alloc_result, events, intent, mission)
++        # record locks observed this step
++        for u in obs.usvs:
++            if u.get("is_locking") and u.get("locking_unit"):
++                self._locked.setdefault(u["name"], set()).add(u["locking_unit"])
++        pos = {u["name"]: (u["position"][0], u["position"][1])
++               for u in obs.usvs if u.get("is_alive") and u.get("position")}
++
++        out = []
++        for a in actions:
++            nm = a[0].split()[0]
++            # only touch ordinary moves for pre-lock intercepting USVs; never override a lock action
++            if a[1] != "move" or nm not in pos:
++                out.append(a)
+                 continue
+-            if not t.is_visible(now):
++            tgt = self.targets.get(nm)
++            if not tgt or tgt not in tracks or tgt in self._locked.get(nm, set()):
++                out.append(a)          # post-lock or no target -> original behaviour
+                 continue
+-            if len(t.assigned_usvs) > 0:
++            t = tracks[tgt]
++            if not t.has_position:
++                out.append(a)
+                 continue
+-            return True
+-        return False
+-
+-    def _released(self, intent):
+-        return StrategicIntent(
+-            posture=intent.posture,
+-            focus_level=intent.focus_level,
+-            emergency_focus_level=intent.emergency_focus_level,
+-            reserve_usvs=0,                      # release static reserve
+-            reserve_ratio=intent.reserve_ratio,
+-            threat_bias=intent.threat_bias,
+-            priority_tracks=intent.priority_tracks,
+-            uav_mode=intent.uav_mode,
+-            uav_priority_tracks=intent.uav_priority_tracks,
+-            recon_aggressiveness=intent.recon_aggressiveness,
+-            engagement_aggressiveness=intent.engagement_aggressiveness,
+-            overmatch_policy=intent.overmatch_policy,
+-            recon_mode=intent.recon_mode,
+-            standoff_preference=intent.standoff_preference,
+-            uncertainty_tolerance=intent.uncertainty_tolerance,
+-            coverage_priority=intent.coverage_priority,
+-            priority_clusters=intent.priority_clusters,
+-            reason=intent.reason,
+-        )
+-
+-    def allocate_usvs(self, tracks, usvs, usv_map, now, intent=None,
+-                      return_margin=False, candidates=None):
+-        if intent is not None and self._under_commitment(tracks, usvs, usv_map, now):
+-            intent = self._released(intent)
+-        return super().allocate_usvs(tracks, usvs, usv_map, now, intent,
+-                                     return_margin, candidates)
++            tpos = t.predicted_position(obs.now)
++            if tpos is None:
++                out.append(a)
++                continue
++            # PRE-LOCK: always close toward the target (ignore standoff band)
++            crs = bearing_to(pos[nm], tpos)
++            out.append((f"{nm} 移动 target_speed={USV_SPEED:.1f} target_course={crs:.1f}", "move"))
++        return out
+ 
+ 
+-class ExpandAgentMain(AgentMain):
++class LockFirstAgentMain(AgentMain):
+     def __init__(self, use_uavs=True, max_steps=40000):
+         super().__init__(use_uavs=use_uavs, max_steps=max_steps)
++        # keep ACE's allocator
++        from agent_hybrid_allocator_expand import ExpandingAllocator
+         self.allocator = ExpandingAllocator()
++        self.usv_ctrl = LockFirstUSVController()
+ 
+ 
+ if __name__ == "__main__":
+@@ -94,4 +84,4 @@ if __name__ == "__main__":
+     for a in sys.argv[1:]:
+         if a == "--no-uav":
+             use_uavs = False
+-    ExpandAgentMain(use_uavs=use_uavs).run()
++    LockFirstAgentMain(use_uavs=use_uavs).run()

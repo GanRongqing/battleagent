@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "VersionManifest",
+  "type": "object",
+  "required": ["candidate_id", "parent_id", "sha256", "changed_files", "interface_changes",
+               "behavior_scope", "mechanism_card"],
+  "properties": {
+    "candidate_id": {"type": "string"},
+    "parent_id": {"type": "string"},
+    "sha256": {"type": "string"},
+    "parent_sha256": {"type": "string"},
+    "changed_files": {"type": "array", "items": {"type": "string"}},
+    "changed_functions": {"type": "array", "items": {"type": "string"}},
+    "interface_changes": {"type": "array", "items": {"type": "string"},
+                          "description": "ANY change to a public API / function signature. Empty if none."},
+    "behavior_scope": {"type": "string", "enum": ["shadow", "sidecar", "runtime"]},
+    "mechanism_card": {"type": "string"}
+  }
+}

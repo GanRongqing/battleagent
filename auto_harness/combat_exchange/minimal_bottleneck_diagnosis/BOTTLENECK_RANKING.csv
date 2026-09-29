@@ -1,0 +1,7 @@
+rank,bottleneck,supporting_target_count,supporting_episode_count,supporting_strategy_count,failure_share,key_evidence,counter_evidence,confidence
+1,LOCK_ACQUISITION,~110,11,6,0.44,"ACE lock/(int+lock)=16.1% (84% of engaged USVs chase, not lock); W5=11.9%; 81% of white deaths occur without own lock","kill_rate 55.8% shows locks DO happen (briefly)",MEDIUM
+2,SURVIVAL_GEOMETRY,135,11,6,NA,"ACE losses 12.3/episode ~= kills 12.6 (1:1); 100% deaths while exposed","ACE reduced losses vs W5 (15.3->12.3/ep), so survival improved",MEDIUM
+3,ALLOCATOR_COMMITMENT,260,11,6,0.24,"ACE never-assigned ~44% of non-killed still exists","ACE coverage up 43.5->75.7%, F1 dropped from 86%",LOW-MED
+4,CAPACITY,NA,NA,6,NA,"20 white vs 30 black; 1:1 exchange","no per-step simultaneous-threat vs conversion data (NOT_MEASURED)",LOW
+5,LOCAL_OVERMATCH,NA,NA,NA,NA,"historical 3+ vs 1 attacker conversion 53% vs 28% (observational)","no per-target attacker-count in ACE logs",LOW
+6,DETECTION_INITIAL,~30,11,6,0.12,"~22.6/30 black detected per episode (75%)","not a total detection failure; distinguish from sensing persistence",LOW

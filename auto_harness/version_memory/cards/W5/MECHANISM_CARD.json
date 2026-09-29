@@ -1,0 +1,19 @@
+{
+  "candidate_id": "W5",
+  "parent_id": null,
+  "status": "FROZEN_BASELINE",
+  "created_at": "2026-09-24",
+  "code": {"main_file": "agent_hybrid_v5.py", "sha256": "e823e7bed219f4693aa778a838df1400c161f8e7e44001502e5bceb0ae804252", "parent_sha256": null,
+           "changed_files": [], "changed_functions": [], "diff_path": null},
+  "failure": {"name": "baseline", "description": "frozen reference policy (variable-cardinality maritime agent)",
+              "evidence": ["all subsequent candidates are measured against W5"]},
+  "root_cause": {"name": "n/a", "description": "baseline", "confidence": "n/a"},
+  "mechanism": {"name": "baseline", "summary": "deterministic V5 harness: TrackManager + ThreatAllocator (focus_level=2, reserve_ratio=0.20) + USVController + UAVManager + ActionSafety",
+                "trigger_condition": "n/a", "behavior_change": "n/a", "scope": "runtime"},
+  "applicability": {"required_conditions": [], "known_non_applicable_conditions": []},
+  "metrics": {"mechanism_metrics": {}, "combat_metrics": {"pooled_CER": 0.373, "kills": 62, "losses": 166}},
+  "validation": {"unit_tests": "agent_hybrid_v5.py --selftest/--scaletest PASS", "dev_status": "baseline", "fresh_status": "baseline"},
+  "limitations": ["allocator under-commitment (F1-A 86%): free USVs + visible zero-owner targets left uncommitted"],
+  "lessons": ["W5 is frozen; all candidates are overlays, never edits to W5."],
+  "next_questions": ["which layer is the next bottleneck after the allocator?"]
+}

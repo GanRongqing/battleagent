@@ -1,0 +1,42 @@
+{
+  "phase": "COMBAT-1B C1 paired DEV",
+  "frozen": {
+    "W5_sha256": "e823e7bed219f4693aa778a838df1400c161f8e7e44001502e5bceb0ae804252",
+    "C1_sha256": "c2fb48f75b0b1289ca9ded7c1abae54826bb471dd1f620cc93c0b9a4ad173055"
+  },
+  "strategies": {
+    "plan_scripts": {
+      "横向编队-中央汇聚箭头突防.py": "30219539cb262a17094e214fb7d88720743aa4b1a3368b723ac5b21e8d7e3ebb",
+      "菱形编队-MUSV外侧绕行SUSV中央收缩.py": "4c63d52937d01f9bd81433e2bdc2501876f35963120200adc4acbc53bab9aa86",
+      "菱形编队-两翼包抄中央突进.py": "eaa350f726711a43dd941e3cdf0683c1c14919bd28e4dac0778742690c3e044e",
+      "菱形编队-中央汇聚箭头突防.py": "c5a335f6d62531dd3181e222593e1b6df12dfd30893821b43e3054597b1ffa92",
+      "菱形编队-南北两翼镜像夹击.py": "8dc3a9afbac0f69a81c3e037f39fe305760268603f6f167279447b73e63a4a96",
+      "菱形编队-右下佯攻右上突袭.py": "b05f0d946c3cf3ec8c523ba30fbca1128bb62644504dd5d490f4d69bb1790ac3",
+      "菱形编队-接近后扇形展开突防.py": "211aa28855cd7d475b2aebf8ba20e7a626440e010358d35fda25186bc536b052"
+    },
+    "routes": {
+      "路线1-中央汇聚箭头突防.json": "9769e6fb4b52b71ba02d20a13a41b1bd48c12ed2755c63cf9f641001769efa4d",
+      "路线2-南北两翼镜像夹击.json": "477d97b726c0f56630b15cfa6d8ee9d688158d698e568ef8eb2f5e9e10919b4b",
+      "路线3-两翼包抄中央突进.json": "25045b0877a093d920ade4564a21ec0cc351cfca32869c1f47b2bc889351fa35",
+      "路线4-接近后扇形展开突防.json": "c767d958b740e9caa29cf833ade90603c6653ca9cd4e9ca453df83ed6742bb03",
+      "路线5-MUSV外侧绕行SUSV中央收缩.json": "fbc3423036f91f518b89510c1cc96b947bdccb56ca55b828691befaf312f57cf",
+      "路线6-右下佯攻右上突袭.json": "7310d1ba491d343b74d09648d69f9c5221e5d7c22d181593ca161eb645749a06"
+    },
+    "adaptation_sha256": "4dc6efa097252f17d0ae344659367a4420d2f1c00364a6026e7d4a83fdef2c7b"
+  },
+  "seeds": [
+    12101,
+    12102
+  ],
+  "agents": [
+    "W5",
+    "C1"
+  ],
+  "episodes": 24,
+  "primary_kpi": [
+    "black_kills",
+    "white_usv_losses",
+    "pooled_CER",
+    "exchange_win_rate"
+  ]
+}
