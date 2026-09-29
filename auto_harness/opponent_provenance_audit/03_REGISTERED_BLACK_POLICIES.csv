@@ -1,0 +1,10 @@
+policy_id,registered_name,source,entrypoint,scenario_id,route_id,status,possible_wave
+black-b0-v1,B0_RANDOM,strategy_library/seed_policies.py; policy_system/cards/black-b0-v1.json,scenario_builder random_waypoint,n/a,n/a,sealed,OLD
+black-b1-v1,B1_MULTI_AXIS,opponent_profiles.py; cards/black-b1-v1.json,opponent_profiles.spatial_groups,n/a,n/a,active,OLD
+black-b2-v1,B2_COORDINATED_PRESSURE,opponent_profiles.py; cards/black-b2-v1.json,_coordinated_pressure_paths,n/a,n/a,active,OLD
+black-b3-v1,B3_ADAPTIVE,opponent_profiles.py; cards/black-b3-v1.json,runtime legal replan,n/a,n/a,active,OLD
+black-b0-v2,B0_RANDOM v2,opponent_b0_v2.py,opponent_b0_v2,n/a,n/a,candidate,UNKNOWN
+black-auto-0001-v1,AUTO1,opponent_auto_profiles.py,auto profile,n/a,n/a,auto,UNKNOWN
+black-external-dispersed-v1,dispersed,external_opponents/xiaowang_source/分散式.py,hsystem/sim_script/20250819TZB/external_dispersed.py,测试1-黑方艇分散式前进.json,n/a,stress_test,UNKNOWN
+black-external-twowave-v1,two-wave,external_opponents/xiaowang_source/两波次.py,hsystem/sim_script/20250819TZB/external_twowave.py,测试2-黑方艇两波次前进.json,n/a,stress_test,UNKNOWN
+B4_DOCTRINE_MIX,B4_DOCTRINE_MIX,opponent_profiles.py,seed-driven mix of B1/B2/B3,n/a,n/a,mix,NO
