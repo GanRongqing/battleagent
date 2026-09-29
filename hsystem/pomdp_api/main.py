@@ -78,6 +78,14 @@ AVAILABLE_SCRIPTS: List[str] = [
     "scenario_30v30",
     "scenario_10v10_rw",
     "scenario_composition",
+    "external_dispersed",
+    "external_twowave",
+    "横向编队-中央汇聚箭头突防",
+    "菱形编队-接近后扇形展开突防",
+    "菱形编队-两翼包抄中央突进",
+    "菱形编队-南北两翼镜像夹击",
+    "菱形编队-中央汇聚箭头突防",
+    "菱形编队-MUSV外侧绕行SUSV中央收缩",
 ]
 # 默认脚本
 DEFAULT_SCRIPT = "测试用例1"
@@ -85,6 +93,9 @@ DEFAULT_SCRIPT = "测试用例1"
 # 宏观步步长（仿真秒数），即两次 Agent 决策之间推进的仿真时间
 # 仿真速率约 100x，30 仿真秒 ≈ 0.3 真实秒，对 Agent 决策无感知延迟
 MACRO_STEP_DURATION = float(os.getenv("MACRO_STEP", "30"))
+# DETERMINISTIC_STEP_MODE: when true, /apply blocks until the engine reaches the logical release
+# target before returning, so the next /status samples the exact boundary. Opt-in; default OFF.
+DETERMINISTIC_STEP_MODE = os.getenv("DETERMINISTIC_STEP_MODE", "false").strip().lower() == "true"
 
 # 无人机降落半径（米），UAV 与 USV 水平距离小于此值时允许直接降落
 # 超过此距离时自动进入制导飞行，由系统计算航向引导 UAV 靠近 USV
@@ -220,6 +231,8 @@ class EpisodeState:
     result: Optional[str] = None
     waiting_for_command: bool = False
     release_until_time: Optional[float] = None  # 当前宏步目标推进到的引擎时间
+    actual_obs_tick: Optional[float] = None  # DETERMINISTIC_STEP_MODE: actual engine tick at the boundary
+    logical_release_until: Optional[float] = None  # 逻辑步进目标（由 step index 决定，不随 wall-clock 漂移）
     start_real_time: Optional[datetime] = None  # 对局开始的真实世界时间
     start_sim_time: float = 0.0                 # 对局开始时的引擎时间（用于计算局内时间）
     action_history: List[str] = field(default_factory=list)
@@ -480,6 +493,7 @@ def _reset_episode_state(engine_name: str = ""):
     _state.result = None
     _state.waiting_for_command = True
     _state.release_until_time = None
+    _state.logical_release_until = None
     _state.start_real_time = datetime.now()
     _state.start_sim_time = 0.0
     _state.action_history.clear()
@@ -1292,7 +1306,7 @@ def _do_init(script_name: str) -> str:
 
     try:
         resp = _grpc_call("init",
-                          kwargs={"fname": script_name, "update": True},
+                          kwargs={"fname": script_name, "update": not DETERMINISTIC_STEP_MODE},
                           engine_name="")
     except Exception as e:
         _log.error("init gRPC 异常: %s", e)
@@ -1307,7 +1321,7 @@ def _do_init(script_name: str) -> str:
             pass
         try:
             resp = _grpc_call("init",
-                              kwargs={"fname": script_name, "update": True},
+                              kwargs={"fname": script_name, "update": not DETERMINISTIC_STEP_MODE},
                               engine_name="")
         except Exception as e:
             raise HTTPException(status_code=500, detail=f"连接后端失败: {e}")
@@ -1316,6 +1330,13 @@ def _do_init(script_name: str) -> str:
         raise HTTPException(status_code=500, detail=f"仿真启动失败: {resp.msg}")
 
     init_data = json.loads(resp.data) if resp.data else {}
+    if DETERMINISTIC_STEP_MODE:
+        # Remove the wall-clock cap so update(delta) processes every scheduled message with
+        # tick <= step_end_tick (otherwise message consumption depends on real time -> non-deterministic).
+        try:
+            _grpc_call("set_ratio_inf", kwargs={})
+        except Exception as _e:
+            _log.warning("deterministic set_ratio_inf 失败: %s", _e)
     return init_data.get("engine_name", "")
 
 
@@ -1460,6 +1481,7 @@ async def start(script_name: str = DEFAULT_SCRIPT):
     _state.result = None
     _state.waiting_for_command = True
     _state.release_until_time = None
+    _state.logical_release_until = None
     _state.start_real_time = datetime.now()
     _state.action_history.clear()
     _init_game_log(script_name)
@@ -1507,6 +1529,14 @@ async def stop():
 
     if resp.msg not in ("FUNC_SUCCESS", "ENGINE_IS_NONE"):
         raise HTTPException(status_code=500, detail=f"停止失败: {resp.msg}")
+
+    if DETERMINISTIC_STEP_MODE:
+        # The paused engine only processes termination inside update() (SimStop -> kill() ->
+        # isactive=False). Run one tick so the heartbeat reports STOP and the next /start can init.
+        try:
+            _grpc_call("update", kwargs={"delta": 1})
+        except Exception as _e:
+            _log.warning("deterministic terminate tick 失败: %s", _e)
 
     _stop_episode_state()
     _state.engine_name = ""
@@ -1791,9 +1821,31 @@ async def apply_actions(req: ApplyRequest):
 
     # 推进宏观步
     try:
+        if DETERMINISTIC_STEP_MODE:
+            # Deterministic: engine was initialised paused (update=False); advance exactly one
+            # macro-step, then sample. The engine stops at the boundary -> exact, repeatable state.
+            try:
+                _grpc_call("update", kwargs={"delta": int(round(MACRO_STEP_DURATION))})
+            except Exception as _e:
+                _log.warning("deterministic update 失败: %s", _e)
         raw = _fetch_raw_state()
         current_time = _r2(raw.get("time", 0))
-        _state.release_until_time = current_time + MACRO_STEP_DURATION
+        if DETERMINISTIC_STEP_MODE:
+            # Already at the boundary; current tick is the release point.
+            _state.logical_release_until = current_time
+            _state.release_until_time = current_time
+            _state.actual_obs_tick = current_time
+        else:
+            # 逻辑步进目标：由 step index 决定（initial + n*MACRO_STEP），不随 wall-clock 漂移累积。
+            if _state.logical_release_until is None:
+                _state.logical_release_until = current_time + MACRO_STEP_DURATION
+            else:
+                _state.logical_release_until += MACRO_STEP_DURATION
+            _state.release_until_time = _state.logical_release_until
+            drift = current_time - (_state.logical_release_until - MACRO_STEP_DURATION)
+            if abs(drift) > 0.01:
+                _log.info("macro-step drift | expected=%.3f actual=%.3f drift=%.3f",
+                          _state.logical_release_until - MACRO_STEP_DURATION, current_time, drift)
         # 记录对局日志（动作执行后的状态快照）
         _record_step(raw, results)
 
@@ -1805,7 +1857,11 @@ async def apply_actions(req: ApplyRequest):
             _state.result = result_info["对局结果"]
             _finalize_game_log(raw)
     except StateFetchError:
-        _state.release_until_time = (_state.release_until_time or 0) + MACRO_STEP_DURATION
+        if _state.logical_release_until is None:
+            _state.logical_release_until = (_state.release_until_time or 0) + MACRO_STEP_DURATION
+        else:
+            _state.logical_release_until += MACRO_STEP_DURATION
+        _state.release_until_time = _state.logical_release_until
 
     _state.waiting_for_command = False
 
