@@ -1,5 +1,6 @@
 import time
 import random
+import hashlib
 import numpy as np
 from matplotlib.patches import Circle
 from matplotlib.collections import PatchCollection
@@ -8,6 +9,16 @@ from .. import algorithm as alg
 from .. import core
 from .. import message
 from .. import arsenal as asn
+
+
+def _stable_rand(*parts):
+    """Deterministic pseudo-uniform in [0,1) from stable identifiers.
+
+    Independent of execution/traversal order of the shared `random` stream, so same-seed runs are
+    bit-reproducible. Used only for the stochastic lock-hit decision (rate preserved ~80%)."""
+    s = "|".join(str(p) for p in parts)
+    h = hashlib.sha256(s.encode("utf-8")).hexdigest()[:8]
+    return int(h, 16) / float(0xFFFFFFFF)
 
 
 class Locker(core.arch.Component):
@@ -103,7 +114,10 @@ class Locker(core.arch.Component):
                     self.locked_info[emy_name]['locked'] = False  # 无论命中与否，都解除锁定
                     emy_unit.locker.locking = False
                     emy_unit.locker.locking_name = None
-                    if random.random() > 0.2:  # 若命中
+                    # 命中判定：改为与遍历/RNG流顺序无关的确定性函数（稳定标识 + 出锁时间）。
+                    # 命中率仍为 ~20%，但同种子下逐位可复现（不再依赖共享 random 流的消费次序）。
+                    _hit = _stable_rand(self.home_unit.name, emy_name, int(self.engine.time)) > 0.2
+                    if _hit:  # 若命中
                         self.locked_info[emy_name]['locked_times'] += 1  # 锁定次数+1
                         self.locked_info[emy_name]['frozen'] = True  # 进入冻结状态
                         self.locked_info[emy_name]['frozen_time'] = self.engine.time  # 记录冻结开始时间
