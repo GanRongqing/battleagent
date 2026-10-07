@@ -1,0 +1,9 @@
+Feature,Source(legal?),WIN_control_read,LOSS_read,Actionable,gap
+local_friendly_support_count,obs.usvs positions (legal),present,present,YES,candidate
+nearest_support_distance,obs.usvs (legal),present,present,YES,candidate
+forward_overextension_vs_local_centroid,obs.usvs (legal),present,present,YES,candidate
+own_active_lock,obs.usvs.is_locking (legal),present,present,YES,yes
+being_locked,obs.usvs.is_locked/locked_attacker (legal),present,present,YES,yes
+assigned_target_known,usv_ctrl.targets + tracker (legal),present,present,YES,yes
+time_closing_without_own_lock,derived from own motion + assignment (legal),present,present,YES,candidate
+enemy_truth_position,FALSE (truth),n/a,n/a,NO forbidden
