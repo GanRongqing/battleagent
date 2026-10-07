@@ -28,8 +28,17 @@ elif agent == "lock":
 elif agent == "expand":
     from agent_hybrid_allocator_expand import ExpandAgentMain
     ExpandAgentMain(use_uavs=True).run()
+elif agent == "admit":
+    from agent_hybrid_prelock_admission import PrelockAdmissionAgentMain
+    PrelockAdmissionAgentMain(use_uavs=True).run()
+elif agent == "track":
+    from agent_hybrid_track_reacquire import TrackReacquireAgentMain
+    TrackReacquireAgentMain(use_uavs=True).run()
 elif agent == "reach":
     from agent_hybrid_reach_commit import ReachCommitAgentMain
     ReachCommitAgentMain(use_uavs=True).run()
+elif agent == "sync":
+    from agent_hybrid_sync_lock import SyncLockAgentMain
+    SyncLockAgentMain(use_uavs=True).run()
 else:
     w5.AgentMain(use_uavs=True).run()
