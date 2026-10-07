@@ -72,9 +72,12 @@ class JudgeSystem(core.entity.FSM):
 
 
     def _judge(self):
+        # 确定性遍历：Python set 的迭代顺序取决于对象内存地址，跨进程不一致，
+        # 会经 kill()/计数/后续消费者放大为同种子下的状态发散。统一按 name 排序遍历。
+        _n = lambda u: getattr(u, "name", "")
         # 判断死亡
         dead_units = []
-        for unit in self.units:
+        for unit in sorted(self.units, key=_n):
             if not unit.isactive:
                 dead_units.append(unit)
         for unit in dead_units:
@@ -96,7 +99,7 @@ class JudgeSystem(core.entity.FSM):
 
         # 判断突防成功数量
         if self.destination is not None:
-            for unit in self.black_ships:
+            for unit in sorted(self.black_ships, key=_n):
                 if unit.coords[0] <= self.destination:
                     print(f"{unit}突防成功！")
                     self.black_success.append(unit.name)
@@ -104,8 +107,8 @@ class JudgeSystem(core.entity.FSM):
                     unit.kill()
 
         # 判断碰撞
-        for white_ship in self.white_ships:
-            for unit in self.units:
+        for white_ship in sorted(self.white_ships, key=_n):
+            for unit in sorted(self.units, key=_n):
                 if (isinstance(unit, Ship) and (white_ship != unit)
                         and alg.geo.distance(white_ship.coords, unit.coords) <= self.attr.ship_collide_distance):
                     print(f"{white_ship}和{unit}发生碰撞！")
@@ -114,7 +117,7 @@ class JudgeSystem(core.entity.FSM):
 
         # 判断是否在区域中
         if self.area is not None:
-            for unit in self.units:
+            for unit in sorted(self.units, key=_n):
                 area = self.enemy_area if (unit.group == "BLUE" and self.enemy_area is not None) \
                     else self.area
                 point = geometry.Point(unit.coords[0:2])
