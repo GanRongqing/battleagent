@@ -76,7 +76,7 @@ def test_2_single_owner_no_lock_forms_2unit_package():
     c.step(obs, tr, Legal(), {}, [], None, "NORMAL")
     assert c.targets["u2"] == "t1", c.targets
     assert any(e[0] == "FORM" for e in c.package_events), c.package_events
-    assert c.package_events[0][1:] == ("t1", "u1", "u2"), c.package_events
+    assert c.package_events[0][1:4] == ("t1", "u1", "u2"), c.package_events
 
 
 def test_3_support_unavailable_no_package():

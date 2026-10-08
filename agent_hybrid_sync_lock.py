@@ -14,7 +14,10 @@ legality, ActionSafety, Black, simulator. NO truth, NO route/strategy-ID, NO LLM
 Bounded: package size 2 (max 3); coverage floor preserved (never divert the last free USV covering an
 actionable target); MAX_FORM_TIME / MAX_SYNC_TIME -> DISSOLVE; LEAD shaped (slowed) if ahead.
 """
+import atexit
+import json
 import math
+import os
 import sys
 
 from agent_hybrid_allocator_expand import ExpandAgentMain
@@ -35,6 +38,16 @@ class SyncLockController(USVController):
         super().__init__()
         self._pkg = {}          # target_name -> {"lead":u, "support":u, "t0":t, "state":s}
         self.package_events = []  # diagnostics
+        _log = os.environ.get("C7_PKG_LOG")
+        if _log:
+            atexit.register(self._dump_packages, _log)
+
+    def _dump_packages(self, path):
+        try:
+            with open(path, "w", encoding="utf-8") as f:
+                json.dump(self.package_events, f, ensure_ascii=False)
+        except Exception:
+            pass
 
     # ---- helpers (legal-only) ----
     def _owners(self):
@@ -73,7 +86,9 @@ class SyncLockController(USVController):
             if (t is None or tname in _KILLED or not members_alive
                     or now - pk["t0"] > MAX_SYNC_TIME
                     or any(self.state.get(m) == self.LOCKING for m in members_alive)):
-                self.package_events.append(("DISSOLVE", tname, round(now - pk["t0"], 1)))
+                _reason = ("member_locked" if any(self.state.get(m) == self.LOCKING for m in members_alive)
+                           else "expired" if now - pk["t0"] > MAX_SYNC_TIME else "gone")
+                self.package_events.append(("DISSOLVE", tname, round(now - pk["t0"], 1), _reason))
                 del self._pkg[tname]
 
         # form packages for single-owner unlocked actionable targets
@@ -100,7 +115,8 @@ class SyncLockController(USVController):
             cands.sort(key=lambda n: (math.hypot(pos[n][0] - tpos[0], pos[n][1] - tpos[1]), n))
             support = cands[0]
             self._pkg[tname] = {"lead": lead, "support": support, "t0": now, "state": "SYNC_APPROACH"}
-            self.package_events.append(("FORM", tname, lead, support))
+            _sp = abs((self._ttfl(pos[lead], tpos) or 0.0) - (self._ttfl(pos[support], tpos) or 0.0))
+            self.package_events.append(("FORM", tname, lead, support, round(_sp, 1), round(now, 1)))
             # redirect the support to this target + approach
             self.targets[support] = tname
             actions = _drop(support)
