@@ -1,0 +1,40 @@
+#!/bin/bash
+# /tmp/opencode/svc.sh — robust service control (avoids pkill self-match)
+PY=/root/miniconda3/envs/hsystem_env/bin/python
+HW=/root/autodl-tmp/hsystem/hsystem
+LOG=/tmp/opencode/simlogs
+mkdir -p "$LOG"
+
+kill_all() {
+  for p in $(pgrep -f "main[.]py"); do kill -9 "$p" 2>/dev/null; done
+  for p in $(pgrep -f "base[_]server"); do kill -9 "$p" 2>/dev/null; done
+  for p in $(pgrep -f "sim[_]server"); do kill -9 "$p" 2>/dev/null; done
+  sleep 3
+}
+
+start_bs() {
+  cd "$HW/simserver"
+  PYTHONPATH=".:$HW" HSYSTEM_ROOT="$HW" RW_SEED_FILE="/tmp/opencode/seed_w0.txt" PYTHONHASHSEED=0 \
+    setsid "$PY" -u base_server.py --port 6000 --min_simserver_port 6001 --simserver_num 1 \
+    </dev/null >"$LOG/bs.log" 2>&1 &
+  sleep 9
+}
+
+restart_api() {
+  for p in $(pgrep -f "main[.]py"); do kill -9 "$p" 2>/dev/null; done
+  sleep 2
+  cd "$HW/pomdp_api"
+  env SIM_HOST=127.0.0.1 SIM_PORT=6000 APP_PORT=8000 DETERMINISTIC_STEP_MODE="${1:-true}" PYTHONHASHSEED=0 \
+    setsid "$PY" -u main.py </dev/null >"$LOG/api_det.log" 2>&1 &
+  sleep 10
+}
+
+health() { curl -s -o /dev/null -w '%{http_code}' -m 8 http://127.0.0.1:8000/health; }
+
+case "$1" in
+  killall) kill_all ;;
+  bs) start_bs ;;
+  api) restart_api "${2:-true}" ;;
+  fresh) kill_all; start_bs; restart_api "${2:-true}"; echo "health=$(health)" ;;
+  *) echo "usage: svc.sh fresh|killall|bs|api [true|false]" ;;
+esac
