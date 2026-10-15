@@ -1,0 +1,93 @@
+[plan] effective_cpu=9 max_safe=9 selected=6 jobs=30 todo=30
+[done] W2-6 C9 43001 valid=True kills=10 loss=18
+[done] W2-6 ACE 43001 valid=True kills=10 loss=18
+[done] W2-6 ACE 43002 valid=True kills=10 loss=18
+[done] W2-6 C9 43003 valid=True kills=10 loss=18
+[done] W2-6 C9 43002 valid=True kills=10 loss=18
+[done] W2-6 ACE 43003 valid=True kills=10 loss=18
+[done] W2-6 C9 43004 valid=True kills=10 loss=18
+[done] W2-6 ACE 43005 valid=True kills=10 loss=18
+[done] W2-6 ACE 43004 valid=True kills=10 loss=18
+[done] W2-6 C9 43005 valid=True kills=10 loss=18
+[done] W2-4 C9 43003 valid=False kills=0 loss=0
+[done] W2-4 ACE 43004 valid=False kills=0 loss=0
+[done] W2-4 C9 43004 valid=False kills=0 loss=0
+[done] W2-4 ACE 43005 valid=False kills=0 loss=0
+[done] W2-4 C9 43005 valid=False kills=0 loss=0
+[done] W2-4 ACE 43001 valid=True kills=12 loss=6
+[done] W2-2 ACE 43001 valid=False kills=0 loss=0
+[done] W2-4 C9 43001 valid=True kills=12 loss=6
+[done] W2-2 ACE 43002 valid=False kills=0 loss=0
+[done] W2-2 ACE 43003 valid=False kills=0 loss=0
+[done] W2-2 C9 43003 valid=False kills=0 loss=0
+[done] W2-2 ACE 43004 valid=False kills=0 loss=0
+[done] W2-2 C9 43004 valid=False kills=0 loss=0
+[done] W2-2 ACE 43005 valid=False kills=0 loss=0
+[done] W2-2 C9 43005 valid=False kills=0 loss=0
+[done] W2-4 ACE 43002 valid=True kills=12 loss=6
+[done] W2-4 C9 43002 valid=True kills=12 loss=6
+[done] W2-4 ACE 43003 valid=True kills=12 loss=6
+Process ForkPoolWorker-4:
+Traceback (most recent call last):
+  File "/root/miniconda3/envs/hsystem_env/lib/python3.8/multiprocessing/pool.py", line 131, in worker
+    put((job, i, result))
+  File "/root/miniconda3/envs/hsystem_env/lib/python3.8/multiprocessing/queues.py", line 368, in put
+    self._writer.send_bytes(obj)
+  File "/root/miniconda3/envs/hsystem_env/lib/python3.8/multiprocessing/connection.py", line 200, in send_bytes
+    self._send_bytes(m[offset:offset + size])
+  File "/root/miniconda3/envs/hsystem_env/lib/python3.8/multiprocessing/connection.py", line 411, in _send_bytes
+    self._send(header + buf)
+  File "/root/miniconda3/envs/hsystem_env/lib/python3.8/multiprocessing/connection.py", line 368, in _send
+    n = write(self._handle, buf)
+BrokenPipeError: [Errno 32] Broken pipe
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/miniconda3/envs/hsystem_env/lib/python3.8/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/root/miniconda3/envs/hsystem_env/lib/python3.8/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/root/miniconda3/envs/hsystem_env/lib/python3.8/multiprocessing/pool.py", line 136, in worker
+    put((job, i, (False, wrapped)))
+  File "/root/miniconda3/envs/hsystem_env/lib/python3.8/multiprocessing/queues.py", line 368, in put
+    self._writer.send_bytes(obj)
+  File "/root/miniconda3/envs/hsystem_env/lib/python3.8/multiprocessing/connection.py", line 200, in send_bytes
+    self._send_bytes(m[offset:offset + size])
+  File "/root/miniconda3/envs/hsystem_env/lib/python3.8/multiprocessing/connection.py", line 411, in _send_bytes
+    self._send(header + buf)
+  File "/root/miniconda3/envs/hsystem_env/lib/python3.8/multiprocessing/connection.py", line 368, in _send
+    n = write(self._handle, buf)
+BrokenPipeError: [Errno 32] Broken pipe
+Process ForkPoolWorker-3:
+Traceback (most recent call last):
+  File "/root/miniconda3/envs/hsystem_env/lib/python3.8/multiprocessing/pool.py", line 131, in worker
+    put((job, i, result))
+  File "/root/miniconda3/envs/hsystem_env/lib/python3.8/multiprocessing/queues.py", line 368, in put
+    self._writer.send_bytes(obj)
+  File "/root/miniconda3/envs/hsystem_env/lib/python3.8/multiprocessing/connection.py", line 200, in send_bytes
+    self._send_bytes(m[offset:offset + size])
+  File "/root/miniconda3/envs/hsystem_env/lib/python3.8/multiprocessing/connection.py", line 411, in _send_bytes
+    self._send(header + buf)
+  File "/root/miniconda3/envs/hsystem_env/lib/python3.8/multiprocessing/connection.py", line 368, in _send
+    n = write(self._handle, buf)
+BrokenPipeError: [Errno 32] Broken pipe
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/root/miniconda3/envs/hsystem_env/lib/python3.8/multiprocessing/process.py", line 315, in _bootstrap
+    self.run()
+  File "/root/miniconda3/envs/hsystem_env/lib/python3.8/multiprocessing/process.py", line 108, in run
+    self._target(*self._args, **self._kwargs)
+  File "/root/miniconda3/envs/hsystem_env/lib/python3.8/multiprocessing/pool.py", line 136, in worker
+    put((job, i, (False, wrapped)))
+  File "/root/miniconda3/envs/hsystem_env/lib/python3.8/multiprocessing/queues.py", line 368, in put
+    self._writer.send_bytes(obj)
+  File "/root/miniconda3/envs/hsystem_env/lib/python3.8/multiprocessing/connection.py", line 200, in send_bytes
+    self._send_bytes(m[offset:offset + size])
+  File "/root/miniconda3/envs/hsystem_env/lib/python3.8/multiprocessing/connection.py", line 411, in _send_bytes
+    self._send(header + buf)
+  File "/root/miniconda3/envs/hsystem_env/lib/python3.8/multiprocessing/connection.py", line 368, in _send
+    n = write(self._handle, buf)
+BrokenPipeError: [Errno 32] Broken pipe

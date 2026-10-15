@@ -40,5 +40,11 @@ elif agent == "reach":
 elif agent == "sync":
     from agent_hybrid_sync_lock import SyncLockAgentMain
     SyncLockAgentMain(use_uavs=True).run()
+elif agent == "demand":
+    from agent_hybrid_demand_gate import DemandGateAgentMain
+    DemandGateAgentMain(use_uavs=True).run()
+elif agent == "budget":
+    from agent_hybrid_budget_gate import BudgetGateAgentMain
+    BudgetGateAgentMain(use_uavs=True).run()
 else:
     w5.AgentMain(use_uavs=True).run()
