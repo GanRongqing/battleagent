@@ -70,6 +70,19 @@ def test_no_truth_leakage_fields():
     # the new branch only uses e.get('position') from obs.active
 
 
+def test_truly_dead_not_revived():
+    os.environ["OBS_TI_REVIVE"] = "1"
+    try:
+        tm = v5.TrackManager()
+        tm.killed_names.add("usv9")
+        # usv9 absent from obs.active (genuinely dead / not observed) -> must stay suppressed
+        tm.update(Obs(0.0, active=[("usv8", (100.0, 0.0), (-1.0, 0.0))]))
+        assert "usv9" not in tm.tracks
+        assert "usv9" in tm.killed_names
+    finally:
+        os.environ.pop("OBS_TI_REVIVE", None)
+
+
 def _all():
     fns = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]
     p = 0

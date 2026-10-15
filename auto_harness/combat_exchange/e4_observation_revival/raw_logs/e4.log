@@ -1,0 +1,30 @@
+=== W2-6 OFF ===
+[plan] effective_cpu=9 max_safe=9 selected=3 jobs=3 todo=3
+[done] W2-6 ACE 43001 valid=True kills=10 loss=18
+[done] W2-6 C11 43001 valid=True kills=11 loss=16
+[done] W2-6 C10 43001 valid=True kills=11 loss=16
+[run] wall=1285.6s stats={'SUCCEEDED': 3}
+[aggregate] valid= 3 total= 3
+=== W2-6 ON ===
+[plan] effective_cpu=9 max_safe=9 selected=3 jobs=3 todo=3
+[done] W2-6 C10 43001 valid=True kills=14 loss=20
+[done] W2-6 C11 43001 valid=True kills=14 loss=20
+[done] W2-6 ACE 43001 valid=True kills=14 loss=20
+[run] wall=954.1s stats={'SUCCEEDED': 3}
+[aggregate] valid= 3 total= 3
+=== CTRL ON (W2-4,W2-2) ===
+[plan] effective_cpu=9 max_safe=9 selected=6 jobs=6 todo=6
+[done] W2-4 ACE 43001 valid=True kills=9 loss=20
+[done] W2-4 C10 43001 valid=True kills=8 loss=20
+[done] W2-4 C11 43001 valid=True kills=8 loss=20
+[done] W2-2 C10 43001 valid=True kills=4 loss=18
+[done] W2-2 ACE 43001 valid=True kills=4 loss=18
+[done] W2-2 C11 43001 valid=True kills=4 loss=18
+[run] wall=1940.1s stats={'SUCCEEDED': 6}
+[aggregate] valid= 6 total= 6
+=== W2-1 ON ===
+[plan] effective_cpu=9 max_safe=9 selected=1 jobs=1 todo=1
+[done] W2-1 ACE 43001 valid=True kills=0 loss=20
+[run] wall=1052.7s stats={'SUCCEEDED': 1}
+[aggregate] valid= 1 total= 1
+E4 DONE
