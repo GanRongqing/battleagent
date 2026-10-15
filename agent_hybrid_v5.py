@@ -472,7 +472,15 @@ class TrackManager:
             if not name:
                 continue
             if name in self.killed_names:
-                continue
+                # OBS-TRACK INTEGRITY FIX (env-gated, default OFF -> frozen behaviour unchanged):
+                # killed_names exists to avoid re-engaging genuinely sunk targets, but the online
+                # kill_detect heuristic can misfire and permanently suppress a still-ALIVE enemy that
+                # the legal radar observation keeps reporting with a position. A live radar contact
+                # with a position must not be discarded.
+                if os.getenv("OBS_TI_REVIVE", "0") == "1" and e.get("position"):
+                    self.killed_names.discard(name)
+                else:
+                    continue
             pos = e.get("position")
             vel = e.get("velocity")
             seen.add(name)

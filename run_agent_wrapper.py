@@ -49,5 +49,8 @@ elif agent == "budget":
 elif agent == "spare":
     from agent_hybrid_spare_support import SpareSupportAgentMain
     SpareSupportAgentMain(use_uavs=True).run()
+elif agent == "dbg":
+    from agent_hybrid_obs_dbg import ObsDbgAgentMain
+    ObsDbgAgentMain(use_uavs=True).run()
 else:
     w5.AgentMain(use_uavs=True).run()
