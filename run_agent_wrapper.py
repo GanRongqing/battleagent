@@ -46,5 +46,8 @@ elif agent == "demand":
 elif agent == "budget":
     from agent_hybrid_budget_gate import BudgetGateAgentMain
     BudgetGateAgentMain(use_uavs=True).run()
+elif agent == "spare":
+    from agent_hybrid_spare_support import SpareSupportAgentMain
+    SpareSupportAgentMain(use_uavs=True).run()
 else:
     w5.AgentMain(use_uavs=True).run()
