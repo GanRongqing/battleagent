@@ -52,5 +52,8 @@ elif agent == "spare":
 elif agent == "dbg":
     from agent_hybrid_obs_dbg import ObsDbgAgentMain
     ObsDbgAgentMain(use_uavs=True).run()
+elif agent == "lifedbg":
+    from agent_hybrid_lifecycle_dbg import LifeDbgAgentMain
+    LifeDbgAgentMain(use_uavs=True).run()
 else:
     w5.AgentMain(use_uavs=True).run()

@@ -1,0 +1,9 @@
+link,evidence_type,step,sim_time,from,to,confidence
+kill_detect_false_death,DIRECT_DATA_DEPENDENCY,260,7800,legal_obs(active),killed_names/usv13,high
+suppress_track_OFF,DIRECT_DATA_DEPENDENCY,261,7830,killed_names,track suppression,high
+revive_track_ON,DIRECT_DATA_DEPENDENCY,261,7830,killed_names,fresh positioned obs -> track restore,high
+track_to_assignment,DIRECT_DATA_DEPENDENCY,272,8160,tracks,allocator assignment,high
+assignment_to_action,DIRECT_DATA_DEPENDENCY,272,8160,assignment,action_hash,high
+kill_to_outcome,TEMPORAL_ASSOCIATION,272,8160,revive/cascade,12/6 vs 9/20,medium
+off_on_counterfactual,COUNTERFACTUAL_CONFIRMED,,,OFF path vs ON path,outcome sign flips,high
+combat_sign_of_revive,INTERFACE_SEMANTICS,,,live target restored,downstream over-engagement,medium

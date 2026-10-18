@@ -461,6 +461,24 @@ class TrackManager:
     def __init__(self):
         self.tracks = {}          # name -> EnemyTrack
         self.killed_names = set() # 已判定击沉的敌名(防止死灰复燃)
+        # ---- E6 TARGET_LIFECYCLE_V2 (bookkeeping only; behaviour-neutral) ----
+        # Records honest lifecycle states + evidence provenance so the Agent can distinguish an
+        # INFERRED death (SUSPECTED_DEAD) from an observation-confirmed state, and surfaces the
+        # conflict when a supposedly-dead target keeps appearing in legal radar observation.
+        # Flag OFF -> no state is recorded and behaviour is byte-identical to the frozen baseline.
+        self._lc_enabled = os.getenv("TARGET_LIFECYCLE_V2", "0") == "1"
+        self.lifecycle = {}          # name -> {"state","event","source"}
+        self.lifecycle_log = []      # transition/evidence audit trail
+
+    def _lc_set(self, name, state, event, source):
+        if not self._lc_enabled:
+            return
+        prev = self.lifecycle.get(name, {}).get("state", "UNKNOWN")
+        if prev == state:
+            return
+        self.lifecycle[name] = {"state": state, "event": event, "source": source}
+        self.lifecycle_log.append({"name": name, "prev": prev, "next": state,
+                                   "event": event, "source": source})
 
     def update(self, obs):
         now = obs.now
@@ -488,6 +506,12 @@ class TrackManager:
                 self.tracks[name] = EnemyTrack(name, now)
                 events.append(("DETECT", name))
             self.tracks[name].update_obs(pos, vel, now)
+            if self._lc_enabled:
+                if name in self.killed_names:
+                    self._lc_set(name, "DEATH_EVIDENCE_CONFLICT",
+                                 "positioned_obs_vs_inferred_dead", "obs.active")
+                else:
+                    self._lc_set(name, "OBSERVED_ACTIVE", "positioned_obs", "obs.active")
 
         for p in obs.passive:
             name = p.get("name", "")
@@ -499,6 +523,8 @@ class TrackManager:
                 t.bearing = p.get("bearing")
                 self.tracks[name] = t
                 events.append(("DETECT", name))
+            if self._lc_enabled:
+                self._lc_set(name, "OBSERVED_BEARING", "bearing_obs", "obs.passive")
 
         to_drop = []
         for name, t in self.tracks.items():
@@ -564,6 +590,7 @@ class TrackManager:
                 killed.append(name)
         for name in dict.fromkeys(killed):
             self.killed_names.add(name)
+            self._lc_set(name, "SUSPECTED_DEAD", "kill_inference", "kill_detect")
             del self.tracks[name]
         return [("KILL", name) for name in dict.fromkeys(killed)], list(dict.fromkeys(killed))
 
