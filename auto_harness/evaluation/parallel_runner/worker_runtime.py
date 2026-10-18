@@ -49,8 +49,12 @@ class Worker:
     def __init__(self, run_id, worker_id, base_port=6010, api_port=8010, root="/tmp/opencode/parallel_runs"):
         self.wid = worker_id
         self.run_id = run_id
-        self.bs_port = base_port + 10 * worker_id
-        self.api_port = api_port + 10 * worker_id
+        # Unique ports derived from run_id so sequential invocations can never reconnect to a stale
+        # base_server/sim_server left over from a previous episode (E8.1 root cause).
+        import hashlib as _h
+        _r = int(_h.sha256(str(run_id).encode()).hexdigest()[:6], 16)
+        self.bs_port = 16000 + (_r % 400) * 10 + 10 * worker_id
+        self.api_port = 26000 + (_r % 400) * 10 + 10 * worker_id
         self.dir = os.path.join(root, run_id, f"w{worker_id}")
         self.simdir = os.path.join(self.dir, "simserver")
         self.seedfile = os.path.join(self.dir, "seed.txt")
@@ -65,7 +69,7 @@ class Worker:
         os.makedirs(self.simdir, exist_ok=True)
         src = os.path.join(HW, "simserver")
         for name in os.listdir(src):
-            if name in (".git", "__pycache__"):
+            if name in (".git", "__pycache__", "temp.py", "temp1.py"):
                 continue
             dst = os.path.join(self.simdir, name)
             try:
@@ -74,6 +78,7 @@ class Worker:
                 pass
 
     def start(self):
+        self._sweep()   # kill any stale process bound to this run's ports before launching
         os.makedirs(self.dir, exist_ok=True)
         os.makedirs(self.apilog, exist_ok=True)
         self._symlink_farm()
