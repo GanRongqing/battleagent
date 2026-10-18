@@ -1,0 +1,10 @@
+item,value,evidence,confidence
+REVIVE_OFF_result,12/6=2.000,E2 game log game_1_20261013_080710.json,high
+REVIVE_ON_result,9/20=0.450,E4 e4_ctl_on w3 game_1_20261015_160116.json,high
+first_action_divergence,step260 02:10:30,action diff (course 162.1->163.9),high
+first_active_enemies_divergence,step261 02:11:00,active set diff,high
+first_internal_state_divergence,NOT_MEASURED,revive events not logged in E4 ON,low
+false_revival_events,0,active=>alive (entity.pyx/radar.pyx),high(structural)
+false_death_targets_W2_4_ON,10,[KILL] then still active,high
+causal_attribution_false_revival,REJECTED,no dead target is revived,high
+causal_attribution_downstream,INCONCLUSIVE (needs revive-event logging),first internal divergence not logged,medium
