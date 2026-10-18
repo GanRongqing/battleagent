@@ -1,0 +1,46 @@
+{
+ "run_id": "e9s_w21",
+ "sid": "W2-1",
+ "policy": "ACE",
+ "plan": "横向编队-中央汇聚箭头突防",
+ "route": "路线1-中央汇聚箭头突防.json",
+ "expected_route_digest": "21ffcf3a30feb1d8cbf2c84f0a598dc400e3731b16abbd706d9cee138b86febb",
+ "effective": [
+  {
+   "worker": "w0",
+   "exists": true,
+   "is_symlink": false,
+   "strategy_filename": "路线2-南北两翼镜像夹击.json",
+   "route_digest": "165edc8b732d57efe5ab62d96dd8531799b10e4085993547fce348b56af7a1ee",
+   "pid": 55968,
+   "match": false
+  }
+ ],
+ "gates": {
+  "EFFECTIVE_IDENTITY_VALID": false,
+  "LOG_ATTRIBUTION_VALID": true,
+  "RESULT_VALID": true
+ },
+ "result": {
+  "Strategy": "W2-1",
+  "Policy": "ACE",
+  "Seed": 43001,
+  "Actual_Engine_Seed": "43001",
+  "Valid": true,
+  "Black_Killed": 12,
+  "White_USV_Lost": 6,
+  "White_UAV_Lost": 10,
+  "Exchange_Ratio": 2.0,
+  "Exchange_Result": "EXCHANGE_WIN",
+  "Terminal_Result": "Result.Defeat",
+  "Sim_Time": "",
+  "Wall_Time": 913.9,
+  "Game_Log": "game_1_20261019_020229.json",
+  "Attempt": 0
+ },
+ "game_log": {
+  "path": "/tmp/opencode/parallel_runs/e9s_w21/w0/api_logs/games/game_1_20261019_020229.json",
+  "script_name": "横向编队-中央汇聚箭头突防"
+ },
+ "SCENARIO_IDENTITY_VALID": false
+}

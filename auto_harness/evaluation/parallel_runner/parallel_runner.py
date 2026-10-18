@@ -30,8 +30,9 @@ import result_aggregator as agg                                # noqa: E402
 
 PROJ = "/root/autodl-tmp/hsystem"
 OUTROOT = os.path.join(PROJ, "auto_harness", "evaluation", "parallel_runner")
-STRATS = {"W2-1": "横向编队-中央汇聚箭头突防", "W2-6": "菱形编队-MUSV外侧绕行SUSV中央收缩",
-          "W2-2": "菱形编队-接近后扇形展开突防", "W2-4": "菱形编队-南北两翼镜像夹击"}
+STRATS = {"W2-1": "横向编队-中央汇聚箭头突防", "W2-2": "菱形编队-接近后扇形展开突防",
+          "W2-3": "菱形编队-两翼包抄中央突进", "W2-4": "菱形编队-南北两翼镜像夹击",
+          "W2-5": "菱形编队-中央汇聚箭头突防", "W2-6": "菱形编队-MUSV外侧绕行SUSV中央收缩"}
 POLICY = {"ACE": "expand", "C7": "sync", "C9": "demand", "C10": "budget", "C11": "spare", "LIFEDBG": "lifedbg"}
 ACE_SHA = "7527253c6d5a4bba198e478a990443354ecf5d8cf4e1c98ace66ce50dc809497"
 

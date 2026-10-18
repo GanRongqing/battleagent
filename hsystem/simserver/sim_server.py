@@ -24,6 +24,35 @@ from grpc.experimental import aio
 import asyncio
 
 DIR = os.path.dirname(os.path.abspath(__file__))
+
+def _e9_load_scenario_module(path):
+    """Load the scenario script from an ABSOLUTE path under a unique module name.
+    Avoids sys.modules / sys.path / stale-pyc ambiguity that made `import temp` execute a
+    different scenario than the one written by this worker. Behaviour-neutral w.r.t. combat."""
+    import importlib.util, uuid
+    name = "scenario_mod_" + uuid.uuid4().hex
+    spec = importlib.util.spec_from_file_location(name, path)
+    mod = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(mod)
+    return mod
+
+
+def _e9_dbg_module(mod):
+    try:
+        import os as _os, json as _j
+        path=_os.environ.get("SCENARIO_MODULE_DEBUG")
+        if not path:
+            return
+        spec=getattr(mod,"__spec__",None)
+        rec={"module":getattr(mod,"__name__",None),
+             "file":getattr(mod,"__file__",None),
+             "spec_origin":getattr(spec,"origin",None),
+             "sys_path0":(__import__("sys").path[0] if __import__("sys").path else None)}
+        with open(path,"a",encoding="utf-8") as f:
+            f.write(_j.dumps(rec,ensure_ascii=False)+"\n")
+    except Exception:
+        pass
+
 DATETIME_FMT = "%Y-%m-%d %H:%M:%S"
 
 
@@ -234,8 +263,8 @@ class SimServer(simserver_pb2_grpc.GreeterServicer):
                 assert text
                 with open(os.path.join(DIR, "temp.py"), "w", encoding="utf-8") as f:
                     f.write(text)
-                import temp
-                importlib.reload(temp)
+                mod = _e9_load_scenario_module(os.path.join(DIR, "temp.py"))
+                _e9_dbg_module(mod)
                 engine = dill.loads(checkpoint_bytes)
             else:
                 if not text:
@@ -256,9 +285,9 @@ class SimServer(simserver_pb2_grpc.GreeterServicer):
                     # 生成仿真脚本的完整路径
                     with open(os.path.join(DIR, "temp.py"), "w", encoding="utf-8") as f:
                         f.write(text)
-                    import temp
-                    importlib.reload(temp)
-                    engine = temp.sim(**kwargs)
+                    mod = _e9_load_scenario_module(os.path.join(DIR, "temp.py"))
+                    _e9_dbg_module(mod)
+                    engine = mod.sim(**kwargs)
                     engine.activate()
             checkbox_names = [v['name'] for v in list(self.checkbox_dict.values())]
             new_render_config = {k: v for k, v in engine.render_config.items() if k in checkbox_names and v}

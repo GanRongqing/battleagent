@@ -59,6 +59,7 @@ class Worker:
         self.simdir = os.path.join(self.dir, "simserver")
         self.seedfile = os.path.join(self.dir, "seed.txt")
         self.apilog = os.path.join(self.dir, "api_logs")
+        self.identity_file = os.path.join(self.dir, "runtime_identity.json")
         self.procs = []
         self.ready = False
 
@@ -86,8 +87,13 @@ class Worker:
         assert _port_free(self.bs_port), f"base port {self.bs_port} busy"
         assert _port_free(self.api_port), f"api port {self.api_port} busy"
         env = dict(os.environ)
+        try:
+            if os.path.exists(self.identity_file): os.remove(self.identity_file)
+        except Exception: pass
         env.update({"PYTHONPATH": f"{self.simdir}:{HW}:{os.path.join(HW,'simserver')}",
-                    "HSYSTEM_ROOT": HW, "RW_SEED_FILE": self.seedfile, "PYTHONHASHSEED": "0"})
+                    "HSYSTEM_ROOT": HW, "RW_SEED_FILE": self.seedfile, "PYTHONHASHSEED": "0",
+                    "RUNTIME_IDENTITY_FILE": self.identity_file,
+                    "SCENARIO_MODULE_DEBUG": os.path.join(self.dir, "scenario_module.txt")})
         self.bslog = open(os.path.join(self.dir, "base_server.log"), "w")
         self.bs = subprocess.Popen(
             [PY, "-u", os.path.join(self.simdir, "base_server.py"), "--port", str(self.bs_port),
