@@ -467,6 +467,10 @@ class TrackManager:
         # conflict when a supposedly-dead target keeps appearing in legal radar observation.
         # Flag OFF -> no state is recorded and behaviour is byte-identical to the frozen baseline.
         self._lc_enabled = os.getenv("TARGET_LIFECYCLE_V2", "0") == "1"
+        # E7 LIFECYCLE_HANDOFF_V1: keep BOTH death stores (killed_names + global _KILLED) consistent
+        # when a fresh legal positioned observation revokes an inferred death. Supersedes the legacy
+        # OBS_TI_REVIVE (which left _KILLED stale -> a restored live track remained unengageable).
+        self._handoff = os.getenv("LIFECYCLE_HANDOFF_V1", "0") == "1"
         self.lifecycle = {}          # name -> {"state","event","source"}
         self.lifecycle_log = []      # transition/evidence audit trail
 
@@ -490,12 +494,19 @@ class TrackManager:
             if not name:
                 continue
             if name in self.killed_names:
-                # OBS-TRACK INTEGRITY FIX (env-gated, default OFF -> frozen behaviour unchanged):
+                # OBS-TRACK INTEGRITY / E7 HANDOFF:
                 # killed_names exists to avoid re-engaging genuinely sunk targets, but the online
                 # kill_detect heuristic can misfire and permanently suppress a still-ALIVE enemy that
-                # the legal radar observation keeps reporting with a position. A live radar contact
-                # with a position must not be discarded.
-                if os.getenv("OBS_TI_REVIVE", "0") == "1" and e.get("position"):
+                # the legal radar observation keeps reporting with a position.
+                if self._handoff and e.get("position"):
+                    # E7 LIFECYCLE_HANDOFF_V1: revoke the inferred death in BOTH stores so the
+                    # lifecycle handed downstream is consistent (no zombie track that _KILLED still
+                    # treats as dead). Uses only the legal positioned observation.
+                    self.killed_names.discard(name)
+                    if isinstance(_KILLED, set):
+                        _KILLED.discard(name)
+                    self._lc_set(name, "OBSERVED_ACTIVE", "revive_via_legal_obs", "obs.active")
+                elif os.getenv("OBS_TI_REVIVE", "0") == "1" and e.get("position"):
                     self.killed_names.discard(name)
                 else:
                     continue
