@@ -102,6 +102,20 @@ class JudgeSystem(core.entity.FSM):
             for unit in sorted(self.black_ships, key=_n):
                 if unit.coords[0] <= self.destination:
                     print(f"{unit}突防成功！")
+                    # E15 read-only breach diagnostic (default OFF; offline analysis only; never fed to
+                    # the White observation / TrackManager / Agent).
+                    try:
+                        import os as _os, json as _js
+                        _bt = _os.environ.get("BREACH_TRACE")
+                        if _bt:
+                            rec = {"episode": _os.environ.get("EPISODE_ID"),
+                                   "kind": "BREACH", "time": float(self.engine.time),
+                                   "unit": unit.name, "x": float(unit.coords[0]), "y": float(unit.coords[1]),
+                                   "breakthrough_count": self.cumulative_score["black_breakthrough"] + 1}
+                            with open(_bt, "a", encoding="utf-8") as _f:
+                                _f.write(_js.dumps(rec, ensure_ascii=False) + "\n")
+                    except Exception:
+                        pass
                     self.black_success.append(unit.name)
                     self.cumulative_score["black_breakthrough"] += 1
                     unit.kill()
