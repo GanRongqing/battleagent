@@ -58,6 +58,9 @@ elif agent == "safeuav":
 elif agent == "coverage":
     from agent_hybrid_coverage_floor import CoverageFloorAgentMain
     CoverageFloorAgentMain(use_uavs=True).run()
+elif agent == "passive":
+    from agent_hybrid_passive_recovery import PassiveRecoveryAgentMain
+    PassiveRecoveryAgentMain(use_uavs=True).run()
 elif agent == "dbg":
     from agent_hybrid_obs_dbg import ObsDbgAgentMain
     ObsDbgAgentMain(use_uavs=True).run()
