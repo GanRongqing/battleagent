@@ -55,6 +55,9 @@ elif agent == "bearing":
 elif agent == "safeuav":
     from agent_hybrid_safe_uav_search import SafeUAVAgentMain
     SafeUAVAgentMain(use_uavs=True).run()
+elif agent == "coverage":
+    from agent_hybrid_coverage_floor import CoverageFloorAgentMain
+    CoverageFloorAgentMain(use_uavs=True).run()
 elif agent == "dbg":
     from agent_hybrid_obs_dbg import ObsDbgAgentMain
     ObsDbgAgentMain(use_uavs=True).run()
