@@ -54,6 +54,9 @@ class ThreatAwareUAVManager(UAVManager):
         centers = [c for c, _ in targets]
         safe = [c for c in centers if self._mind(c) >= SAFE_STANDOFF]
         center = safe[0] if safe else max(centers, key=self._mind)
+        from agent_hybrid_v5 import _uav_trace
+        _uav_trace({"kind":"c13_global_search","now":now,"uav":name,"nthreats":len(getattr(self,"_threat_pos",[])),
+                    "ntargets":len(centers),"nsafe":len(safe),"center":[round(center[0],1),round(center[1],1)]})
         return self._fly(name, pos, center)
 
 

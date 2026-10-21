@@ -177,6 +177,19 @@ class ApiClient:
 # ════════════════════════════════════════════════════════════════
 # 通用工具
 # ════════════════════════════════════════════════════════════════
+def _uav_trace(rec):
+    """Read-only E12 tracing (env UAV_TRACE=path). No behaviour change."""
+    import os as _os, json as _js
+    p=_os.environ.get("UAV_TRACE")
+    if not p: return
+    try:
+        rec["pid"]=_os.getpid()
+        with open(p,"a",encoding="utf-8") as f:
+            f.write(_js.dumps(rec,ensure_ascii=False)+"\n")
+    except Exception:
+        pass
+
+
 def bearing_to(frm, to):
     """frm -> to 的航向角，正北为0°，顺时针为正。"""
     dx, dy = to[0] - frm[0], to[1] - frm[1]
@@ -2265,6 +2278,7 @@ class UAVManager:
 
         recon = intent.recon_aggressiveness if intent else 0.6
         focus = intent.focus_level if intent else 2
+        _uav_trace({"kind":"uav_step","now":obs.now,"mission":mission,"uav_alive":obs.uav_alive})
 
         # 感知需求（每步动态计算，规模无关）
         reacquire_targets = tracker.reacquire_candidates(now)      # 仅敌 USV，丢失高威胁
@@ -2422,9 +2436,12 @@ class UAVManager:
             return self._search_fly(name, pos, n_airborne)
         idx = int(name.replace("white_uav", "")) if "white_uav" in name else 0
         targets = coverage.best_unobserved(now, k=max(1, n_airborne))
+        _uav_trace({"kind":"global_search","now":now,"uav":name,"n_airborne":n_airborne,
+                    "ntargets":len(targets)})
         if not targets:
             return self._search_fly(name, pos, n_airborne)
         center, _ = targets[idx % len(targets)]
+        _uav_trace({"kind":"global_search_choice","now":now,"uav":name,"center":[round(center[0],1),round(center[1],1)]})
         return self._fly(name, pos, center)
 
     # ── 角色选择 ──
