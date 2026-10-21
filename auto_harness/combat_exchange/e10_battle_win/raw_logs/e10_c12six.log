@@ -1,0 +1,15 @@
+[plan] effective_cpu=10 max_safe=10 selected=6 jobs=6 todo=6
+[done] W2-6 C12 43001 valid=True kills=13 loss=15
+[done] W2-5 C12 43001 valid=True kills=16 loss=15
+[done] W2-1 C12 43001 valid=True kills=0 loss=20
+[done] W2-3 C12 43001 valid=True kills=16 loss=13
+[done] W2-4 C12 43001 valid=True kills=12 loss=6
+[done] W2-2 C12 43001 valid=True kills=7 loss=19
+[run] wall=939.8s stats={'SUCCEEDED': 6}
+[aggregate] valid= 6 total= 6
+{"run": "e10_c12_six", "sid": "W2-1", "policy": "C12", "identity": true, "expected_digest": "21ffcf3a30fe", "effective": [["w1", "21ffcf3a30fe", true]], "result": "0/20"}
+{"run": "e10_c12_six", "sid": "W2-2", "policy": "C12", "identity": true, "expected_digest": "b53386b7b9e7", "effective": [["w0", "b53386b7b9e7", true]], "result": "7/19"}
+{"run": "e10_c12_six", "sid": "W2-3", "policy": "C12", "identity": true, "expected_digest": "ce9507fff54e", "effective": [["w3", "ce9507fff54e", true]], "result": "16/13"}
+{"run": "e10_c12_six", "sid": "W2-4", "policy": "C12", "identity": true, "expected_digest": "165edc8b732d", "effective": [["w5", "165edc8b732d", true]], "result": "12/6"}
+{"run": "e10_c12_six", "sid": "W2-5", "policy": "C12", "identity": true, "expected_digest": "21ffcf3a30fe", "effective": [["w2", "21ffcf3a30fe", true]], "result": "16/15"}
+{"run": "e10_c12_six", "sid": "W2-6", "policy": "C12", "identity": false, "expected_digest": "4b80fe82f3c0", "effective": [["w2", "21ffcf3a30fe", false]], "result": "13/15"}

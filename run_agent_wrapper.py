@@ -49,6 +49,9 @@ elif agent == "budget":
 elif agent == "spare":
     from agent_hybrid_spare_support import SpareSupportAgentMain
     SpareSupportAgentMain(use_uavs=True).run()
+elif agent == "bearing":
+    from agent_hybrid_bearing_reacquire import BearingReacquireAgentMain
+    BearingReacquireAgentMain(use_uavs=True).run()
 elif agent == "dbg":
     from agent_hybrid_obs_dbg import ObsDbgAgentMain
     ObsDbgAgentMain(use_uavs=True).run()
