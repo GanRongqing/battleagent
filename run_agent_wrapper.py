@@ -52,6 +52,9 @@ elif agent == "spare":
 elif agent == "bearing":
     from agent_hybrid_bearing_reacquire import BearingReacquireAgentMain
     BearingReacquireAgentMain(use_uavs=True).run()
+elif agent == "safeuav":
+    from agent_hybrid_safe_uav_search import SafeUAVAgentMain
+    SafeUAVAgentMain(use_uavs=True).run()
 elif agent == "dbg":
     from agent_hybrid_obs_dbg import ObsDbgAgentMain
     ObsDbgAgentMain(use_uavs=True).run()
