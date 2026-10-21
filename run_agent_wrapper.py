@@ -61,6 +61,12 @@ elif agent == "coverage":
 elif agent == "passive":
     from agent_hybrid_passive_recovery import PassiveRecoveryAgentMain
     PassiveRecoveryAgentMain(use_uavs=True).run()
+elif agent == "trackonly":
+    from agent_hybrid_passive_isolated import TrackOnlyAgentMain
+    TrackOnlyAgentMain(use_uavs=True).run()
+elif agent == "passive2":
+    from agent_hybrid_passive_isolated import PassiveIsolatedAgentMain
+    PassiveIsolatedAgentMain(use_uavs=True).run()
 elif agent == "dbg":
     from agent_hybrid_obs_dbg import ObsDbgAgentMain
     ObsDbgAgentMain(use_uavs=True).run()
