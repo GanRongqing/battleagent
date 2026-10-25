@@ -73,6 +73,15 @@ elif agent == "uavbounds":
 elif agent == "uavcov":
     from agent_hybrid_coverage_bounds import CoverageBoundsAgentMain
     CoverageBoundsAgentMain(use_uavs=True).run()
+elif agent == "press":
+    from agent_hybrid_press_search import PressSearchAgentMain
+    PressSearchAgentMain(use_uavs=True).run()
+elif agent == "retreatloss":
+    from agent_hybrid_retreat_loss import StopPressAfterLossAgentMain
+    StopPressAfterLossAgentMain(use_uavs=True).run()
+elif agent == "bearinghome":
+    from agent_hybrid_bearing_home import PassiveHomeAgentMain
+    PassiveHomeAgentMain(use_uavs=True).run()
 elif agent == "dbg":
     from agent_hybrid_obs_dbg import ObsDbgAgentMain
     ObsDbgAgentMain(use_uavs=True).run()
