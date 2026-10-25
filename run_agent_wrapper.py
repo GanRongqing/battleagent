@@ -67,6 +67,9 @@ elif agent == "trackonly":
 elif agent == "passive2":
     from agent_hybrid_passive_isolated import PassiveIsolatedAgentMain
     PassiveIsolatedAgentMain(use_uavs=True).run()
+elif agent == "uavbounds":
+    from agent_hybrid_uav_bounds import BoundedUAVAgentMain
+    BoundedUAVAgentMain(use_uavs=True).run()
 elif agent == "dbg":
     from agent_hybrid_obs_dbg import ObsDbgAgentMain
     ObsDbgAgentMain(use_uavs=True).run()
