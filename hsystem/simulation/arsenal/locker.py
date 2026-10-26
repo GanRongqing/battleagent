@@ -21,6 +21,33 @@ def _stable_rand(*parts):
     return int(h, 16) / float(0xFFFFFFFF)
 
 
+# ── E23: default-OFF, read-only lock-chain trace (behavior-neutral) ──
+# Enabled only when the LOCK_TRACE env var is set. When unset, _trace is a no-op and no
+# state/RNG/order is touched. Never feeds the Agent.
+import json as _json
+import os as _os
+_TRACE_PATH = _os.environ.get("LOCK_TRACE")
+_EPISODE = _os.environ.get("EPISODE_ID", "")
+
+
+def _e23_trace(event, attacker, target, faction, now, lock_start=None, elapsed=None,
+               distance=None, ltimes=None, frozen=None, reason=""):
+    if not _TRACE_PATH:
+        return
+    try:
+        rec = {
+            "episode_id": _EPISODE, "engine_time": now, "event_type": event,
+            "attacker_id": attacker, "target_id": target, "faction": faction,
+            "lock_start_time": lock_start, "lock_elapsed": elapsed,
+            "actual_distance": distance, "target_locked_times": ltimes,
+            "target_frozen_state": frozen, "reason": reason,
+        }
+        with open(_TRACE_PATH, "a", encoding="utf-8") as _f:
+            _f.write(_json.dumps(rec, ensure_ascii=False) + "\n")
+    except Exception:
+        pass
+
+
 class Locker(core.arch.Component):
     '''锁定仿真模块'''
 
@@ -88,12 +115,26 @@ class Locker(core.arch.Component):
             # 新增锁定链条
             self.emy_name.append(unit_name)
             self.locked_info[unit_name] = {"locked_begin_time": self.engine.time, "emy_name": unit_name, "locked_times": 0, "frozen": False, "frozen_time": None, "locked": True}
+            try:
+                _d = alg.geo.distance(self.engine.unit_by_name(unit_name).coords, self.coords)
+            except Exception:
+                _d = None
+            _e23_trace("LOCK_START", unit_name, self.home_unit.name, self.home_unit.group,
+                       self.engine.time, lock_start=self.engine.time, distance=_d,
+                       ltimes=0, frozen=self.frozen)
             return True
         else:
             # 更新已有但已失效的锁定链条
             if not self.locked_info[unit_name].get("locked", False):
                 self.locked_info[unit_name]["locked_begin_time"] = self.engine.time
                 self.locked_info[unit_name]["locked"] = True
+                try:
+                    _d = alg.geo.distance(self.engine.unit_by_name(unit_name).coords, self.coords)
+                except Exception:
+                    _d = None
+                _e23_trace("LOCK_RESTART", unit_name, self.home_unit.name, self.home_unit.group,
+                           self.engine.time, lock_start=self.engine.time, distance=_d,
+                           ltimes=self.locked_info[unit_name].get("locked_times", 0), frozen=self.frozen)
                 return True
             else:
                 # 重复锁定视为执行失败
@@ -106,7 +147,14 @@ class Locker(core.arch.Component):
             emy_name = _lock_info['emy_name']
             if _lock_info['locked']:
                 emy_unit = self.engine.unit_by_name(emy_name)
-                if alg.geo.distance(emy_unit.coords, self.coords) >= 40_000:
+                _e23_d = alg.geo.distance(emy_unit.coords, self.coords)
+                if _e23_d >= 40_000:
+                    _e23_trace("LOCK_BREAK_RANGE", emy_name, self.home_unit.name, self.home_unit.group,
+                               self.engine.time, lock_start=_lock_info.get('locked_begin_time'),
+                               elapsed=(self.engine.time - _lock_info['locked_begin_time'])
+                               if _lock_info.get('locked_begin_time') is not None else None,
+                               distance=_e23_d, ltimes=_lock_info.get('locked_times', 0),
+                               frozen=self.frozen)
                     self.locked_info[emy_name]['locked'] = False  # 超出锁定距离，解除锁定
                     continue  # 继续检查下一个锁定链条
                 locked_time = self.engine.time - _lock_info['locked_begin_time']
@@ -117,14 +165,31 @@ class Locker(core.arch.Component):
                     # 命中判定：改为与遍历/RNG流顺序无关的确定性函数（稳定标识 + 出锁时间）。
                     # 命中率仍为 ~20%，但同种子下逐位可复现（不再依赖共享 random 流的消费次序）。
                     _hit = _stable_rand(self.home_unit.name, emy_name, int(self.engine.time)) > 0.2
+                    _e23_trace("LOCK_WINDOW_COMPLETE", emy_name, self.home_unit.name, self.home_unit.group,
+                               self.engine.time, lock_start=_lock_info.get('locked_begin_time'),
+                               elapsed=locked_time, distance=_e23_d,
+                               ltimes=_lock_info.get('locked_times', 0), frozen=self.frozen,
+                               reason=("hit" if _hit else "miss"))
+                    _e23_trace("HIT_SUCCESS" if _hit else "HIT_MISS", emy_name, self.home_unit.name,
+                               self.home_unit.group, self.engine.time,
+                               lock_start=_lock_info.get('locked_begin_time'),
+                               elapsed=locked_time, distance=_e23_d,
+                               ltimes=_lock_info.get('locked_times', 0), frozen=self.frozen)
                     if _hit:  # 若命中
                         self.locked_info[emy_name]['locked_times'] += 1  # 锁定次数+1
                         self.locked_info[emy_name]['frozen'] = True  # 进入冻结状态
                         self.locked_info[emy_name]['frozen_time'] = self.engine.time  # 记录冻结开始时间
+                        _e23_trace("FREEZE_START", emy_name, self.home_unit.name, self.home_unit.group,
+                                   self.engine.time, lock_start=_lock_info.get('locked_begin_time'),
+                                   elapsed=locked_time, distance=_e23_d,
+                                   ltimes=self.locked_info[emy_name]['locked_times'], frozen=True)
         # 检查存活状态
         _locked_times_list = [i["locked_times"] for i in self.locked_info.values()]
         self.locked_times = min(2, sum(_locked_times_list))
         if sum(_locked_times_list) >= 2:
+            _e23_trace("UNIT_KILLED", None, self.home_unit.name, self.home_unit.group,
+                       self.engine.time, ltimes=min(2, sum(_locked_times_list)),
+                       frozen=self.frozen, reason="cumulative_2_hits")
             if len(self.home_unit.planes) > 0:
                 _plane_name = self.home_unit.planes[0]
                 _plane = self.engine.unit_by_name(_plane_name)
@@ -137,6 +202,9 @@ class Locker(core.arch.Component):
             if _lock_info['frozen_time'] and _lock_info['frozen']:
                 if self.engine.time - _lock_info['frozen_time'] > 300:
                     self.locked_info[emy_name]['frozen'] = False  # 冻结时间到，解除冻结状态
+                    _e23_trace("FREEZE_END", emy_name, self.home_unit.name, self.home_unit.group,
+                               self.engine.time, elapsed=(self.engine.time - _lock_info['frozen_time']),
+                               ltimes=_lock_info.get('locked_times', 0), frozen=False, reason="frozen_300s")
 
         _frozen_list = [i["frozen"] for i in self.locked_info.values()]
         if sum(_frozen_list) and not self.frozen:

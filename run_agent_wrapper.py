@@ -88,6 +88,9 @@ elif agent == "standoff":
 elif agent == "maxrange":
     from agent_hybrid_max_range import MaxRangeAgentMain
     MaxRangeAgentMain(use_uavs=True).run()
+elif agent == "unlimpkg":
+    from agent_hybrid_unlimited_pkg import UnlimitedPkgAgentMain
+    UnlimitedPkgAgentMain(use_uavs=True).run()
 elif agent == "dbg":
     from agent_hybrid_obs_dbg import ObsDbgAgentMain
     ObsDbgAgentMain(use_uavs=True).run()

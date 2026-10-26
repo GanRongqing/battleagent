@@ -1,0 +1,2 @@
+candidate,parent,hypothesis,mechanism,code_diff,unit_test,episode_identity,trajectory_changed,active_positioning_changed,legal_actions_changed,combat_kills,white_losses,pure_CER,packages_formed,verdict,next_action
+C24,C19,"coordination budget (MAX_TOTAL_PACKAGES=3) limits White lock chains","UNLIMITED_PACKAGES: set MAX_TOTAL_PACKAGES very high on top of C19","agent_hybrid_unlimited_pkg.py: patch bg.MAX_TOTAL_PACKAGES","3/3",true,no,no,no,4,20,0.2,0,NO_EFFECT,"0 packages formed even unlimited -> coordination not the bottleneck"
