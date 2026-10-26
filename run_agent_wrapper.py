@@ -82,6 +82,12 @@ elif agent == "retreatloss":
 elif agent == "bearinghome":
     from agent_hybrid_bearing_home import PassiveHomeAgentMain
     PassiveHomeAgentMain(use_uavs=True).run()
+elif agent == "standoff":
+    from agent_hybrid_standoff_hold import StandoffHoldAgentMain
+    StandoffHoldAgentMain(use_uavs=True).run()
+elif agent == "maxrange":
+    from agent_hybrid_max_range import MaxRangeAgentMain
+    MaxRangeAgentMain(use_uavs=True).run()
 elif agent == "dbg":
     from agent_hybrid_obs_dbg import ObsDbgAgentMain
     ObsDbgAgentMain(use_uavs=True).run()
