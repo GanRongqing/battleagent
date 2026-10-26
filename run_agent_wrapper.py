@@ -91,6 +91,12 @@ elif agent == "maxrange":
 elif agent == "unlimpkg":
     from agent_hybrid_unlimited_pkg import UnlimitedPkgAgentMain
     UnlimitedPkgAgentMain(use_uavs=True).run()
+elif agent == "fleetrecon":
+    from agent_hybrid_fleet_recon import FleetReconAgentMain
+    FleetReconAgentMain(use_uavs=True).run()
+elif agent == "boundsafe":
+    from agent_hybrid_boundary_safe import BoundarySafeAgentMain
+    BoundarySafeAgentMain(use_uavs=True).run()
 elif agent == "dbg":
     from agent_hybrid_obs_dbg import ObsDbgAgentMain
     ObsDbgAgentMain(use_uavs=True).run()
