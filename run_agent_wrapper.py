@@ -97,6 +97,12 @@ elif agent == "fleetrecon":
 elif agent == "boundsafe":
     from agent_hybrid_boundary_safe import BoundarySafeAgentMain
     BoundarySafeAgentMain(use_uavs=True).run()
+elif agent == "saferecon":
+    from agent_hybrid_safe_recon import SafeReconAgentMain
+    SafeReconAgentMain(use_uavs=True).run()
+elif agent == "adaptive":
+    from agent_hybrid_adaptive import AdaptiveAgentMain
+    AdaptiveAgentMain(use_uavs=True).run()
 elif agent == "dbg":
     from agent_hybrid_obs_dbg import ObsDbgAgentMain
     ObsDbgAgentMain(use_uavs=True).run()

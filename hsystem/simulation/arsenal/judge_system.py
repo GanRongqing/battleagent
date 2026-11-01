@@ -138,6 +138,19 @@ class JudgeSystem(core.entity.FSM):
                 is_in_area = area.contains(point)
                 if not is_in_area:
                     if unit.isactive:
+                        # E25 read-only AREA_TRACE (default OFF; offline analysis only; never fed to Agent).
+                        try:
+                            import os as _aos, json as _ajs
+                            _at = _aos.environ.get("AREA_TRACE")
+                            if _at:
+                                _rec = {"episode": _aos.environ.get("EPISODE_ID"), "kind": "AREA_OUT",
+                                        "time": float(self.engine.time), "unit": unit.name,
+                                        "group": unit.group, "x": float(unit.coords[0]),
+                                        "y": float(unit.coords[1])}
+                                with open(_at, "a", encoding="utf-8") as _f:
+                                    _f.write(_ajs.dumps(_rec, ensure_ascii=False) + "\n")
+                        except Exception:
+                            pass
                         unit.kill()
                     print(f"{unit}不在设定区域内！")
 
