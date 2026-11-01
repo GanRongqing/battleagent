@@ -103,6 +103,9 @@ elif agent == "saferecon":
 elif agent == "adaptive":
     from agent_hybrid_adaptive import AdaptiveAgentMain
     AdaptiveAgentMain(use_uavs=True).run()
+elif agent == "splitscreen":
+    from agent_hybrid_split_screen import SplitScreenAgentMain
+    SplitScreenAgentMain(use_uavs=True).run()
 elif agent == "dbg":
     from agent_hybrid_obs_dbg import ObsDbgAgentMain
     ObsDbgAgentMain(use_uavs=True).run()

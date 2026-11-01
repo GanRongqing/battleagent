@@ -49,6 +49,8 @@ class BoundaryAwareSafety(ActionSafety):
         safe = super().filter(actions, obs, legal)
         usv = {u["name"]: u for u in obs.usvs
                if u.get("is_alive") and u.get("position")}
+        uav = {u["name"]: u for u in obs.uavs
+               if u.get("is_alive") and u.get("position")}
         out = []
         for a in safe:
             text = a["action_text"]
@@ -62,6 +64,15 @@ class BoundaryAwareSafety(ActionSafety):
                     if not _inside(px, py) or not _inside(x, y):
                         c2 = bearing_to((x, y), CENTER)
                         text = f"{unit} 移动 target_speed={USV_SPEED:.1f} target_course={c2:.1f}"
+                        self.area_rewrites += 1
+            elif atype == "fly" and unit in uav:
+                sp, crs = _parse(text)
+                if sp is not None and crs is not None:
+                    x, y = uav[unit]["position"][0], uav[unit]["position"][1]
+                    px, py = _predict(x, y, sp, crs)
+                    if not _inside(px, py) or not _inside(x, y):
+                        c2 = bearing_to((x, y), CENTER)
+                        text = f"{unit} 飞行 target_speed={sp:.1f} target_course={c2:.1f}"
                         self.area_rewrites += 1
             out.append({"action_text": text, "action_type": atype})
         return out
