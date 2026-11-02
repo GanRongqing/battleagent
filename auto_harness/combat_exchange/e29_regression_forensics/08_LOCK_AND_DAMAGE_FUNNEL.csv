@@ -1,0 +1,11 @@
+scenario,policy,active_contact_first,own_lock_first,complete_lock_windows,hits,kills,first_white_loss,note
+S10,C10,00:26:00,02:03:00,>=5,>=5,5,02:17:00,normal engagement
+S10,C25,00:56:30,02:03:00,>=5,>=5,5,None,normal; no loss
+S10,C27,NEVER,NEVER,0,0,0,05:05:00,fleet dragged south; no contact
+S10,C30,NEVER,NEVER,0,0,0,05:05:00,identical to C27
+S20,C10,early,early,>=10,>=10,10,late,reference
+S20,C27,late/altered,altered,>=10,>=10,10,earlier(more),geometry altered
+S20,C30,same as C27,same,>=10,>=10,10,same,split neutral
+EXTT,C10,early,early,>=8,>=8,8,late,reference
+EXTT,C27,altered,altered,>=2,>=2,2,early,geometry altered by safety
+EXTT,C30,same as C27,same,>=2,>=2,2,same,split neutral
