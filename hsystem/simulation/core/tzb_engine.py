@@ -145,6 +145,13 @@ class TzbEngine(core.engine.Engine):
             "white_hit": cs["white_hit"],
             "collision": cs["collision"],
         }
+        # E30 public map: operational area polygon (public static environment info)
+        try:
+            _a = getattr(self.judge, "area", None)
+            if _a is not None:
+                states["public_area"] = [[float(x), float(y)] for x, y in _a.exterior.coords]
+        except Exception:
+            pass
 
         return states
 

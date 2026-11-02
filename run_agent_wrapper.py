@@ -106,6 +106,9 @@ elif agent == "adaptive":
 elif agent == "splitscreen":
     from agent_hybrid_split_screen import SplitScreenAgentMain
     SplitScreenAgentMain(use_uavs=True).run()
+elif agent == "c31":
+    from agent_hybrid_c31 import C31AgentMain
+    C31AgentMain(use_uavs=True).run()
 elif agent == "dbg":
     from agent_hybrid_obs_dbg import ObsDbgAgentMain
     ObsDbgAgentMain(use_uavs=True).run()

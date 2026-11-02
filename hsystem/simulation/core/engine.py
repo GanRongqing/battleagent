@@ -440,5 +440,12 @@ class Engine(base_engine.BaseEngine):
         states['judge_system_info']['black_locked_num'] = self.judge.black_locked_num
         states['judge_system_info']['white_locked_num'] = self.judge.white_locked_num
         states['judge_system_info']['collide_num'] = self.judge.collide_num
+        # E30 public map: operational area polygon (public static environment info; never enemy truth)
+        try:
+            _a = getattr(self.judge, "area", None)
+            if _a is not None:
+                states["public_area"] = [[float(x), float(y)] for x, y in _a.exterior.coords]
+        except Exception:
+            pass
 
         return states

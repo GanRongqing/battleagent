@@ -108,8 +108,8 @@ LANDING_RADIUS = float(os.getenv("LANDING_RADIUS", "5"))
 
 from logging.handlers import RotatingFileHandler
 
-# 日志目录，与 main.py 同级的 api_logs 文件夹
-_LOG_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "api_logs")
+# 日志目录，与 main.py 同级的 api_logs 文件夹（可用 API_LOG_DIR 覆盖，供并行评测每 Worker 隔离）
+_LOG_DIR = os.getenv("API_LOG_DIR") or os.path.join(os.path.dirname(os.path.abspath(__file__)), "api_logs")
 # 运行日志与对局日志分开存放
 _RUNTIME_LOG_DIR = os.path.join(_LOG_DIR, "runtime")
 _GAME_LOG_DIR = os.path.join(_LOG_DIR, "games")
@@ -1700,6 +1700,7 @@ async def get_status():
         "等待指令": _state.waiting_for_command,
         "资源快照": resource_snapshot,
         "奖励信号": raw.get("env_score_flat", {}) or {},
+        "公开地图": {"作战区域": raw.get("public_area")},
         "行动历史": _state.action_history,
     }
 

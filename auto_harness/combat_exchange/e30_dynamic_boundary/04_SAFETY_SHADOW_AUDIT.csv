@@ -1,0 +1,4 @@
+scenario,policy,old_safety_behavior,new_safety_behavior,interior_rewrites,unnecessary_rewrites,available
+S10,C31,"old(hardcoded) dragged y 405->329 toward (185,0), no contact, 0 kills","new: interior (y~405 inside octagon) not rewritten; only 5 boundary rewrites; 5/0",5,0,true
+W2-1,C31,"old(hardcoded==W2 area) turned UAVs south/inside","new: exact W2 polygon + 5km approach buffer; 16/5, 0 AREA_OUT",not_measured_per_unit,0,true
+S10,C30(old),"continuous rewrite; 0/5","reference",not_applicable,not_applicable,true

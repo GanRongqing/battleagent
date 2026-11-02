@@ -238,6 +238,8 @@ class Obs:
         intel = (rs.get("观察信息", {}) or {}).get("white_observation", {}) or {}
         self.active = intel.get("雷达捕获", []) or []      # [{name, position, velocity}]
         self.passive = intel.get("被动告警", []) or []     # [{name, bearing, detected_by}]
+        _pm = (status or {}).get("公开地图", {}) or {}
+        self.public_area = _pm.get("作战区域") or None      # public operational-area polygon (E30)
 
         reward = (status or {}).get("奖励信号", {}) or {}
         self.black_killed = reward.get("black_killed", 0)
