@@ -1,0 +1,14 @@
+path,size,type,reproducible,safe_to_remove
+hsystem/pomdp_api/api_logs/games,37G,engine JSON episode logs,yes,yes
+/tmp/opencode/parallel_runs,7.7G,runner worker dirs (logs),yes,yes
+/tmp/opencode/simlogs,73M,sim logs,yes,yes
+hsystem/build,184M,cython build temp + duplicate .so,yes,yes
+__pycache__ (1328 dirs),186.6MB,python bytecode cache,yes,yes
+hsystem/.venv,1.1-1.3G,separate python venv,no,NO
+hsystem/.git,82M,engine git objects,no,NO
+githsysys/.git,59M,deliverable git history,no,NO
+hsystem/pomdp_api/api_logs/runtime,38M,api runtime state,yes/partial,keep
+auto_harness/combat_exchange/*/raw_logs,~150M,curated evidence,no (evidence),NO
+auto_harness/combat_exchange/e8_fast_validation/raw_logs,~24M x n,duplicate historical game logs,partial,retain (small vs total)
+runtime_audit,77M,prior audit output,partial,retain
+w6_anti_evasion,25M,historical work,partial,retain
