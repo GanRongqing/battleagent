@@ -32,7 +32,10 @@ PROJ = "/root/autodl-tmp/hsystem"
 OUTROOT = os.path.join(PROJ, "auto_harness", "evaluation", "parallel_runner")
 STRATS = {"W2-1": "横向编队-中央汇聚箭头突防", "W2-2": "菱形编队-接近后扇形展开突防",
           "W2-3": "菱形编队-两翼包抄中央突进", "W2-4": "菱形编队-南北两翼镜像夹击",
-          "W2-5": "菱形编队-中央汇聚箭头突防", "W2-6": "菱形编队-MUSV外侧绕行SUSV中央收缩"}
+          "W2-5": "菱形编队-中央汇聚箭头突防", "W2-6": "菱形编队-MUSV外侧绕行SUSV中央收缩",
+          "S10": "scenario_10v10", "S15": "scenario_15v15", "S20": "scenario_20v20",
+          "S30": "scenario_30v30", "S10RW": "scenario_10v10_rw",
+          "EXTD": "external_dispersed", "EXTT": "external_twowave"}
 POLICY = {"ACE": "expand", "C7": "sync", "C9": "demand", "C10": "budget", "C11": "spare", "C12": "bearing", "C13": "safeuav", "C14": "coverage", "C15": "passive", "TRACKONLY": "trackonly", "C16": "passive2", "C17": "uavbounds", "C18": "uavcov", "C19": "press", "C20": "retreatloss", "C21": "bearinghome", "C22": "standoff", "C23": "maxrange", "C24": "unlimpkg", "C25": "fleetrecon", "C26": "boundsafe", "C27": "saferecon", "C28": "adaptive", "C29": "saferecon", "C30": "splitscreen", "LIFEDBG": "lifedbg"}
 ACE_SHA = "7527253c6d5a4bba198e478a990443354ecf5d8cf4e1c98ace66ce50dc809497"
 

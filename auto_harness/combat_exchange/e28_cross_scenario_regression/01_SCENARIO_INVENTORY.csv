@@ -1,0 +1,14 @@
+id,script_loaded,source_file,white_usv,white_uav,black_usv,black_uav,black_movement,opponent_profile,frontage,distinct_from_W2,selected,reason
+W2-1,"横向编队-中央汇聚箭头突防",sim_script/scenario/plan/…,20,10,30,0(route ships),route-arrow,ladder,fixed,n/a(reference),no,baseline reference
+W2-2,"菱形编队-接近后扇形展开突防",sim_script/scenario/plan/…,20,10,30,0,route-fan,ladder,fixed,n/a,no,reference
+W2-3,"菱形编队-两翼包抄中央突进",plan,20,10,30,0,route-flank,ladder,fixed,n/a,no,reference
+W2-4,"菱形编队-南北两翼镜像夹击",plan,20,10,30,0,route-mirror,ladder,fixed,n/a,no,reference
+W2-5,"菱形编队-中央汇聚箭头突防",plan,20,10,30,0,route-arrow,ladder,fixed,n/a,no,reference
+W2-6,"菱形编队-MUSV外侧绕行SUSV中央收缩",plan,20,10,30,0,route-shrink,ladder,fixed,n/a,no,reference
+S10,scenario_10v10,sim_script/20250819TZB/scenario_10v10.py,5,5,5,5,straight_west,B0_RANDOM,fixed_density,YES,yes,small symmetric
+S15,scenario_15v15,sim_script/20250819TZB/scenario_15v15.py,8,7,8,7,straight_west,B0_RANDOM,fixed_density,YES,yes,mid asymmetric composition
+S20,scenario_20v20,sim_script/20250819TZB/scenario_20v20.py,10,10,10,10,straight_west,B0_RANDOM,fixed_density,YES,yes,mid symmetric
+S30,scenario_30v30,sim_script/20250819TZB/scenario_30v30.py,15,15,15,15,straight_west,B0_RANDOM,fixed_density,YES,yes,large symmetric
+S10RW,scenario_10v10_rw,sim_script/20250819TZB/scenario_10v10_rw.py,5,5,5,5,random_waypoint,B0_RANDOM,fixed_density,YES,yes,random-waypoint opponent
+EXTD,external_dispersed,sim_script/20250819TZB/external_dispersed.py,custom,custom,custom,custom,external,TzbEngine,n/a,YES,yes,external dispersed black
+EXTT,external_twowave,sim_script/20250819TZB/external_twowave.py,custom,custom,custom,custom,external,TzbEngine,n/a,YES,yes,external two-wave black

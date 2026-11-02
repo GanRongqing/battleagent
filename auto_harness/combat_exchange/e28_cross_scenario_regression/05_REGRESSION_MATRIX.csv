@@ -1,0 +1,8 @@
+scenario,seed,C10_K,C10_L,C10_CER,C30_K,C30_L,C30_CER,delta,classification,reason
+S10,43001,5,1,5.00,0,5,0.00,MAJOR,MAJOR_REGRESSION,"C10 CER>1, C30 CER<=1 (0 kills)"
+S10RW,43001,5,0,INF,0,5,0.00,MAJOR,MAJOR_REGRESSION,"C10 CER>1, C30 kills all lost"
+S15,43001,8,0,INF,8,7,1.14,MINOR,MINOR_REGRESSION,"same kills, +7 losses; C30 still >1 but far below C10"
+S20,43001,10,1,10.00,10,8,1.25,MINOR,MINOR_REGRESSION,"same kills, +7 losses; C30 >1 but far below C10"
+S30,43001,15,0,INF,15,10,1.50,MINOR,MINOR_REGRESSION,"same kills, +10 losses; C30 >1 but far below C10"
+EXTD,43001,5,4,1.25,3,5,0.60,MAJOR,MAJOR_REGRESSION,"C10>1, C30<=1 and fewer kills"
+EXTT,43001,8,1,8.00,2,5,0.40,MAJOR,MAJOR_REGRESSION,"C10>1, C30<=1 and fewer kills"

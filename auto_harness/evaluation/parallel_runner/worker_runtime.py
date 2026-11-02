@@ -77,6 +77,16 @@ class Worker:
                 os.symlink(os.path.join(src, name), dst)
             except FileExistsError:
                 pass
+        # E28 adapter: scale-scenario wrappers resolve <dirname(cwd)>/sim_script/20250819TZB;
+        # expose the repo sim_script into the worker dirs so they (and base_server fpaths) resolve.
+        _simsrc = os.path.join(HW, "sim_script")
+        for _base in (self.dir, self.simdir):
+            _dst = os.path.join(_base, "sim_script")
+            if os.path.isdir(_simsrc) and not os.path.exists(_dst):
+                try:
+                    os.symlink(_simsrc, _dst)
+                except FileExistsError:
+                    pass
 
     def start(self):
         self._sweep()   # kill any stale process bound to this run's ports before launching
