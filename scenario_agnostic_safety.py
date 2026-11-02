@@ -32,6 +32,9 @@ class ScenarioAgnosticBoundarySafety(ActionSafety):
         self.area_rewrites = 0
         self.predicted_out_rewrites = 0
         self.unnecessary_rewrites = 0
+        self.preventive_buffer_rewrites = 0
+        self.current_out_rewrites = 0
+        self.unexpected_rewrites = 0
         self.available = False
         self.unavailable_reason = ""
 
@@ -93,8 +96,14 @@ class ScenarioAgnosticBoundarySafety(ActionSafety):
                         verb = "移动" if atype == "move" else "飞行"
                         text = f"{unit} {verb} target_speed={sp:.1f} target_course={c2:.1f}"
                         self.area_rewrites += 1
-                        if inside_now:
+                        if not inside_now:
+                            self.current_out_rewrites += 1
+                        elif not inside_next:
                             self.predicted_out_rewrites += 1
+                        elif _near_approach:
+                            self.preventive_buffer_rewrites += 1
+                        else:
+                            self.unexpected_rewrites += 1
                         if inside_now and inside_next:
                             self.unnecessary_rewrites += 1
             out.append({"action_text": text, "action_type": atype})

@@ -33,6 +33,9 @@ class C31AgentMain(SplitScreenAgentMain):
                                     "rewrites": self.safety.area_rewrites,
                                     "predicted_out": self.safety.predicted_out_rewrites,
                                     "unneeded": self.safety.unnecessary_rewrites,
+                                    "current_out": self.safety.current_out_rewrites,
+                                    "preventive": self.safety.preventive_buffer_rewrites,
+                                    "unexpected": self.safety.unexpected_rewrites,
                                     "reason": self.safety.unavailable_reason}) + "\n")
         except Exception:
             pass
