@@ -36,7 +36,8 @@ STRATS = {"W2-1": "横向编队-中央汇聚箭头突防", "W2-2": "菱形编队
           "S10": "scenario_10v10", "S15": "scenario_15v15", "S20": "scenario_20v20",
           "S30": "scenario_30v30", "S10RW": "scenario_10v10_rw",
           "EXTD": "external_dispersed", "EXTT": "external_twowave",
-          "L1": "scenario_L1", "L2": "scenario_L2", "L3": "scenario_L3", "L4": "scenario_L4", "L5": "scenario_L5"}
+          "L1": "scenario_L1", "L2": "scenario_L2", "L3": "scenario_L3", "L4": "scenario_L4", "L5": "scenario_L5",
+          "N01": "横向编队-路线01","N02": "横向编队-路线02","N03": "横向编队-路线03","N04": "横向编队-路线04","N05": "横向编队-路线05","N06": "横向编队-路线06","N07": "横向编队-路线07","N08": "横向编队-路线08","N09": "横向编队-路线09","N10": "横向编队-路线10","N11": "横向编队-路线11","N12": "横向编队-路线12","N13": "横向编队-路线13","N14": "横向编队-路线14","N15": "横向编队-路线15","N16": "横向编队-路线16"}
 POLICY = {"ACE": "expand", "C7": "sync", "C9": "demand", "C10": "budget", "C11": "spare", "C12": "bearing", "C13": "safeuav", "C14": "coverage", "C15": "passive", "TRACKONLY": "trackonly", "C16": "passive2", "C17": "uavbounds", "C18": "uavcov", "C19": "press", "C20": "retreatloss", "C21": "bearinghome", "C22": "standoff", "C23": "maxrange", "C24": "unlimpkg", "C25": "fleetrecon", "C26": "boundsafe", "C27": "saferecon", "C28": "adaptive", "C29": "saferecon", "C30": "splitscreen", "C31": "c31", "LIFEDBG": "lifedbg"}
 ACE_SHA = "7527253c6d5a4bba198e478a990443354ecf5d8cf4e1c98ace66ce50dc809497"
 
