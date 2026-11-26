@@ -330,7 +330,15 @@ def create_red_force(engine, ships_xy, uav_swarm_xy, uav_speed, config):
     """创建所有情景共用的红方水面艇、无人机和通信网络。"""
     ship_config = config["ship"]
     uav_config = config["uav"]
-    engine.db["RadarWithGuider"]["distance"] = ship_config["radar_distance"]
+    # E34 parity adapter (behavior-neutral): optional scenario-level White USV radar override.
+    _ship_radar = ship_config["radar_distance"]
+    try:
+        _ov = float(os.environ.get("HSYSTEM_WHITE_USV_RADAR", "0") or 0)
+        if _ov > 0:
+            _ship_radar = _ov
+    except Exception:
+        pass
+    engine.db["RadarWithGuider"]["distance"] = _ship_radar
     engine.db["RadarWithGuider"]["sector"] = ship_config["radar_sector"]
     engine.db["RadarWithGuider"]["detected_method"] = "fixed"
     engine.db["Ship"]["comdev"] = "Comdev"

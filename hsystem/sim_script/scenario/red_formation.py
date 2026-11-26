@@ -98,7 +98,7 @@ def red_formation_horizontal_n(usv_count):
 
     Matches the provided scenario spec: spacing 20 km for N<=20, 18 km for N=30, centered on y=0 at
     x=60 km. These scenarios define NO White UAVs, so uav_swarm_xy is empty."""
-    spacing = 20_000 if usv_count <= 20 else 18_000
+    spacing = min(20_000 if usv_count <= 20 else 18_000, 540_000 // max(1, usv_count - 1))
     start_y = (usv_count - 1) * spacing / 2
     ships_xy = {f"white_usv{i + 1}": [60_000, start_y - i * spacing] for i in range(usv_count)}
     return ships_xy, {}
